@@ -16,6 +16,8 @@ namespace WClipboard.Core.Tests.DI
         public int ProcessId { get; }
 
         public IReadOnlyList<string> Args { get; }
+
+        public Version Version { get; }
     }
 
     public class DIContainerTests
