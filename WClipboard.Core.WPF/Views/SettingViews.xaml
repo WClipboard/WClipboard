@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:e="clr-namespace:WClipboard.Core.WPF.Extensions"
+                    xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes"
+                    xmlns:svm="clr-namespace:WClipboard.Core.WPF.Settings.Defaults">
+    <DataTemplate x:Key="TextSettingView" DataType="{x:Type svm:TextSettingViewModel}">
+        <TextBox t:Palette.Active="Content" Text="{e:Binding {Binding Value}, ValidationRulesPath=ValidationRules}" />
+    </DataTemplate>
+    <DataTemplate x:Key="CheckBoxSettingView" DataType="{x:Type svm:CheckBoxSettingViewModel}">
+        <StackPanel Orientation="Vertical">
+            <CheckBox t:Palette.Active="Content" IsChecked="{Binding Value}" IsThreeState="{Binding IsThreeState}" Content="{Binding Description}" />
+            <TextBlock Text="{Binding ValueText}" Visibility="{Binding ValueText, Converter={StaticResource VisibileIfNotNullConverter}}" />
+        </StackPanel>
+    </DataTemplate>
+    <DataTemplate x:Key="ComboBoxSettingView" DataType="{x:Type svm:ComboBoxSettingViewModel}">
+        <StackPanel Orientation="Horizontal" e:Spacing.Spacing="1,0">
+            <TextBlock Text="{Binding Description, StringFormat={}{0}:}" VerticalAlignment="Center" />
+            <ComboBox ItemsSource="{Binding Items}" SelectedItem="{Binding Value}" ItemTemplateSelector="{StaticResource TypeTemplateSelector}" VerticalAlignment="Center" />
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

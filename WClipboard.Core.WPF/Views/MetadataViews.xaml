@@ -1,0 +1,72 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:md="clr-namespace:WClipboard.Core.WPF.Clipboard.Metadata.Defaults"
+                    xmlns:ctvm="clr-namespace:WClipboard.Core.WPF.Clipboard.Trigger.ViewModel"
+                    xmlns:cc="clr-namespace:WClipboard.Core.WPF.CustomControls"
+                    xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes"
+                    xmlns:e="clr-namespace:WClipboard.Core.WPF.Extensions">
+    <DataTemplate x:Key="TriggersMetadataView" DataType="{x:Type md:TriggersMetadata}">
+        <Grid>
+            <Grid.Resources>
+                <CollectionViewSource x:Key="TriggersView" Source="{Binding Triggers}" />
+            </Grid.Resources>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ListBox Grid.Column="0" t:Palette.Active="Content" Background="{t:FromPalette}" Foreground="{t:FromPalette}" ItemsSource="{Binding Source={StaticResource TriggersView}}" ItemContainerStyle="{StaticResource BackgroundListBoxItem}" MaxHeight="200" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type ctvm:ClipboardTriggerViewModel}">
+                        <StackPanel Orientation="Horizontal" e:Spacing.Spacing="2">
+                            <cc:IconPresenter Width="16" Height="16" Icon="{Binding Model.WindowInfo.IconSource}" ToolTip="{Binding Program.Name}" />
+                            <cc:IconPresenter Width="16" Height="16" Icon="{Binding Model.Type.IconSource}" ToolTip="{Binding Model.Type.Name}" />
+                            <TextBlock Text="{Binding Model.When, StringFormat=HH:mm:ss}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ContentControl Grid.Column="1" Content="{Binding Source={StaticResource TriggersView}}">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate DataType="{x:Type ctvm:ClipboardTriggerViewModel}">
+                        <Grid e:Spacing.Spacing="2" e:GridEx.AutoOrderDirection="Row">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock VerticalAlignment="Center" Text="Action type:" />
+                            <cc:IconPresenter VerticalAlignment="Center" Width="16" Height="16" Icon="{Binding Model.Type.IconSource}" />
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Model.Type.Name}" />
+
+                            <TextBlock VerticalAlignment="Center" Text="On:" />
+                            <TextBlock Grid.ColumnSpan="2" VerticalAlignment="Center" Text="{Binding Model.When, StringFormat='HH:mm:ss, dd-MM-yyyy'}" />
+
+                            <TextBlock VerticalAlignment="Center" Text="App:" />
+                            <cc:IconPresenter VerticalAlignment="Center" Width="16" Height="16" Icon="{Binding Program.IconSource}" />
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Program.Name}" TextWrapping="Wrap" />
+
+                            <TextBlock VerticalAlignment="Center" Text="Window:" />
+                            <cc:IconPresenter VerticalAlignment="Center" Width="16" Height="16" Icon="{Binding Model.WindowInfo.IconSource}" />
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Model.WindowInfo.Title}" TextWrapping="Wrap" />
+                        </Grid>
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+        </Grid>
+    </DataTemplate>
+
+    <md:FormatsToInlineModelsConverter x:Key="FormatsToInlineModelsConverter" />
+
+    <DataTemplate x:Key="FormatsMetadataView" DataType="{x:Type md:FormatsMetadata}">
+        <TextBlock e:TextExtensions.Inlines="{Binding Formats, Converter={StaticResource FormatsToInlineModelsConverter}}" />
+    </DataTemplate>
+</ResourceDictionary>

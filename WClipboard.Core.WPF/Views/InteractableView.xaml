@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cc="clr-namespace:WClipboard.Core.WPF.CustomControls"
+                    xmlns:vm="clr-namespace:WClipboard.Core.WPF.ViewModels"
+                    xmlns:e="clr-namespace:WClipboard.Core.WPF.Extensions">
+    <DataTemplate x:Key="InteractableView" DataType="{x:Type vm:InteractableState}">
+        <Button e:CommandsBinding.InteractableInputBindings="{Binding Interactable}" Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}" IsEnabled="{Binding Enabled}" ToolTip="{Binding Tooltip, Mode=OneTime}">
+            <cc:IconPresenter Icon="{Binding Interactable.IconSource, Mode=OneTime}" Height="16" />
+        </Button>
+    </DataTemplate>
+</ResourceDictionary>

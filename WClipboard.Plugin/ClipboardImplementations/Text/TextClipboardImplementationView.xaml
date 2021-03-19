@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:WClipboard.Plugin.ClipboardImplementations.Text"
+                    xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes;assembly=WClipboard.Core.WPF">
+    <DataTemplate x:Key="TextClipboardImplementationView" DataType="{x:Type local:TextClipboardImplementationViewModel}">
+        <StackPanel>
+            <ItemsControl ItemsSource="{Binding Interactables}" ItemsPanel="{StaticResource ItemsStackPanelHorizontal}" ItemTemplateSelector="{StaticResource TypeTemplateSelector}" />
+            <TextBox t:Palette.Active="{StaticResource ContentPalette}" Text="{Binding Model.Source, Mode=OneWay}" IsReadOnly="True" MaxHeight="300" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" TextWrapping="Wrap" />
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

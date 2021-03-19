@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:p="clr-namespace:WClipboard.Plugin.ClipboardImplementations.Path"
+                    xmlns:e="clr-namespace:WClipboard.Core.WPF.Extensions;assembly=WClipboard.Core.WPF"
+                    xmlns:cc="clr-namespace:WClipboard.Core.WPF.CustomControls;assembly=WClipboard.Core.WPF"
+                    xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes;assembly=WClipboard.Core.WPF">
+    <p:PathPartsToInlineModelsConverter x:Key="PathPartsToInlineModelsConverter" />
+
+    <DataTemplate x:Key="SinglePathView" DataType="{x:Type p:SinglePathViewModel}">
+        <StackPanel Orientation="Vertical" e:CommandsBinding.CommandBindings="{Binding CommandBindings}">
+            <ItemsControl ItemsSource="{Binding Interactables}" ItemsPanel="{StaticResource ItemsStackPanelHorizontal}" ItemTemplateSelector="{StaticResource TypeTemplateSelector}" />
+            <DockPanel LastChildFill="True" e:Spacing.Spacing="2" t:Palette.Active="{StaticResource ContentPalette}" Background="{t:FromPalette}">
+                <cc:IconPresenter DockPanel.Dock="Left" Icon="{Binding IconSource}" Width="16" Height="16" ToolTip="{Binding TypeName}" VerticalAlignment="Center" />
+                <TextBlock e:TextExtensions.Inlines="{Binding Parts, Converter={StaticResource PathPartsToInlineModelsConverter}}" VerticalAlignment="Center" />
+            </DockPanel>
+            <TextBlock Text="{Binding Message}" Foreground="{t:FromPalette Error}" Visibility="{Binding Message, Converter={StaticResource VisibileIfNotNullConverter}}" />
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

@@ -1,0 +1,48 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:c="clr-namespace:WClipboard.Core.WPF.Converters"
+                    xmlns:dtsc="clr-namespace:WClipboard.Core.WPF.Converters.DateTimeSpan">
+    <c:AlphaColorConverter x:Key="AlphaColorConverter" />
+    <c:AlphaSolidColorBrushConverter x:Key="AlphaSolidColorBrushConverter" />
+
+    <c:CompareConverter x:Key="GreaterThanConverter" Expression="GreaterThan" With="0" />
+
+    <c:CharAsStringConverter x:Key="CharAsStringConverter" />
+
+    <c:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" /> <!-- True is Visible -->
+    <c:BooleanToVisibilityConverter x:Key="InvBoolToVisibilityConverter" Inverse="True" /> <!-- True is Collapsed -->
+
+    <c:AllConverter x:Key="AllConverter" />
+    <c:AllConverter x:Key="NotAllConverter" />
+    <c:AnyConverter x:Key="AnyConverter" />
+    <c:AnyConverter x:Key="NotAnyConverter" />
+
+    <c:IsNullConverter x:Key="IsNullConverter" />
+    <c:IsNullConverter x:Key="IsNotNullConverter" Inverse="True" />
+
+    <c:IndexConverter x:Key="IndexConverter" />
+    <c:SplitConverter x:Key="SplitConverter" />
+    <c:ContainsConverter x:Key="ContainsConverter" />
+    <c:JoinConverter x:Key="JoinConverter" />
+
+    <dtsc:DefaultDateTimeSpanConverter x:Key="DefaultDateTimeSpanConverter" />
+
+    <c:ChainConverter x:Key="VisibleIfGreaterThanZeroConverter">
+        <c:CompareConverter Expression="GreaterThan" With="0" />
+        <c:BooleanToVisibilityConverter />
+    </c:ChainConverter>
+
+    <c:ChainConverter x:Key="VisibileIfNotNullConverter">
+        <c:IsNullConverter Inverse="True"/>
+        <c:BooleanToVisibilityConverter />
+    </c:ChainConverter>
+
+    <c:ChainConverter x:Key="VisibileIfNullConverter">
+        <c:IsNullConverter />
+        <c:BooleanToVisibilityConverter />
+    </c:ChainConverter>
+
+    <c:DataTemplateSelectorConverter x:Key="DataTemplateSelectorConverter" DataTemplateSelector="{StaticResource TypeTemplateSelector}" />
+
+    <c:DictionaryToItemConverter x:Key="DictionaryToItemConverter" />
+</ResourceDictionary>

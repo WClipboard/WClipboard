@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "WClipboard.App": {
+      "commandName": "Project",
+      "commandLineArgs": "/nodebug"
+    }
+  }
+}

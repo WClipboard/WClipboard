@@ -1,0 +1,80 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cc="clr-namespace:WClipboard.Core.WPF.CustomControls"
+    xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes"
+    xmlns:c="clr-namespace:WClipboard.Core.WPF.Converters"
+    xmlns:e="clr-namespace:WClipboard.Core.WPF.Extensions">
+    
+    <Style TargetType="{x:Type cc:CustomWindow}">
+        <Setter Property="AllowsTransparency" Value="True" />
+        <Setter Property="Background" Value="{t:FromPalette}" />
+        <Setter Property="Foreground" Value="{t:FromPalette}" />
+        <Setter Property="BorderBrush" Value="{t:FromPalette GrayB}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <!--<Setter Property="Icon" Value="pack://application:,,,/Resources/WClipboard.ico" />-->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type cc:CustomWindow}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <DockPanel LastChildFill="True" KeyboardNavigation.IsTabStop="False">
+                            <cc:CustomWindowHeader DockPanel.Dock="Top" x:Name="header" WindowTitle="{TemplateBinding Title}" Icon="{TemplateBinding Icon}" Style="{TemplateBinding HeaderStyle}" />
+                            <ContentPresenter />
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome CaptionHeight="30" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="WindowStyle" Value="None" />
+    </Style>
+
+    <Style TargetType="{x:Type cc:CustomWindowHeader}">
+        <Setter Property="Background" Value="{t:FromPalette}" />
+        <Setter Property="Foreground" Value="{t:FromPalette}" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type cc:CustomWindowHeader}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid KeyboardNavigation.IsTabStop="False">
+                            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" e:Spacing.Spacing="2" KeyboardNavigation.IsTabStop="False">
+                                <cc:IconPresenter Icon="{TemplateBinding Icon}" Width="22" Height="22" SnapsToDevicePixels="True" />
+                                <TextBlock Text="{TemplateBinding WindowTitle}" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel WindowChrome.IsHitTestVisibleInChrome="True" HorizontalAlignment="Right" Orientation="Horizontal" KeyboardNavigation.IsTabStop="False" KeyboardNavigation.DirectionalNavigation="Contained">
+                                <Button Command="{x:Static cc:CustomWindow.Minimize}" Style="{DynamicResource WindowHeaderButton}" ToolTip="Minimize">
+                                    <cc:IconPresenter Icon="MinimizeIcon" Width="16" Height="16" />
+                                </Button>
+                                <Button Command="{x:Static cc:CustomWindow.Maximize}" Style="{DynamicResource WindowHeaderButton}" ToolTip="Maximize">
+                                    <cc:IconPresenter Icon="MaximizeIcon" Width="16" Height="16" />
+                                </Button>
+                                <Button Command="{x:Static cc:CustomWindow.Restore}" Style="{DynamicResource WindowHeaderButton}" ToolTip="Restore">
+                                    <cc:IconPresenter Icon="RestoreIcon" Width="16" Height="16" />
+                                </Button>
+                                <Button Command="{x:Static ApplicationCommands.Close}" Style="{DynamicResource WindowHeaderCloseButton}" ToolTip="Close">
+                                    <cc:IconPresenter Icon="CloseIcon" Width="16" Height="16" />
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type cc:Icon}">
+        <Setter Property="IsTabStop" Value="False" />
+    </Style>
+
+    <!--<Style TargetType="{x:Type cc:ToggleContentButton}" BasedOn="{StaticResource {x:Type ToggleButton}}" />-->
+</ResourceDictionary>

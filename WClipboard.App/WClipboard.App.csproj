@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <StartupObject>WClipboard.App.Program</StartupObject>
+    <LangVersion>8.0</LangVersion>
+    <Company>WClipboard</Company>
+    <Product>WClipboard</Product>
+    <Authors>Wibren Wiersma</Authors>
+    <Copyright>Wibren Wiersma 2021</Copyright>
+    <ApplicationIcon>Resources\WClipboard.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
+    <PackageId>WClipboard</PackageId>
+    <PackageProjectUrl>https://wclipboard.com</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/WClipboard/WClipboard</RepositoryUrl>
+    <NeutralLanguage>en</NeutralLanguage>
+    <AssemblyName>WClipboard</AssemblyName>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <FileVersion>0.1.0.0</FileVersion>
+    <Version>0.1</Version>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>5</WarningLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\WClipboard.ico" />
+    <None Remove="Themes\Light.xaml" />
+    <None Remove="Themes\Dark.xaml" />
+    <None Remove="Windows\OverviewWindow.xaml" />
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WClipboard.Plugin\WClipboard.Plugin.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\WClipboard.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Windows\OverviewWindow.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

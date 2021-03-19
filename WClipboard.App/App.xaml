@@ -1,0 +1,42 @@
+﻿<Application x:Class="WClipboard.App.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WClipboard.App"
+             xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes;assembly=WClipboard.Core.WPF"
+             StartupUri="Windows/OverviewWindow.xaml" ShutdownMode="OnExplicitShutdown">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <t:CurrentThemeResourceDictionary />
+                <ResourceDictionary>
+                    <Style x:Key="{x:Static SystemParameters.FocusVisualStyleKey}">
+                        <Setter Property="Control.Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <Rectangle StrokeThickness="1" Stroke="{t:FromPalette Foreground}" StrokeDashArray="1 2" SnapsToDevicePixels="true"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Icons/Icons.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/DataTemplateSelectors/DataTemplateSelectors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Converters/Converters.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Templates/ItemsPanelTemplates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Styles/ItemContainerStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Styles/Buttons.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Styles/CheckBoxes.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Styles/ComboBoxes.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Styles/ScrollBars.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Styles/ListBoxes.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Styles/ListBoxItems.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Styles/TabControls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Styles/TabItems.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Styles/TextBoxes.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Styles/TreeViewItems.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Styles/DateTimeSpanPresenters.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Views/ClipboardObjectView.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

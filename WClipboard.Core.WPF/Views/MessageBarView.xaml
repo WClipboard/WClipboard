@@ -1,0 +1,38 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="clr-namespace:WClipboard.Core.WPF.ViewModels"
+                    xmlns:cc="clr-namespace:WClipboard.Core.WPF.CustomControls"
+                    xmlns:c="clr-namespace:WClipboard.Core.WPF.Converters"
+                    xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <c:KeyToValueConverter x:Key="TypeToIconConveter">
+        <sys:String x:Key="{x:Static vm:MessageBarType.Information}">InfoIcon</sys:String>
+        <sys:String x:Key="{x:Static vm:MessageBarType.Warning}">WarningIcon</sys:String>
+        <sys:String x:Key="{x:Static vm:MessageBarType.Error}">ErrorIcon</sys:String>
+    </c:KeyToValueConverter>
+
+    <c:KeyToValueConverter x:Key="TypeToColorConverter">
+        <t:FromPalette x:Key="{x:Static vm:MessageBarType.Information}" Overload="Info" />
+        <t:FromPalette x:Key="{x:Static vm:MessageBarType.Warning}" Overload="Warning" />
+        <t:FromPalette x:Key="{x:Static vm:MessageBarType.Error}" Overload="Error" />
+    </c:KeyToValueConverter>
+    
+    <DataTemplate x:Key="MessageBarView" DataType="{x:Type vm:MessageBarViewModel}">
+        <Border t:Palette.Active="Content" x:Name="border" CornerRadius="3" Background="{t:FromPalette }" BorderBrush="{t:FromPalette GrayB}" BorderThickness="1">
+            <DockPanel LastChildFill="True">
+                <cc:IconPresenter DockPanel.Dock="Left" Icon="{Binding Type, Converter={StaticResource TypeToIconConveter}}" Width="16" Height="16" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <ContentPresenter Content="{Binding Content}" ContentTemplateSelector="{StaticResource TypeTemplateSelector}" VerticalAlignment="Center" />
+            </DockPanel>
+        </Border>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding Level}" Value="{x:Static vm:MessageBarLevel.Medium}">
+                <Setter TargetName="border" Property="BorderBrush" Value="{Binding Type, Converter={StaticResource TypeToColorConverter}}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Level}" Value="{x:Static vm:MessageBarLevel.High}">
+                <Setter TargetName="border" Property="BorderBrush" Value="{Binding Type, Converter={StaticResource TypeToColorConverter}}" />
+                <Setter TargetName="border" Property="t:Palette.Active" Value="{Binding Type}" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+</ResourceDictionary>

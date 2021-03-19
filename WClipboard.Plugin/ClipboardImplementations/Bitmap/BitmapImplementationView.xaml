@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:b="clr-namespace:WClipboard.Plugin.ClipboardImplementations.Bitmap"
+                    xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes;assembly=WClipboard.Core.WPF">
+    <DataTemplate x:Key="BitmapImplementationView" DataType="{x:Type b:BitmapImplementationViewModel}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            
+            <ItemsControl Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" ItemsSource="{Binding Interactables}" ItemsPanel="{StaticResource ItemsStackPanelHorizontal}" ItemTemplateSelector="{StaticResource TypeTemplateSelector}" />
+            <Border Grid.Column="0" Grid.Row="1" t:Palette.Active="{StaticResource ContentPalette}" Background="{t:FromPalette}" Padding="1" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Image Source="{Binding Thumbnail}" MinHeight="30" MaxHeight="{Binding Thumbnail.PixelHeight}" Height="auto" Width="auto" SnapsToDevicePixels="True" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Auto" RenderOptions.BitmapScalingMode="NearestNeighbor" StretchDirection="UpOnly" />
+            </Border>
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Model.Size.Height, StringFormat='{}{0}px'}" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <TextBlock.LayoutTransform>
+                    <RotateTransform Angle="90" />
+                </TextBlock.LayoutTransform>
+            </TextBlock>
+            <TextBlock Grid.Column="0" Grid.Row="2" Text="{Binding Model.Size.Width, StringFormat='{}{0}px'}" HorizontalAlignment="Center" />
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

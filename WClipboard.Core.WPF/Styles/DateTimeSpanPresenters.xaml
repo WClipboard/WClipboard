@@ -1,0 +1,7 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cc="clr-namespace:WClipboard.Core.WPF.CustomControls">
+    <Style TargetType="{x:Type cc:DateTimeSpanPresenter}" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="Converter" Value="{StaticResource DefaultDateTimeSpanConverter}" />
+    </Style>
+</ResourceDictionary>

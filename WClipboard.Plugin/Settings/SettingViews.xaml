@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:bi="clr-namespace:WClipboard.Plugin.ClipboardImplementations.Bitmap"
+                    xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes;assembly=WClipboard.Core.WPF"
+                    xmlns:e="clr-namespace:WClipboard.Core.WPF.Extensions;assembly=WClipboard.Core.WPF">
+    <DataTemplate x:Key="BitmapFileOptionView" DataType="{x:Type bi:BitmapFileOption}">
+        <StackPanel Orientation="Horizontal" e:Spacing.Spacing="1,0">
+            <TextBlock Text="{Binding Name}"/>
+            <TextBlock Foreground="{t:FromPalette GrayBI}" Text="{Binding Extension, StringFormat=(.{0})}"/>
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

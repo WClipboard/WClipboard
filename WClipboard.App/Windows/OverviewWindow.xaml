@@ -1,0 +1,71 @@
+﻿<cc:CustomWindow x:Class="WClipboard.App.Windows.OverviewWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:cc="clr-namespace:WClipboard.Core.WPF.CustomControls;assembly=WClipboard.Core.WPF"
+             xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes;assembly=WClipboard.Core.WPF"
+             xmlns:f="clr-namespace:WClipboard.Core.WPF.Clipboard.ViewModel.Filters;assembly=WClipboard.Core.WPF"
+             xmlns:e="clr-namespace:WClipboard.Core.WPF.Extensions;assembly=WClipboard.Core.WPF"
+             xmlns:avm="clr-namespace:WClipboard.App.ViewModels"
+             xmlns:local="clr-namespace:WClipboard.App.Windows"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600"
+             d:DataContext ="{d:DesignInstance {x:Type avm:OverviewWindowViewModel}, IsDesignTimeCreatable=False}"
+             t:Palette.Active="Surface"
+             Title="WClipboard" Icon="pack://application:,,,/Resources/WClipboard.ico">
+    <cc:CustomWindow.Resources>
+        <DataTemplate x:Key="FilterDataTemplate" DataType="{x:Type f:Filter}">
+            <StackPanel Orientation="Horizontal" Height="22">
+                <cc:IconPresenter Icon="{Binding IconSource, Mode=OneTime}" VerticalAlignment="Center" Margin="3" />
+                <TextBlock Text="{Binding Text, Mode=OneTime}" VerticalAlignment="Center" Margin="3" />
+            </StackPanel>
+        </DataTemplate>
+        <Style x:Key="FilterContainerStyle" TargetType="ContentControl">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContentControl">
+                        <Button t:Palette.Active="Secondary" Background="{t:FromPalette}" Margin="3" Command="{Binding DataContext.FilterHelper.RemoveSelectedFilterCommand, RelativeSource={e:ItemsHost}}" CommandParameter="{Binding }" ToolTip="Remove filter">
+                            <ContentPresenter Margin="3" />
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource ClearButton}">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Opacity" Value="0.3" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Binding x:Key="ShowIfFiltering" Path="FilterHelper.SelectedFilters.Count" Converter="{StaticResource VisibleIfGreaterThanZeroConverter}" />
+    </cc:CustomWindow.Resources>
+    <DockPanel LastChildFill="True" KeyboardNavigation.IsTabStop="False">
+        <DockPanel DockPanel.Dock="Top" KeyboardNavigation.IsTabStop="False" e:Spacing.Spacing="3">
+            <ItemsControl DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Right" ItemsSource="{Binding Interactables}" ItemsPanel="{StaticResource ItemsStackPanelHorizontal}" ItemTemplateSelector="{StaticResource TypeTemplateSelector}" />
+            <Path DockPanel.Dock="Right" Fill="{t:FromPalette GrayB}" Data="M0,1 V 20" Stroke="{t:FromPalette GrayB}" StrokeThickness="1" VerticalAlignment="Center" />
+            <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" KeyboardNavigation.IsTabStop="False">
+                <TextBlock Text="{Binding ObjectsView.Count, StringFormat='{}{0}/'}" Visibility="{e:StaticMarkupResource ShowIfFiltering}" />
+                <TextBlock Text="{Binding Objects.Count, StringFormat='{}{0} items'}" />
+            </StackPanel>
+            <cc:IconPresenter DockPanel.Dock="Left" Icon="SearchIcon" VerticalAlignment="Center" Width="16" />
+            <Button DockPanel.Dock="Right" Command="{Binding FilterHelper.RemoveAllSelectedFiltersCommand}" ToolTip="Clear filters" VerticalAlignment="Center" Visibility="{e:StaticMarkupResource ShowIfFiltering}">
+                <cc:IconPresenter Icon="CloseIcon" Width="16" />
+            </Button>
+            <ComboBox VerticalAlignment="Center" ItemsSource="{Binding FilterHelper.SearchFilters}" Text="{Binding FilterHelper.SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ItemTemplate="{StaticResource FilterDataTemplate}" SelectedItem="{Binding FilterHelper.SelectedSearchFilter}" Style="{StaticResource ComboBoxSearchStyle}" HorizontalAlignment="Stretch" />
+        </DockPanel>
+        <cc:ContaineredItemsControl DockPanel.Dock="Top" ItemsPanel="{StaticResource ItemsWrapPanel}" ItemsSource="{Binding FilterHelper.SelectedFilters}" ItemTemplate="{StaticResource FilterDataTemplate}" VerticalAlignment="Top" HorizontalAlignment="Stretch" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" ItemContainerStyle="{StaticResource FilterContainerStyle}" Visibility="{e:StaticMarkupResource ShowIfFiltering}" />
+
+        <Border t:Palette.Active="Content" Background="{t:FromPalette}" BorderBrush="{t:FromPalette GrayB}" BorderThickness="0,1,0,0">
+            <DockPanel KeyboardNavigation.IsTabStop="False">
+                <Border DockPanel.Dock="Top" BorderBrush="{t:FromPalette Primary}" Background="{t:FromPalette Surface}" BorderThickness="1" Visibility="{Binding DragAndDropFormats, Converter={StaticResource VisibileIfNotNullConverter}}" Margin="5">
+                    <TextBlock Text="Drop it!" FontSize="24" TextAlignment="Center" Margin="20" Foreground="{t:FromPalette Primary}" />
+                </Border>
+                <ListBox ItemContainerStyle="{StaticResource BorderedListBoxItem}" ItemsSource="{Binding ObjectsView}" ItemTemplate="{StaticResource ClipboardObjectView}" ItemsPanel="{StaticResource ItemsStackPanelVertical}" />
+            </DockPanel>
+        </Border>
+    </DockPanel>
+</cc:CustomWindow>

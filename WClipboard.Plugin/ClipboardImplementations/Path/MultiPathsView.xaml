@@ -1,0 +1,30 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:p="clr-namespace:WClipboard.Plugin.ClipboardImplementations.Path"
+                    xmlns:cc="clr-namespace:WClipboard.Core.WPF.CustomControls;assembly=WClipboard.Core.WPF"
+                    xmlns:e="clr-namespace:WClipboard.Core.WPF.Extensions;assembly=WClipboard.Core.WPF"
+                    xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes;assembly=WClipboard.Core.WPF">
+    <p:PathPartsToInlineModelsConverter x:Key="PathPartsToInlineModelsConverter" />
+
+    <DataTemplate x:Key="MultiPathView" DataType="{x:Type p:MultiPathViewModel}">
+        <Grid e:Spacing.Spacing="2" e:CommandsBinding.CommandBindings="{Binding CommandBindings}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+            <cc:IconPresenter Grid.Column="0" Icon="{Binding IconSource}" Width="16" Height="16" ToolTip="{Binding TypeName}" />
+            <TextBlock Grid.Column="1" e:TextExtensions.Inlines="{Binding Parts, Converter={StaticResource PathPartsToInlineModelsConverter}}" VerticalAlignment="Center" />
+            <ItemsControl Grid.Column="2" ItemsSource="{Binding Interactables}" ItemsPanel="{StaticResource ItemsStackPanelHorizontal}" ItemTemplateSelector="{StaticResource TypeTemplateSelector}" />
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MultiPathsView" DataType="{x:Type p:MultiPathsViewModel}">
+        <StackPanel Orientation="Vertical">
+            <ItemsControl ItemsSource="{Binding Interactables}" ItemsPanel="{StaticResource ItemsStackPanelHorizontal}" ItemTemplateSelector="{StaticResource TypeTemplateSelector}" />
+            <ContentPresenter Content="{Binding SharedPath}" ContentTemplate="{StaticResource MultiPathView}" />
+            <ListBox ItemsSource="{Binding PathViewModels}" ItemTemplate="{StaticResource MultiPathView}" ItemContainerStyle="{StaticResource BackgroundListBoxItem}" />
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>
