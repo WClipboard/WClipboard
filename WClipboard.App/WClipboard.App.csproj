@@ -21,6 +21,7 @@
     <FileVersion>0.1.0.0</FileVersion>
     <Version>0.1</Version>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
