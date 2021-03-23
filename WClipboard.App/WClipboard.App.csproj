@@ -21,7 +21,7 @@
     <FileVersion>0.1.0.0</FileVersion>
     <Version>0.1</Version>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,6 +32,8 @@
     <None Include="..\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
     </None>
   </ItemGroup>
 
