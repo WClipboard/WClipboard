@@ -1,7 +1,17 @@
 # WClipboard
+[![Build Status](https://wibrenwiersma.visualstudio.com/WClipboard/_apis/build/status/Classic%20WClipboard-CI?branchName=master)](https://wibrenwiersma.visualstudio.com/WClipboard/_build/latest?definitionId=5&branchName=master)
 
 WClipboard is an intelligent, free to use, opensource clipboard manager.
 It stores your clipboard history and simplifies your workflow.
+
+WClipboard requires [.NET 5.0 x64 .NET Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/5.0/runtime). We only support a 64 bits Windows 10 machine.
+## Installation
+Go to the latest release. There you find in the assets two options to install WClipboard:
+1. Download and run the Setup MSI installer.
+2. Or download the WClipboard.zip and unpack it wherever you like. Running WClipboard.exe for the first time will setup some required things on your machine.
+
+When an error appears that you don't have the correct .NET runtime installed, make sure you have [.NET 5.0 x64 .NET Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/5.0/runtime) installed. (This download page is more helpfull than the one where the error box points you to.)
+
 
 ## License
 WClipboard is licensed under GNU GPL v3 License
@@ -18,6 +28,6 @@ WClipboard is licensed under GNU GPL v3 License
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-For more detail see [License.txt](License.txt)
+For more detail see [License.txt](LICENSE.txt)
 
 We do not require this or any license for "plugins" (external dlls) created for WClipboard
