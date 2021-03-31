@@ -5,7 +5,7 @@ namespace WClipboard.Core.WPF.ViewModels.Commands
 {
     public class SimpleCommand : ICommand
     {
-        private readonly Action<object> _execute;
+        private readonly Action<object?> _execute;
         private bool _canExecute;
 
         public bool CanExecute
@@ -24,11 +24,11 @@ namespace WClipboard.Core.WPF.ViewModels.Commands
 
         public event EventHandler? CanExecuteChanged;
 
-        bool ICommand.CanExecute(object parameter) => CanExecute;
+        bool ICommand.CanExecute(object? parameter) => CanExecute;
 
-        public void Execute(object parameter) => _execute(parameter);
+        public void Execute(object? parameter) => _execute(parameter);
 
-        public SimpleCommand(Action<object> execute, bool canExecute = true)
+        public SimpleCommand(Action<object?> execute, bool canExecute = true)
         {
             _execute = execute;
             _canExecute = canExecute;

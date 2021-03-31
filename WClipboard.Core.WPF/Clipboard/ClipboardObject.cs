@@ -35,7 +35,7 @@ namespace WClipboard.Core.WPF.Clipboard
             };
         }
 
-        private void CheckIfImplementationShouldBeInThis(object sender, NotifyCollectionChangedEventArgs e)
+        private void CheckIfImplementationShouldBeInThis(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if(e.NewItems?.Cast<ClipboardImplementation>().Any(ci => ci.ClipboardObject != this) ?? false)
             {

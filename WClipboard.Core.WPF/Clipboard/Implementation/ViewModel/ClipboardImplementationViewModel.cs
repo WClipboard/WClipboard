@@ -21,15 +21,15 @@ namespace WClipboard.Core.WPF.Clipboard.Implementation.ViewModel
 
             if (implementation.Parent is null)
             {
-                LinkedImplementations = new BindableObservableCollection<ClipboardImplementationViewModel>(implementation.LinkedImplementations.Select(li => clipboardObject._clipboardObjectManager.CreateViewModel(li, clipboardObject)).NotNull(), clipboardObject.SynchronizationContext);
+                LinkedImplementations = new BindableObservableCollection<ClipboardImplementationViewModel>(implementation.LinkedImplementations!.Select(li => clipboardObject._clipboardObjectManager.CreateViewModel(li, clipboardObject)).NotNull(), clipboardObject.SynchronizationContext);
                 implementation.LinkedImplementations!.CollectionChanged += LinkedImplementations_CollectionChanged; // We know that it is not null since Parent is null
 
-                LinkedContent = new BindableObservableCollection<BaseViewModel>(implementation.LinkedContent.Select(lc => clipboardObject._clipboardObjectManager.CreateViewModel(lc, this)).NotNull(), clipboardObject.SynchronizationContext);
+                LinkedContent = new BindableObservableCollection<BaseViewModel>(implementation.LinkedContent!.Select(lc => clipboardObject._clipboardObjectManager.CreateViewModel(lc, this)).NotNull(), clipboardObject.SynchronizationContext);
                 implementation.LinkedContent!.CollectionChanged += LinkedContent_CollectionChanged; // We know that it is not null since Parent is null
             }
         }
 
-        private void LinkedImplementations_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void LinkedImplementations_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             var differences = e.GetDifferences<ClipboardImplementation>();
 #pragma warning disable CS8604 // Possible null reference argument. This is the case because event handler is only used when not null
@@ -38,7 +38,7 @@ namespace WClipboard.Core.WPF.Clipboard.Implementation.ViewModel
 #pragma warning restore CS8604 // Possible null reference argument.
         }
 
-        private void LinkedContent_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void LinkedContent_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             var differences = e.GetDifferences();
 #pragma warning disable CS8604 // Possible null reference argument. This is the case because event handler is only used when not null

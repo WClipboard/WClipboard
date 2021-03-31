@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -73,10 +71,10 @@ namespace WClipboard.App.ViewModels
 
             FilterHelper = new FilterHelper(SynchronizationContext, ObjectsView);
 
-            clipboardObjectsManager = DiContainer.SP.GetService<IClipboardObjectsManager>();
-            clipboardObjectManager = DiContainer.SP.GetService<IClipboardObjectManager>();
-            clipboardFormatsManager = DiContainer.SP.GetService<IClipboardFormatsManager>();
-            interactablesManager = DiContainer.SP.GetService<IInteractablesManager>();
+            clipboardObjectsManager = DiContainer.SP!.GetRequiredService<IClipboardObjectsManager>();
+            clipboardObjectManager = DiContainer.SP!.GetRequiredService<IClipboardObjectManager>();
+            clipboardFormatsManager = DiContainer.SP!.GetRequiredService<IClipboardFormatsManager>();
+            interactablesManager = DiContainer.SP!.GetRequiredService<IInteractablesManager>();
 
             _overviewWindow = overviewWindow;
             overviewWindow.Loaded += OverviewWindow_Loaded;
@@ -95,7 +93,7 @@ namespace WClipboard.App.ViewModels
         {
             clipboardObjectsManager.AddListener(this);
 
-            foreach(var service in DiContainer.SP.GetServices<IAfterMainWindowLoadedListener>())
+            foreach(var service in DiContainer.SP!.GetServices<IAfterMainWindowLoadedListener>())
             {
                 service.AfterMainWindowLoaded();
             }
@@ -120,7 +118,12 @@ namespace WClipboard.App.ViewModels
 
             Objects.Insert(0, viewModel);
 
-            viewModel.Interactables.Add(clipboadObjectViewModelCloseInteractable.CreateState(viewModel));
+            var state = clipboadObjectViewModelCloseInteractable.CreateState(viewModel);
+
+            if (!(state is null))
+            {
+                viewModel.Interactables.Add(state);
+            }
         }
 
         private void OverviewWindow_DragEnter(object sender, DragEventArgs e)

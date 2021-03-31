@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WClipboard.Core.Utilities
+namespace WClipboard.Core.Utilities.Collections
 {
-    public class RefCreateDictionary<TKey, TValue> : Dictionary<TKey, TValue>
+    public class RefCreateDictionary<TKey, TValue> : Dictionary<TKey, TValue> where TKey : notnull
     {
         private readonly Func<TKey, TValue> _createFunc;
 

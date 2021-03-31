@@ -9,7 +9,7 @@ namespace WClipboard.Core.Extensions
         {
             try
             {
-                return process.MainModule.FileVersionInfo.FileDescription;
+                return process.MainModule?.FileVersionInfo.FileDescription ?? process.ProcessName;
             }
             catch (Exception)
             {
@@ -21,7 +21,7 @@ namespace WClipboard.Core.Extensions
         {
             try
             {
-                return process.MainModule.FileName;
+                return process.MainModule?.FileName;
             }
             catch (Exception) {
                 return null;

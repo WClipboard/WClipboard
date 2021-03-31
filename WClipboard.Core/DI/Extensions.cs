@@ -47,7 +47,7 @@ namespace WClipboard.Core.DI
             where TService5 : class =>
             AddSingleton<TImplementation>(serviceCollection, typeof(TService1), typeof(TService2), typeof(TService3), typeof(TService4), typeof(TService5));
 
-        public static void AddSingleton<TImplementation>(this IServiceCollection serviceCollection, TImplementation instance, Type service1, Type service2, params Type[] moreServices)
+        public static void AddSingleton<TImplementation>(this IServiceCollection serviceCollection, TImplementation instance, Type service1, Type service2, params Type[] moreServices) where TImplementation : notnull
         {
             serviceCollection.AddSingleton(service1, instance);
             serviceCollection.AddSingleton(service2, instance);
@@ -178,7 +178,7 @@ namespace WClipboard.Core.DI
 
         public static Lazy<T> GetLazy<T>(this IServiceProvider serviceProvider)
         {
-            return new Lazy<T>(() => serviceProvider.GetService<T>(), System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
+            return new Lazy<T>(() => serviceProvider.GetService<T>()!, System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
         }
     }
 }

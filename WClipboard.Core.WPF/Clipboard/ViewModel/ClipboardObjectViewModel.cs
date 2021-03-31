@@ -81,7 +81,7 @@ namespace WClipboard.Core.WPF.Clipboard.ViewModel
             return triggers.Select(t => new ClipboardTriggerViewModel(t));
         }
 
-        private void UpdateImplementations(object sender, NotifyCollectionChangedEventArgs e)
+        private void UpdateImplementations(object? sender, NotifyCollectionChangedEventArgs e)
         {
             var differences = e.GetDifferences<ClipboardImplementation>();
 
@@ -91,7 +91,7 @@ namespace WClipboard.Core.WPF.Clipboard.ViewModel
                 Implementations.AddRange(Create(differences.Added));
         }
 
-        private void UpdateTriggers(object sender, NotifyCollectionChangedEventArgs e)
+        private void UpdateTriggers(object? sender, NotifyCollectionChangedEventArgs e)
         {
             var differences = e.GetDifferences<ClipboardTrigger>();
 

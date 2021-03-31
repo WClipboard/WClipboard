@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
-namespace WClipboard.Core.Utilities
+namespace WClipboard.Core.Utilities.Collections
 {
-    public class KeyedCollectionFunc<TKey, T> : IKeyedCollection<TKey, T>
+    public class KeyedCollectionFunc<TKey, T> : IKeyedCollection<TKey, T> where TKey : notnull
     {
         private readonly IDictionary<TKey, T> _base;
         private readonly Func<T, TKey> _keySelector;
@@ -119,7 +120,7 @@ namespace WClipboard.Core.Utilities
             return _base.Remove(key);
         }
 
-        public bool TryGetValue(TKey key, out T value)
+        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out T value)
         {
             return _base.TryGetValue(key, out value);
         }

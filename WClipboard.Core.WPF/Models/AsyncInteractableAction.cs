@@ -15,7 +15,7 @@ namespace WClipboard.Core.WPF.Models
         {
         }
 
-        public override async void Execute(object parameter)
+        public override async void Execute(object? parameter)
         {
             canExecute = false;
             OnCanExecutedChanged();
@@ -26,7 +26,7 @@ namespace WClipboard.Core.WPF.Models
             OnCanExecutedChanged();
         }
 
-        protected abstract Task ExecuteAsync(object parameter);
+        protected abstract Task ExecuteAsync(object? parameter);
     }
 
     public abstract class AsyncInteractableAction<TViewModel> : InteractableAction<TViewModel>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using WClipboard.Core.Utilities.Collections;
 
 namespace WClipboard.Core.Utilities
 {
@@ -8,7 +10,7 @@ namespace WClipboard.Core.Utilities
     {
     }
 
-    public abstract class CollectionManager<TKey, T> : ICollectionManager<TKey, T>
+    public abstract class CollectionManager<TKey, T> : ICollectionManager<TKey, T> where TKey : notnull
     {
         protected readonly KeyedCollectionFunc<TKey, T> _collection;
 
@@ -43,7 +45,7 @@ namespace WClipboard.Core.Utilities
             return _collection.Contains(item);
         }
 
-        public bool TryGetValue(TKey key, out T value)
+        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out T value)
         {
             return _collection.TryGetValue(key, out value);
         }

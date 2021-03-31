@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using WClipboard.Core.Utilities;
+using WClipboard.Core.Utilities.Collections;
 using Xunit;
 
 namespace WClipboard.Core.Tests.Utilities

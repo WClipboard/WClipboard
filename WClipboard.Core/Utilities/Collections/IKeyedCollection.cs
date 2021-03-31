@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace WClipboard.Core.Utilities
+namespace WClipboard.Core.Utilities.Collections
 {
     public interface IReadOnlyKeyedCollection<TKey, T> : IEnumerable<T>, IReadOnlyCollection<T>, IEnumerable, IReadOnlyDictionary<TKey, T>
     {

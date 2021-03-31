@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
-namespace WClipboard.Core.Utilities
+namespace WClipboard.Core.Utilities.Collections
 {
-    public class ObservableKeyedCollectionFunc<TKey, T> : INotifyPropertyChanged, INotifyCollectionChanged, IList<T>, IReadOnlyList<T>, IKeyedCollection<TKey, T>
+    public class ObservableKeyedCollectionFunc<TKey, T> : INotifyPropertyChanged, INotifyCollectionChanged, IList<T>, IReadOnlyList<T>, IKeyedCollection<TKey, T> where TKey : notnull
     {
         private readonly ObservableCollection<T> _base;
         private readonly ConcurrentDictionary<TKey, T> _dict;
@@ -79,17 +80,17 @@ namespace WClipboard.Core.Utilities
             }
         }
 
-        private void Base_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Base_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(sender, e);
         }
 
-        private void Base_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void Base_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             CollectionChanged?.Invoke(sender, e);
         }
 
-        private void ThrowKeyDuplicate(string paramName)
+        private static void ThrowKeyDuplicate(string paramName)
         {
             throw new ArgumentException("There is already a item with this key", paramName);
         }
@@ -193,7 +194,7 @@ namespace WClipboard.Core.Utilities
             Remove(_base[index]);
         }
 
-        public bool TryGetValue(TKey key, out T value)
+        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out  T value)
         {
             return _dict.TryGetValue(key, out value);
         }

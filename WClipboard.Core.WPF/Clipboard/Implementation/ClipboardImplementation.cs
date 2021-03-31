@@ -44,17 +44,17 @@ namespace WClipboard.Core.WPF.Clipboard.Implementation
             LinkedContent.CollectionChanged += CheckTypeOfLinkedContents;
         }
 
-        private void CheckTypeOfLinkedContents(object sender, NotifyCollectionChangedEventArgs e)
+        private void CheckTypeOfLinkedContents(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if(e.NewItems.Cast<object>().Any(o => o is ClipboardImplementation))
+            if(e.NewItems?.Cast<object>().Any(o => o is ClipboardImplementation) ?? false)
             {
                 throw new InvalidOperationException($"You cannot add a {nameof(ClipboardImplementation)} in {nameof(LinkedContent)} add it in {nameof(LinkedImplementations)} instead");
             }
         }
 
-        private void CheckParentPropertyOfLinkedImplementations(object sender, NotifyCollectionChangedEventArgs e)
+        private void CheckParentPropertyOfLinkedImplementations(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.NewItems.Cast<ClipboardImplementation>().Any(c => c.Parent != this))
+            if (e.NewItems?.Cast<ClipboardImplementation>().Any(c => c.Parent != this) ?? false)
             {
                 throw new InvalidOperationException($"You cannot add a {nameof(ClipboardImplementation)} in {nameof(LinkedImplementations)} where the {Parent} of that {nameof(ClipboardImplementation)} is not the same as the {nameof(ClipboardImplementation)} you added it to");
             }

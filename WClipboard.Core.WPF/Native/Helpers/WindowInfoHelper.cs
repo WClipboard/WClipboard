@@ -39,7 +39,7 @@ namespace WClipboard.Core.WPF.Native.Helpers
             NativeMethods.GetWindowThreadProcessId(hWnd, out var processId);
 
             var process = Process.GetProcessById(processId);
-            var iconSource = GetWindowIconSource(hWnd, Core.DI.DiContainer.SP.GetService<IAppInfo>().ProcessId == process.Id);
+            var iconSource = GetWindowIconSource(hWnd, Core.DI.DiContainer.SP!.GetRequiredService<IAppInfo>().ProcessId == process.Id);
             string title = GetWindowTitle(hWnd);
 
             return new WindowInfo(title, iconSource, new ProcessInfo(processId));

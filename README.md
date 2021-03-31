@@ -12,6 +12,9 @@ Go to the latest release. There you find in the assets two options to install WC
 
 When an error appears that you don't have the correct .NET runtime installed, make sure you have [.NET 5.0 x64 .NET Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/5.0/runtime) installed. (This download page is more helpfull than the one where the error box points you to.)
 
+### After installation:
+- We recommend to setup WClipboard to start when Windows starts in the WClipboard settings menu. WClipboard will only be able to monitor your clipboard when running.
+- Take a look at the other settings also.
 
 ## License
 WClipboard is licensed under GNU GPL v3 License

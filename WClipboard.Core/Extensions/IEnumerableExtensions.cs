@@ -23,7 +23,7 @@ namespace WClipboard.Core.Extensions
         /// <param name="keySelecter">Function to select the key of a source item</param>
         /// <param name="valueSelecter">Function to select the value of a source item</param>
         /// <returns>A Dictionary, with all keys selected by the <paramref name="keySelecter"/> of each item in <paramref name="collection"/>, with the last value for each key from the <paramref name="valueSelecter"/> in the <paramref name="collection"/></returns>
-        public static Dictionary<TKey, TValue> ToDictionaryLast<T, TKey, TValue>(this IEnumerable<T> collection, Func<T, TKey> keySelecter, Func<T, TValue> valueSelecter)
+        public static Dictionary<TKey, TValue> ToDictionaryLast<T, TKey, TValue>(this IEnumerable<T> collection, Func<T, TKey> keySelecter, Func<T, TValue> valueSelecter) where TKey : notnull
         {
             var returner = new Dictionary<TKey, TValue>();
             foreach(var item in collection)
@@ -36,6 +36,16 @@ namespace WClipboard.Core.Extensions
         public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> collection) where T : class
         {
             return collection.Where(e => e != null).Select(e => e!);
+        }
+
+        public static T MaxBy<T, R>(this IEnumerable<T> collection, Func<T, R> evaluate) where R : IComparable<R>
+        {
+            return collection.Aggregate((max, next) => evaluate(next).CompareTo(evaluate(max)) > 0 ? next : max);
+        }
+
+        public static T MinBy<T, R>(this IEnumerable<T> collection, Func<T, R> evaluate) where R : IComparable<R>
+        {
+            return collection.Aggregate((min, next) => evaluate(next).CompareTo(evaluate(min)) < 0 ? next : min);
         }
     }
 }

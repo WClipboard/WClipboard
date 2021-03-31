@@ -17,7 +17,7 @@ namespace WClipboard.Core
     {
         public static string GetDirectory(this IAppInfo appInfo)
         {
-            return System.IO.Path.GetDirectoryName(appInfo.Path);
+            return System.IO.Path.GetDirectoryName(appInfo.Path)!; //Is not null and is no root directory
         }
     }
 }

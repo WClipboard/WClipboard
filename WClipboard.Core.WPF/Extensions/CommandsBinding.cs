@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using WClipboard.Core.Utilities;
+using WClipboard.Core.Utilities.Collections;
 using WClipboard.Core.WPF.Models;
 using WClipboard.Core.WPF.ViewModels;
 
@@ -68,7 +68,7 @@ namespace WClipboard.Core.WPF.Extensions
                 {
                     var weakUiElementRef = new WeakReference<UIElement>(uiElement);
 
-                    var handler = new NotifyCollectionChangedEventHandler((object sender, NotifyCollectionChangedEventArgs e) =>
+                    var handler = new NotifyCollectionChangedEventHandler((object? sender, NotifyCollectionChangedEventArgs e) =>
                     {
                         if (weakUiElementRef.TryGetTarget(out var uiElement))
                         {
@@ -184,7 +184,7 @@ namespace WClipboard.Core.WPF.Extensions
                 {
                     var weakUiElementRef = new WeakReference<UIElement>(uiElement);
 
-                    var handler = new NotifyCollectionChangedEventHandler((object sender, NotifyCollectionChangedEventArgs e) =>
+                    var handler = new NotifyCollectionChangedEventHandler((object? sender, NotifyCollectionChangedEventArgs e) =>
                     {
                         if(weakUiElementRef.TryGetTarget(out var uiElement))
                         {

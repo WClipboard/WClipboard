@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
-namespace WClipboard.Core.Utilities
+namespace WClipboard.Core.Utilities.Collections
 {
     public class ObservableObjectTypeCollection<T> : ObservableKeyedCollectionFunc<Type, T>, IServiceProvider where T : notnull
     {
@@ -25,7 +26,7 @@ namespace WClipboard.Core.Utilities
             }
         }
 
-        public bool TryGetValue<TValue>(out TValue value) where TValue : T
+        public bool TryGetValue<TValue>([MaybeNullWhen(false)] out TValue value) where TValue : T
         {
             var result = TryGetValue(typeof(TValue), out var tValue);
             value = (TValue)tValue;

@@ -27,14 +27,14 @@ namespace WClipboard.Core.WPF.Models
 
         protected InteractableAction(string name, KeyGesture? keyGesture = null) : this(name, new MouseGesture(MouseAction.LeftClick, ModifierKeys.None), keyGesture) { }
 
-        public bool CanExecute(object parameter) => canExecute;
+        public bool CanExecute(object? parameter) => canExecute;
 
         protected void OnCanExecutedChanged()
         {
             CanExecuteChanged?.Invoke(this, new EventArgs());
         }
 
-        public abstract void Execute(object parameter);
+        public abstract void Execute(object? parameter);
 
         internal string GetTooltip()
         {
@@ -59,7 +59,7 @@ namespace WClipboard.Core.WPF.Models
         {
         }
 
-        public override void Execute(object parameter) => Execute((TViewModel)parameter);
+        public override void Execute(object? parameter) => Execute((TViewModel)parameter);
         protected abstract void Execute(TViewModel parameter);
     }
 }

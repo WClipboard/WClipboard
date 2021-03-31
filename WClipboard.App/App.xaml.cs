@@ -29,7 +29,7 @@ namespace WClipboard.App
         {
             DispatcherUnhandledException += App_DispatcherUnhandledException;
 
-            foreach (var informService in DiContainer.SP.GetServices<IAfterWPFAppStartupListener>())
+            foreach (var informService in DiContainer.SP!.GetServices<IAfterWPFAppStartupListener>())
             {
                 informService.AfterWPFAppStartup();
             }

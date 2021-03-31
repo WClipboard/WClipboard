@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using WClipboard.Core.WPF.ViewModels.Commands;
 using System.Linq;
-using WClipboard.Core.Utilities;
+using WClipboard.Core.Utilities.Collections;
 using WClipboard.Core.WPF.Settings;
 using WClipboard.Core.Settings;
 
@@ -37,8 +37,8 @@ namespace WClipboard.App.ViewModels
 
         public SettingsWindowViewModel(SettingsWindow settingsWindow) : base(settingsWindow)
         {
-            uiSettingsManager = DiContainer.SP.GetService<IUISettingsManager>();
-            ioSettingsManager = DiContainer.SP.GetService<IIOSettingsManager>();
+            uiSettingsManager = DiContainer.SP!.GetRequiredService<IUISettingsManager>();
+            ioSettingsManager = DiContainer.SP!.GetRequiredService<IIOSettingsManager>();
 
             SaveCommand = new SimpleCommand(OnSave, false);
             RestoreCommand = new SimpleCommand(OnRestore, false);
@@ -95,7 +95,10 @@ namespace WClipboard.App.ViewModels
 
         private void Setting_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            var setting = (SettingViewModel)sender;
+            var setting = sender as SettingViewModel;
+
+            if (setting is null)
+                return;
 
             if (e.PropertyName == nameof(SettingViewModel.IsApplied))
             {
@@ -149,7 +152,7 @@ namespace WClipboard.App.ViewModels
             }
         }
 
-        private void OnSave(object parameter)
+        private void OnSave(object? parameter)
         {
             foreach(var setting in Settings)
             {
@@ -157,7 +160,7 @@ namespace WClipboard.App.ViewModels
             }
         }
 
-        private void OnRestore(object parameter)
+        private void OnRestore(object? parameter)
         {
             foreach(var setting in Settings)
             {
@@ -165,7 +168,7 @@ namespace WClipboard.App.ViewModels
             }
         }
 
-        private void OnOk(object parameter)
+        private void OnOk(object? parameter)
         {
             Model.Close();
         }

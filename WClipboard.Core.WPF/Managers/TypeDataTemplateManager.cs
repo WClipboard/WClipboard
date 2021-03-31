@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
-using WClipboard.Core.Utilities;
+using WClipboard.Core.Utilities.Collections;
 using WClipboard.Core.WPF.Utilities;
 
 namespace WClipboard.Core.WPF.Managers
@@ -20,7 +20,7 @@ namespace WClipboard.Core.WPF.Managers
     {
         public static void AddTypeDateTemplate<ForType>(this IServiceProvider serviceProvider, string resourceDictionaryLocation, object templateKey)
         {
-            serviceProvider.GetService<ITypeDataTemplateManager>().Add(typeof(ForType), (DataTemplate)
+            serviceProvider.GetRequiredService<ITypeDataTemplateManager>().Add(typeof(ForType), (DataTemplate)
                 ResourceDictionaryUtilities.Get(resourceDictionaryLocation, typeof(ForType).Assembly)
                 [templateKey]);
         }
@@ -32,7 +32,7 @@ namespace WClipboard.Core.WPF.Managers
             {
                 if(rd.Contains(possibleKey))
                 {
-                    serviceProvider.GetService<ITypeDataTemplateManager>().Add(typeof(ForType), (DataTemplate)rd[possibleKey]);
+                    serviceProvider.GetRequiredService<ITypeDataTemplateManager>().Add(typeof(ForType), (DataTemplate)rd[possibleKey]);
                     return;
                 }
             }
@@ -40,7 +40,7 @@ namespace WClipboard.Core.WPF.Managers
             {
                 if(item.DataType is Type dt && dt == typeof(ForType))
                 {
-                    serviceProvider.GetService<ITypeDataTemplateManager>().Add(typeof(ForType), item);
+                    serviceProvider.GetRequiredService<ITypeDataTemplateManager>().Add(typeof(ForType), item);
                     return;
                 }
             }
@@ -62,7 +62,7 @@ namespace WClipboard.Core.WPF.Managers
 
         public static void AddTypeDateTemplate<ForType>(this IServiceProvider serviceProvider, DataTemplate template)
         {
-            serviceProvider.GetService<ITypeDataTemplateManager>().Add(typeof(ForType), template);
+            serviceProvider.GetRequiredService<ITypeDataTemplateManager>().Add(typeof(ForType), template);
         }
     }
 }

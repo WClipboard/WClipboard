@@ -39,7 +39,7 @@ namespace WClipboard.Core.WPF.Clipboard.Metadata.Defaults
             OnPropertyChanged(nameof(Formats));
         }
 
-        private void Implementations_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Implementations_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             var dif = e.GetDifferences<ClipboardImplementationViewModel>();
 

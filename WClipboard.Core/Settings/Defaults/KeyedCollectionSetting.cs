@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
 using WClipboard.Core.DI;
-using WClipboard.Core.Utilities;
+using WClipboard.Core.Utilities.Collections;
 
 namespace WClipboard.Core.Settings.Defaults
 {

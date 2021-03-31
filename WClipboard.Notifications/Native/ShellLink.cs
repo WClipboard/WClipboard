@@ -19,28 +19,22 @@ namespace ShellLinkPlus
          Guid("000214F9-0000-0000-C000-000000000046")]
         private interface IShellLinkW
         {
-            uint GetPath([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszFile,
-                         int cchMaxPath, ref WIN32_FIND_DATAW pfd, uint fFlags);
+            uint GetPath([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszFile, int cchMaxPath, ref WIN32_FIND_DATAW pfd, uint fFlags);
             uint GetIDList(out IntPtr ppidl);
             uint SetIDList(IntPtr pidl);
-            uint GetDescription([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszName,
-                                int cchMaxName);
+            uint GetDescription([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszName, int cchMaxName);
             uint SetDescription([MarshalAs(UnmanagedType.LPWStr)] string pszName);
-            uint GetWorkingDirectory([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszDir,
-                                     int cchMaxPath);
+            uint GetWorkingDirectory([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszDir, int cchMaxPath);
             uint SetWorkingDirectory([MarshalAs(UnmanagedType.LPWStr)] string pszDir);
-            uint GetArguments([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszArgs,
-                              int cchMaxPath);
+            uint GetArguments([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszArgs, int cchMaxPath);
             uint SetArguments([MarshalAs(UnmanagedType.LPWStr)] string pszArgs);
             uint GetHotKey(out ushort pwHotkey);
             uint SetHotKey(ushort wHotKey);
             uint GetShowCmd(out int piShowCmd);
             uint SetShowCmd(int iShowCmd);
-            uint GetIconLocation([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszIconPath,
-                                 int cchIconPath, out int piIcon);
+            uint GetIconLocation([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszIconPath, int cchIconPath, out int piIcon);
             uint SetIconLocation([MarshalAs(UnmanagedType.LPWStr)] string pszIconPath, int iIcon);
-            uint SetRelativePath([MarshalAs(UnmanagedType.LPWStr)] string pszPathRel,
-                                 uint dwReserved);
+            uint SetRelativePath([MarshalAs(UnmanagedType.LPWStr)] string pszPathRel, uint dwReserved);
             uint Resolve(IntPtr hwnd, uint fFlags);
             uint SetPath([MarshalAs(UnmanagedType.LPWStr)] string pszFile);
         }
@@ -175,7 +169,7 @@ namespace ShellLinkPlus
             }
 
             // Value (only for string value)
-            public string Value
+            public string? Value
             {
                 get
                 {
@@ -226,7 +220,7 @@ namespace ShellLinkPlus
 
         #region Fields
 
-        private IShellLinkW shellLinkW = null;
+        private IShellLinkW? shellLinkW;
 
         // Name = System.AppUserModel.ID
         // ShellPKey = PKEY_AppUserModel_ID
@@ -285,9 +279,7 @@ namespace ShellLinkPlus
         {
             get
             {
-                string shortcutFile;
-
-                PersistFile.GetCurFile(out shortcutFile);
+                PersistFile.GetCurFile(out var shortcutFile);
 
                 return shortcutFile;
             }
@@ -303,14 +295,13 @@ namespace ShellLinkPlus
 
                 WIN32_FIND_DATAW data = new WIN32_FIND_DATAW();
 
-                VerifySucceeded(shellLinkW.GetPath(targetPath, targetPath.Capacity, ref data,
-                                                   SLGP_UNCPRIORITY));
+                VerifySucceeded((shellLinkW ?? throw new ObjectDisposedException(nameof(ShellLink))).GetPath(targetPath, targetPath.Capacity, ref data, SLGP_UNCPRIORITY));
 
                 return targetPath.ToString();
             }
             set
             {
-                VerifySucceeded(shellLinkW.SetPath(value));
+                VerifySucceeded((shellLinkW ?? throw new ObjectDisposedException(nameof(ShellLink))).SetPath(value));
             }
         }
 
@@ -321,13 +312,13 @@ namespace ShellLinkPlus
                 // No limitation to length of buffer string in the case of Unicode though.
                 StringBuilder arguments = new StringBuilder(INFOTIPSIZE);
 
-                VerifySucceeded(shellLinkW.GetArguments(arguments, arguments.Capacity));
+                VerifySucceeded((shellLinkW ?? throw new ObjectDisposedException(nameof(ShellLink))).GetArguments(arguments, arguments.Capacity));
 
                 return arguments.ToString();
             }
             set
             {
-                VerifySucceeded(shellLinkW.SetArguments(value));
+                VerifySucceeded((shellLinkW ?? throw new ObjectDisposedException(nameof(ShellLink))).SetArguments(value));
             }
         }
 
@@ -368,7 +359,7 @@ namespace ShellLinkPlus
             : this(null) { }
 
         // Construct with loading shortcut file.
-        public ShellLink(string file)
+        public ShellLink(string? file)
         {
             try
             {
@@ -415,30 +406,11 @@ namespace ShellLinkPlus
         #region Methods
 
         // Save shortcut file.
-        public void Save()
-        {
-            string file = ShortcutFile;
-
-            if (file == null)
-            {
-                throw new InvalidOperationException("File name is not given.");
-            }
-            else
-            {
-                Save(file);
-            }
-        }
+        public void Save() => Save(ShortcutFile);
 
         public void Save(string file)
         {
-            if (file == null)
-            {
-                throw new ArgumentNullException("File name is required.");
-            }
-            else
-            {
-                PersistFile.Save(file, true);
-            }
+            PersistFile.Save(file, true);
         }
 
         // Load shortcut file.
@@ -459,8 +431,7 @@ namespace ShellLinkPlus
         {
             if (hresult > 1)
             {
-                throw new InvalidOperationException("Failed with HRESULT: " +
-                                                    hresult.ToString("X"));
+                throw new InvalidOperationException("Failed with HRESULT: " + hresult.ToString("X"));
             }
         }
 

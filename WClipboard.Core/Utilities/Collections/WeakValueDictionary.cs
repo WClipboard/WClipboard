@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace WClipboard.Core.Utilities
+namespace WClipboard.Core.Utilities.Collections
 {
     public class WeakValueDictionary<TKey, TValue> : IDictionary<TKey, TValue> where TValue : class
     {
@@ -124,8 +125,8 @@ namespace WClipboard.Core.Utilities
         }
 
         public bool Remove(TKey key) => dictionary.Remove(key);
-        public bool Remove(KeyValuePair<TKey, TValue> item) => Contains(item) ? Remove(item.Key) : false;
-        public bool TryGetValue(TKey key, out TValue value)
+        public bool Remove(KeyValuePair<TKey, TValue> item) => Contains(item) && Remove(item.Key);
+        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             if (dictionary.TryGetValue(key, out var refValue))
             {
@@ -138,8 +139,7 @@ namespace WClipboard.Core.Utilities
                     dictionary.Remove(key);
                 }
             }
-            //TODO Very dirty fix
-            new Dictionary<TKey, TValue>(0).TryGetValue(key, out value);
+            value = null;
             return false;
         }
 

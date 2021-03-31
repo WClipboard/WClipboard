@@ -42,7 +42,7 @@ namespace WClipboard.Notifications
 
         public void AfterDIContainerBuild()
         {
-            CreateStartMenuShortcut(Core.DI.DiContainer.SP.GetService<IAppInfo>());
+            CreateStartMenuShortcut(Core.DI.DiContainer.SP!.GetService<IAppInfo>()!);
         }
     }
 }

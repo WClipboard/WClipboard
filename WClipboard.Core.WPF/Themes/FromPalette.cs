@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
-using WClipboard.Core.Utilities;
+using WClipboard.Core.Utilities.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows.Media.Animation;
 

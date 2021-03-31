@@ -22,7 +22,7 @@ namespace WClipboard.Core.Extensions
             return (T)Enum.Parse(typeof(T), name);
         }
 
-        public static string GetName<T>(T value) where T : Enum
+        public static string? GetName<T>(T value) where T : Enum
         {
             return Enum.GetName(typeof(T), value);
         }

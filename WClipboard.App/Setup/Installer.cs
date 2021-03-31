@@ -6,7 +6,7 @@ using System.Windows;
 using WClipboard.App.Settings;
 using WClipboard.Core;
 
-namespace WClipboard.App
+namespace WClipboard.App.Setup
 {
     public enum InstalledState
     {
@@ -28,10 +28,10 @@ namespace WClipboard.App
         internal InstalledState GetStatus()
         {
             using (var appRegisteryKey = Registry.CurrentUser.OpenSubKey($@"SOFTWARE\{appInfo.Name}")) {
-                var versionStr = appRegisteryKey?.GetValue("Version") as string;
-
-                if (versionStr == null)
+                if (!(appRegisteryKey?.GetValue("Version") is string versionStr))
+                {
                     return InstalledState.NotInstalled;
+                }
 
                 var version = Version.Parse(versionStr);
 

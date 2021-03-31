@@ -18,7 +18,7 @@ namespace WClipboard.Core.WPF.Native.Helpers
 
         private WindowClipboardViewerHelper(Window window)
         {
-            manager = DiContainer.SP.GetService<IClipboardObjectsManager>();
+            manager = DiContainer.SP!.GetRequiredService<IClipboardObjectsManager>();
             window.SourceInitialized += Window_SourceInitialized;
         }
 

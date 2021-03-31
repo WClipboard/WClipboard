@@ -24,7 +24,7 @@ namespace WClipboard.Core.WPF.Models
         {
             Path = path;
             IconSource = PathInfoHelper.GetIcon(Path, IconType.Small);
-            Name = FileVersionInfo.GetVersionInfo(path).FileDescription;
+            Name = FileVersionInfo.GetVersionInfo(path).FileDescription ?? System.IO.Path.GetFileNameWithoutExtension(path);
         }
 
         public override bool Equals(object? obj)

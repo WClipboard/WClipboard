@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using WClipboard.Core.Clipboard.Format;
 using WClipboard.Core.Clipboard.Trigger;
-using WClipboard.Core.Utilities;
+using WClipboard.Core.Utilities.Collections;
 using WClipboard.Core.WPF.Clipboard.Implementation;
 using WClipboard.Core.WPF.Clipboard.Trigger;
 using WClipboard.Core.WPF.Extensions;

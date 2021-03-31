@@ -25,12 +25,12 @@ namespace WClipboard.App.Models
             var assembly = Assembly.GetExecutingAssembly();
             var assemblyName = assembly.GetName();
 
-            Name = assemblyName.Name;
-            Version = assemblyName.Version;
+            Name = assemblyName.Name!;
+            Version = assemblyName.Version!;
 
             using(var curProccess = Process.GetCurrentProcess())
             {
-                Path = curProccess.GetPath();
+                Path = curProccess.GetPath()!;
                 ProcessId = curProccess.Id;
             }
         }

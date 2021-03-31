@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using WClipboard.App.DI;
 using WClipboard.App.Models;
+using WClipboard.App.Setup;
 using WClipboard.Core.DI;
 using WClipboard.Core.WPF.DI;
 using WClipboard.Notifications.DI;
@@ -34,13 +34,7 @@ namespace WClipboard.App
 
                 if (installedState == InstalledState.NotInstalled || installedState == InstalledState.OlderVersionPresent)
                 {
-                    ProcessStartInfo info = new ProcessStartInfo(appInfo.Path, "/install")
-                    {
-                        UseShellExecute = true,
-                        Verb = "runas"
-                    };
-                    Process.Start(info);
-
+                    installer.Install();
                     return;
                 } 
                 else if (installedState == InstalledState.NewerVersionPresent)

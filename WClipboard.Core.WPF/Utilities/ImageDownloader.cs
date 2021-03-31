@@ -4,7 +4,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using WClipboard.Core.Utilities;
+using WClipboard.Core.Utilities.Collections;
 
 namespace WClipboard.Core.WPF.Utilities
 {

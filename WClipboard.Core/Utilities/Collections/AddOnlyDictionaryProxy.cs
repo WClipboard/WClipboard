@@ -1,16 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
-namespace WClipboard.Core.Utilities
+namespace WClipboard.Core.Utilities.Collections
 {
-    public interface IAddOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
+    public interface IAddOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue> where TKey : notnull
     {
         void Add(TKey key, TValue value);
 
         new TValue this[TKey key] { get; set; }
     }
 
-    public class AddOnlyDictionaryProxy<TKey, TValue> : IAddOnlyDictionary<TKey, TValue>
+    public class AddOnlyDictionaryProxy<TKey, TValue> : IAddOnlyDictionary<TKey, TValue> where TKey : notnull
     {
         private readonly IDictionary<TKey, TValue> _base;
 
@@ -40,7 +41,7 @@ namespace WClipboard.Core.Utilities
         public void Add(TKey key, TValue value) => _base.Add(key, value);
         public bool ContainsKey(TKey key) => _base.ContainsKey(key);
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _base.GetEnumerator();
-        public bool TryGetValue(TKey key, out TValue value) => _base.TryGetValue(key, out value);
+        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) => _base.TryGetValue(key, out value);
         IEnumerator IEnumerable.GetEnumerator() => _base.GetEnumerator();
     }
 }

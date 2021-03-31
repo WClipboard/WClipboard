@@ -5,8 +5,8 @@ using System.Linq;
 using System.Xml;
 using WClipboard.Core.LifeCycle;
 using WClipboard.Core.Extensions.Xml;
-using WClipboard.Core.Utilities;
 using WClipboard.Core.IO;
+using WClipboard.Core.Utilities.Collections;
 
 namespace WClipboard.Core.Settings
 {
@@ -80,7 +80,7 @@ namespace WClipboard.Core.Settings
                     throw new ArgumentException($"A {nameof(IIOSetting)}.{nameof(IIOSetting.Type)} is not allowed to be {nameof(Object)}", nameof(settings));
 
                 this.settings.Add(setting);
-                if (xmlDocument.SelectNodes($"/{ROOT_ELEMENT_NAME}/{ELEMENT_NAME}[@{KEY_ATTRIBUTE_NAME}='{setting.Key}']").FirstOrDefault() is XmlElement settingNode)
+                if (xmlDocument.SelectNodes($"/{ROOT_ELEMENT_NAME}/{ELEMENT_NAME}[@{KEY_ATTRIBUTE_NAME}='{setting.Key}']")?.FirstOrDefault() is XmlElement settingNode)
                 {
                     setting.Value = FindSerializer(setting.Type).Deserialize(setting.Type, settingNode);
                 }
@@ -111,7 +111,7 @@ namespace WClipboard.Core.Settings
         {
             var xmlDocument = new XmlDocument();
             SetAsDefault(xmlDocument);
-            var rootElement = xmlDocument.FirstChild;
+            var rootElement = xmlDocument.FirstChild!; //SetAsDefault adds rootElement
 
             foreach (var setting in settings)
             {
@@ -130,7 +130,7 @@ namespace WClipboard.Core.Settings
         private IIOSettingsSerializer FindSerializer(Type type)
         {
             var baseType = type;
-            while (baseType != typeof(object))
+            while (baseType != null && baseType != typeof(object))
             {
                 if (serializers.TryGetValue(baseType, out var serializer))
                     return serializer;

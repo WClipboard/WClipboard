@@ -54,9 +54,9 @@ namespace WClipboard.App.Settings
 
         public static void RemoveStartup(IAppInfo appInfo)
         {
-            using (RegistryKey systemRunKey = Registry.CurrentUser.OpenSubKey(StartupRegisteryKey, true))
+            using (var systemRunKey = Registry.CurrentUser.OpenSubKey(StartupRegisteryKey, true))
             {
-                systemRunKey.DeleteValue(appInfo.Name, false);
+                systemRunKey?.DeleteValue(appInfo.Name, false);
             }
         }
 
@@ -84,15 +84,15 @@ namespace WClipboard.App.Settings
                     {
                         if (!oldValue.HasValue)
                         {
-                            using(RegistryKey systemRunKey = Registry.CurrentUser.OpenSubKey(DisabledRegisteryKey, true))
+                            using(var systemRunKey = Registry.CurrentUser.OpenSubKey(DisabledRegisteryKey, true))
                             {
-                                systemRunKey.DeleteValue(appInfo.Name, false);
+                                systemRunKey?.DeleteValue(appInfo.Name, false);
                             }
                         }
 
-                        using (RegistryKey systemRunKey = Registry.CurrentUser.OpenSubKey(StartupRegisteryKey, true))
+                        using (var systemRunKey = Registry.CurrentUser.OpenSubKey(StartupRegisteryKey, true))
                         {
-                            systemRunKey.DeleteValue(appInfo.Name, false);
+                            systemRunKey?.DeleteValue(appInfo.Name, false);
                         }
                     }
                 }

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using WClipboard.Core.Utilities;
+using WClipboard.Core.Utilities.Collections;
 using WClipboard.Core.WPF.Managers;
 using WClipboard.Core.WPF.Models;
 

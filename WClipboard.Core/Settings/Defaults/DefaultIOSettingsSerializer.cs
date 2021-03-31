@@ -14,7 +14,7 @@ namespace WClipboard.Core.Settings.Defaults
         }
         public void Serialize(object? value, XmlElement settingNode)
         {
-            settingNode.InnerText = Convert.ToString(value);
+            settingNode.InnerText = Convert.ToString(value) ?? string.Empty;
         }
     }
 }

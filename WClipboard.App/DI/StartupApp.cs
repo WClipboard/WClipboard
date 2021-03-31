@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using WClipboard.App.Settings;
+using WClipboard.App.Setup;
 using WClipboard.App.ViewModels.Interactables;
 using WClipboard.Core.DI;
 using WClipboard.Core.WPF.Extensions;
@@ -18,6 +19,8 @@ namespace WClipboard.App.DI
             services.AddTheme(
                 new Theme("Dark", "Themes/Dark.xaml", context.AppInfo.Name),
                 new Theme("Light", "Themes/Light.xaml", context.AppInfo.Name));
+
+            services.AddTransientWithAutoInject<UpdateChecker>();
         }
     }
 }

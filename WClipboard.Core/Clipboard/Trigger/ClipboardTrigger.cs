@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using WClipboard.Core.Utilities;
+using WClipboard.Core.Utilities.Collections;
 
 namespace WClipboard.Core.Clipboard.Trigger
 {

@@ -15,7 +15,7 @@ namespace WClipboard.Core.WPF.Clipboard.Trigger.ViewModel
         {
             if (model.WindowInfo != null)
             {
-                Program = DiContainer.SP.GetService<IProgramManager>().GetProgram(model.WindowInfo.ProcessInfo);
+                Program = DiContainer.SP!.GetRequiredService<IProgramManager>().GetProgram(model.WindowInfo.ProcessInfo);
             }
         }
     }

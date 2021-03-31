@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using WClipboard.Core.Clipboard.Trigger;
-using WClipboard.Core.Utilities;
+using WClipboard.Core.Utilities.Collections;
 using WClipboard.Core.WPF.Models;
 
 namespace WClipboard.Core.WPF.Managers

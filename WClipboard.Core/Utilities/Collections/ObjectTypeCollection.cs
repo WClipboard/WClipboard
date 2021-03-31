@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WClipboard.Core.Utilities
+namespace WClipboard.Core.Utilities.Collections
 {
     public class ObjectTypeCollection : KeyedCollectionFunc<Type, object>, IServiceProvider
     {
@@ -15,7 +15,7 @@ namespace WClipboard.Core.Utilities
 
         public object? GetService(Type serviceType)
         {
-            if (TryGetValue(serviceType, out object value))
+            if (TryGetValue(serviceType, out object? value))
             {
                 return value;
             }

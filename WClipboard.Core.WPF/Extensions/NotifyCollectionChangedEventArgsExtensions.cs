@@ -12,10 +12,10 @@ namespace WClipboard.Core.WPF.Extensions
         {
             return e.Action switch
             {
-                NotifyCollectionChangedAction.Add => new CollectionDifferences<T>(added: e.NewItems.Cast<T>()),
-                NotifyCollectionChangedAction.Remove => new CollectionDifferences<T>(removed: e.OldItems.Cast<T>()),
+                NotifyCollectionChangedAction.Add => new CollectionDifferences<T>(added: e.NewItems?.Cast<T>()),
+                NotifyCollectionChangedAction.Remove => new CollectionDifferences<T>(removed: e.OldItems?.Cast<T>()),
                 NotifyCollectionChangedAction.Move => new CollectionDifferences<T>(),
-                NotifyCollectionChangedAction.Replace => new CollectionDifferences<T>(added: e.NewItems.Cast<T>(), removed: e.OldItems.Cast<T>()),
+                NotifyCollectionChangedAction.Replace => new CollectionDifferences<T>(added: e.NewItems?.Cast<T>(), removed: e.OldItems?.Cast<T>()),
                 _ => throw new NotImplementedException($"{nameof(GetDifferences)} does not work with {e.Action}"),
             };
         }
@@ -30,8 +30,8 @@ namespace WClipboard.Core.WPF.Extensions
 
         public CollectionDifferences(IReadOnlyCollection<T>? added = null, IReadOnlyCollection<T>? removed = null)
         {
-            Added = added ?? new List<T>(0);
-            Removed = removed ?? new List<T>(0);
+            Added = added ?? Array.Empty<T>();
+            Removed = removed ?? Array.Empty<T>();
         }
     }
 }
