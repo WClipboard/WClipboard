@@ -3,13 +3,13 @@ using System.Collections.ObjectModel;
 using WClipboard.Core.DI;
 using WClipboard.Core.Utilities;
 using WClipboard.Core.WPF.Clipboard.ViewModel.Filters;
-using System.Collections.Generic;
 using System.Threading;
 using System.Linq;
 using WClipboard.Core.WPF.Utilities;
 using System.Windows.Input;
 using System.Windows.Data;
 using WClipboard.Core.WPF.Clipboard.ViewModel;
+using WClipboard.Core.Extensions;
 
 namespace WClipboard.App.ViewModels
 {
@@ -21,23 +21,26 @@ namespace WClipboard.App.ViewModels
         public string SearchText
         {
             get => searchText;
-            set => SetProperty(ref searchText, value).OnChanged(RefreshSearchFilters);
+            set => SetProperty(ref searchText, value, string.IsNullOrEmpty(value) || !isSelectedSearchFilterUpdating).OnChanged(RefreshSearchFilters);
         }
 
-        private List<Filter> searchFilters;
+        private ObservableCollection<Filter> searchFilters;
 
-        public List<Filter> SearchFilters 
+        public ObservableCollection<Filter> SearchFilters 
         {
             get => searchFilters;
             set => SetProperty(ref searchFilters, value);
         }
+
+        private bool isSelectedSearchFilterUpdating = false;
 
         public Filter? SelectedSearchFilter
         {
             get => null;
             set
             {
-                if(!(value is null))
+                isSelectedSearchFilterUpdating = true;
+                if (!(value is null))
                 {
                     SelectedFilters.Add(value);
 
@@ -48,9 +51,9 @@ namespace WClipboard.App.ViewModels
                     else
                     {
                         SearchFilters.Remove(value);
-                        OnPropertyChanged(nameof(SearchFilters));
                     }
                 }
+                isSelectedSearchFilterUpdating = false;
             }
         }
 
@@ -63,6 +66,7 @@ namespace WClipboard.App.ViewModels
 
         public FilterHelper(SynchronizationContext synchronizationContext, ListCollectionView collectionView)
         {
+            searchFilters = new ObservableCollection<Filter>();
             this.collectionView = collectionView;
             collectionView.Filter = CollectionFilter;
 
@@ -82,7 +86,8 @@ namespace WClipboard.App.ViewModels
 
         private void RefreshSearchFilters()
         {
-            SearchFilters = new List<Filter>(filtersManager.Value.GetFilters(SearchText).Except(SelectedFilters));
+            searchFilters.Clear();
+            searchFilters.AddRange(filtersManager.Value.GetFilters(SearchText).Except(SelectedFilters));
         }
 
         private void OnRemoveSelectedFilter(Filter filter)
