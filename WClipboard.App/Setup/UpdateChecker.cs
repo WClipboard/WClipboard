@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using WClipboard.Core;
 using WClipboard.Core.Extensions;
+using WClipboard.Core.Utilities;
 using WClipboard.Core.Utilities.Json;
 using WClipboard.Core.WPF.LifeCycle;
 
@@ -42,23 +43,32 @@ namespace WClipboard.App.Setup
 
         private async void CheckForUpdates()
         {
-            using (var webclient = new WebClient())
+            try
             {
-                webclient.Headers.Add(HttpRequestHeader.UserAgent, appInfo.Name);
-                var releases = await JsonSerializer.DeserializeAsync<List<Release>>(await webclient.OpenReadTaskAsync($"https://api.github.com/repos/WClipboard/{appInfo.Name}/releases"), new JsonSerializerOptions(JsonSerializerDefaults.Web) { PropertyNamingPolicy =  new SnakeCaseJsonNamingPolicy()});
-
-                var newestRelease = releases?.Where(r => !r.Draft).MaxBy(r => r.GetVersion());
-
-                if (newestRelease != null && newestRelease.GetVersion() > appInfo.Version)
+                using (var webclient = new WebClient())
                 {
-                    if(MessageBox.Show($"New version of {appInfo.Name} available v{appInfo.Version} => {newestRelease.TagName}{(newestRelease.Prerelease ? " (prerelease)" : "")}.\nWould you like to download the update?", "Update available", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                    webclient.Headers.Add(HttpRequestHeader.UserAgent, appInfo.Name);
+                    var releases = await JsonSerializer.DeserializeAsync<List<Release>>(await webclient.OpenReadTaskAsync($"https://api.github.com/repos/WClipboard/{appInfo.Name}/releases"), new JsonSerializerOptions(JsonSerializerDefaults.Web) { PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy() });
+
+                    var newestRelease = releases?.Where(r => !r.Draft).MaxBy(r => r.GetVersion());
+
+                    if (newestRelease != null && newestRelease.GetVersion() > appInfo.Version)
                     {
-                        Process.Start(new ProcessStartInfo(newestRelease.HtmlUrl!) {
-                            UseShellExecute = true,
-                            Verb = "open"
-                        });
+                        if (MessageBox.Show($"New version of {appInfo.Name} available v{appInfo.Version} => {newestRelease.TagName}{(newestRelease.Prerelease ? " (prerelease)" : "")}.\nWould you like to download the update?", "Update available", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                        {
+                            Process.Start(new ProcessStartInfo(newestRelease.HtmlUrl!)
+                            {
+                                UseShellExecute = true,
+                                Verb = "open"
+                            });
+                        }
                     }
                 }
+            }
+            catch (WebException ex)
+            {
+                Logger.Log(LogLevel.Info, "Something went wrong when checking for updates");
+                Logger.Log(LogLevel.Info, ex);
             }
         }
     }
