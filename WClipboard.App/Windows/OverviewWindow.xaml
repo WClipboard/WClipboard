@@ -55,7 +55,7 @@
             <Button DockPanel.Dock="Right" Command="{Binding FilterHelper.RemoveAllSelectedFiltersCommand}" ToolTip="Clear filters" VerticalAlignment="Center" Visibility="{e:StaticMarkupResource ShowIfFiltering}">
                 <cc:IconPresenter Icon="CloseIcon" Width="16" />
             </Button>
-            <ComboBox VerticalAlignment="Center" ItemsSource="{Binding FilterHelper.SearchFilters}" Text="{Binding FilterHelper.SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ItemTemplate="{StaticResource FilterDataTemplate}" SelectedItem="{Binding FilterHelper.SelectedSearchFilter}" Style="{StaticResource ComboBoxSearchStyle}" HorizontalAlignment="Stretch" />
+            <cc:SearchBox VerticalAlignment="Center" ItemsSource="{Binding FilterHelper.SearchFilters}" Text="{Binding FilterHelper.SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ItemTemplate="{StaticResource FilterDataTemplate}" SelectedItem="{Binding FilterHelper.SelectedSearchFilter}" HorizontalAlignment="Stretch" />
         </DockPanel>
         <cc:ContaineredItemsControl DockPanel.Dock="Top" ItemsPanel="{StaticResource ItemsWrapPanel}" ItemsSource="{Binding FilterHelper.SelectedFilters}" ItemTemplate="{StaticResource FilterDataTemplate}" VerticalAlignment="Top" HorizontalAlignment="Stretch" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" ItemContainerStyle="{StaticResource FilterContainerStyle}" Visibility="{e:StaticMarkupResource ShowIfFiltering}" />
 

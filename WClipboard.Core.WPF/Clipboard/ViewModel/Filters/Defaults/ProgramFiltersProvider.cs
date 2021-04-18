@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using WClipboard.Core.Utilities.Collections;
 using WClipboard.Core.WPF.Managers;
 using WClipboard.Core.WPF.Models;
@@ -25,7 +26,7 @@ namespace WClipboard.Core.WPF.Clipboard.ViewModel.Filters.Defaults
 
                 foreach (var program in programs)
                 {
-                    if (program.Name.StartsWith(text))
+                    if (Regex.IsMatch(program.Name, $@"^(.*\s)?{text}", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
                     {
                         if (!filterCache.TryGetValue(program, out var filter)) {
                             filter = new ProgramFilter(program);
