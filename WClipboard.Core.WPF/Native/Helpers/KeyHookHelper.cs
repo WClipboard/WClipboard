@@ -27,6 +27,7 @@ namespace WClipboard.Core.WPF.Native.Helpers
     {
         private IntPtr hhook;
         private HookCallback? cashedCallback;
+        private readonly bool[] keyStates;
 
         public HashSet<Key> NotifyKeys { get; }
 
@@ -34,6 +35,8 @@ namespace WClipboard.Core.WPF.Native.Helpers
 
         internal KeyHookHelper()
         {
+            keyStates = new bool[256];
+
             NotifyKeys = new HashSet<Key>();
 
             cashedCallback = new HookCallback(HookProc);
@@ -59,22 +62,6 @@ namespace WClipboard.Core.WPF.Native.Helpers
 
             var castedLParam = Marshal.PtrToStructure<KeyboardDllHookStruct>(lParam);
 
-            if(!NotifyKeys.Contains(KeyInterop.KeyFromVirtualKey(castedLParam.vkCode)))
-            {
-                return NativeMethods.CallNextHookEx(hhook, code, wParam, lParam);
-            }
-
-            var modifyStateKeys = new HashSet<Key>();
-            if (NativeMethods.GetKeyboardState(out var keyStates))
-            {
-                for(int i = 0; i < keyStates.Length; i++)
-                {
-                    if((keyStates[i] & 0x80) != 0) {
-                        modifyStateKeys.Add(KeyInterop.KeyFromVirtualKey(i));
-                    }
-                }
-            }
-
             var state = wParam switch
             {
                 (int)NativeConsts.Message.WM_KEYUP => KeyStates.Toggled,
@@ -84,8 +71,25 @@ namespace WClipboard.Core.WPF.Native.Helpers
                 _ => KeyStates.None,
             };
 
-            var key = KeyInterop.KeyFromVirtualKey(castedLParam.vkCode);
+            if (castedLParam.vkCode < keyStates.Length)
+            {
+                keyStates[castedLParam.vkCode] = state == KeyStates.Down;
+            }
 
+            if (!NotifyKeys.Contains(KeyInterop.KeyFromVirtualKey(castedLParam.vkCode)))
+            {
+                return NativeMethods.CallNextHookEx(hhook, code, wParam, lParam);
+            }
+
+            var modifyStateKeys = new HashSet<Key>();
+            for(int i = 0; i < keyStates.Length; i++)
+            {
+                if(keyStates[i]) {
+                    modifyStateKeys.Add(KeyInterop.KeyFromVirtualKey(i));
+                }
+            }
+
+            var key = KeyInterop.KeyFromVirtualKey(castedLParam.vkCode);
             long time = castedLParam.time;
             Task.Run(() => NotifyKeyStateChanged?.Invoke(this, new KeyboardHookEventArgs(key, state, modifyStateKeys, time)));
 

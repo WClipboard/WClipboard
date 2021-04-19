@@ -10,23 +10,26 @@ namespace WClipboard.Core.WPF.Listeners
         public Key Key { get; }
         public ModifierKeys ModifierKeys { get; }
         public Action<GlobalKeyUpEventListener, long> Listener { get; }
-        private long lastDownTime;
+        private long? lastDownTime;
 
         public GlobalKeyUpEventListener(Key key, ModifierKeys modifierKeys, Action<GlobalKeyUpEventListener, long> listener)
         {
             Key = key;
             ModifierKeys = modifierKeys;
             Listener = listener;
-            lastDownTime = 0;
+            lastDownTime = null;
         }
 
         void IGlobalKeyEventListener.OnEvent(KeyboardHookEventArgs e, ModifierKeys modifierKeys)
         {
-            if (e.State == KeyStates.Down && modifierKeys == ModifierKeys && e.NotifyKey == Key)
-                lastDownTime = e.MessageTime;
-            else if (e.State == KeyStates.Toggled && e.NotifyKey == Key)
+            if (e.State == KeyStates.Down && modifierKeys == ModifierKeys && e.NotifyKey == Key && !lastDownTime.HasValue)
             {
-                Listener(this, e.MessageTime - lastDownTime);
+                lastDownTime = e.MessageTime;
+            }
+            else if (e.State == KeyStates.Toggled && e.NotifyKey == Key && lastDownTime.HasValue)
+            {
+                Listener(this, e.MessageTime - lastDownTime.Value);
+                lastDownTime = null;
             }
         }
 
