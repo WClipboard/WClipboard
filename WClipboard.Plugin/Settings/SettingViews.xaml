@@ -6,7 +6,7 @@
     <DataTemplate x:Key="BitmapFileOptionView" DataType="{x:Type bi:BitmapFileOption}">
         <StackPanel Orientation="Horizontal" e:Spacing.Spacing="1,0">
             <TextBlock Text="{Binding Name}"/>
-            <TextBlock Foreground="{t:FromPalette GrayBI}" Text="{Binding Extension, StringFormat=(.{0})}"/>
+            <TextBlock Foreground="{t:FromPalette GrayBI}" Text="{Binding Extension, StringFormat=({0})}"/>
         </StackPanel>
     </DataTemplate>
 </ResourceDictionary>

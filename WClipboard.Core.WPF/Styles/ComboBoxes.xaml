@@ -82,46 +82,14 @@
                         <ContentPresenter />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
+                        <!--<Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="{t:FromPalette MouseOver}"/>
-                        </Trigger>
+                        </Trigger>-->
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="{t:FromPalette PrimaryB}" />
                         </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="ComboBoxSearchStyle" TargetType="ComboBox">
-        <Setter Property="t:Palette.Active" Value="Content" />
-        <Setter Property="IsEditable" Value="True" />
-        <Setter Property="IsReadOnly" Value="False" />
-        <Setter Property="ShouldPreserveUserEnteredPrefix" Value="True" />
-        <Setter Property="StaysOpenOnEdit" Value="True" />
-        <Setter Property="IsTabStop" Value="False" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="ComboBox">
-                    <Grid>
-                        <TextBox x:Name="PART_EditableTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="3" Focusable="True" IsReadOnly="{TemplateBinding IsReadOnly}" Foreground="{t:FromPalette}" Background="{t:FromPalette}" />
-                        <Popup x:Name="Popup" Placement="Bottom" IsOpen="{Binding IsFocused, ElementName=PART_EditableTextBox, Mode=OneWay}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide" t:Palette.Active="Content">
-                            <Grid x:Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
-                                <Border x:Name="DropDownBorder" BorderThickness="1" BorderBrush="{t:FromPalette Gray}" Background="{t:FromPalette}">
-                                    <ScrollViewer SnapsToDevicePixels="True" Foreground="{t:FromPalette}">
-                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
-                                    </ScrollViewer>
-                                </Border>
-                            </Grid>
-                        </Popup>
-                    </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsGrouping" Value="True">
-                            <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
-                        </Trigger>
-                        <Trigger Property="HasItems" Value="False">
-                            <Setter TargetName="Popup" Property="IsOpen" Value="False" />
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter Property="Background" Value="{t:FromPalette MouseOver}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

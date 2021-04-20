@@ -81,7 +81,7 @@ namespace WClipboard.Plugin.ClipboardImplementations.Path
             Type = Main.Name.Contains(".") ? PathType.File : PathType.Directory;
             RecheckExistsAndType();
             if (!Exists)
-                Message = $"This {Type.ToString().ToLowerInvariant()} does not exists";
+                Message = $"This {Type.ToString().ToLowerInvariant()} does not exist";
         }
 
         private void Watcher_Renamed(object sender, RenamedEventArgs e)
@@ -117,7 +117,7 @@ namespace WClipboard.Plugin.ClipboardImplementations.Path
         private void Watcher_Deleted(object sender, FileSystemEventArgs e)
         {
             Exists = false;
-            Message = $"This {Type.ToString().ToLowerInvariant()} does not exists anymore";
+            Message = $"This {Type.ToString().ToLowerInvariant()} does not exist anymore";
         }
 
         private void Watcher_Created(object sender, FileSystemEventArgs e)

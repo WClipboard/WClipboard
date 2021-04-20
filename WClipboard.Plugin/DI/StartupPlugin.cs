@@ -9,6 +9,7 @@ using WClipboard.Core.WPF.Managers;
 using WClipboard.Plugin.ClipboardImplementations.Bitmap;
 using WClipboard.Plugin.ClipboardImplementations.Path;
 using WClipboard.Plugin.ClipboardImplementations.Text;
+using WClipboard.Plugin.ClipboardImplementations.Text.Filters;
 using WClipboard.Plugin.ClipboardImplementations.Text.LinkedContent;
 using WClipboard.Plugin.ClipboardImplementations.Text.LinkedContent.Defaults;
 using WClipboard.Plugin.Defaults;
@@ -47,6 +48,7 @@ namespace WClipboard.Plugin.DI
             //Text
             services.AddSingleton<ILinkedContentFactoriesManager, LinkedTextContentFactoriesManager>();
             services.AddInteractable<ClipboardImplementations.Text.Interactables.ConvertToFileInteractable>();
+            services.AddFiltersProvider<TextSearchFilterProvider>();
 
             //Settings
             services.AddUISettingsFactory<PluginUISettingsFactory>();

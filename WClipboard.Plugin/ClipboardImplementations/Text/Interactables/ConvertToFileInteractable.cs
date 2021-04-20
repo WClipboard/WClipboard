@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -12,7 +13,9 @@ namespace WClipboard.Plugin.ClipboardImplementations.Text.Interactables
 {
     public class ConvertToFileInteractable : Interactable<TextClipboardImplementationViewModel>
     {
-        public ConvertToFileInteractable() : base("ConvertToFileIcon", new ConvertToFileInteractableAction())
+        public ConvertToFileInteractable() : base("ConvertToFileIcon", 
+            new ConvertToFileInteractableAction(),
+            new SaveToFileInteractableAction())
         {
         }
 
@@ -35,6 +38,40 @@ namespace WClipboard.Plugin.ClipboardImplementations.Text.Interactables
                 DataObjectExtensions.SetLinkedWClipboardId(dataObject, parameter.Model.ClipboardObject.Id);
                 dataObject.SetFileDropList(fileName);
                 Clipboard.SetDataObject(dataObject);
+            }
+        }
+
+        private class SaveToFileInteractableAction : InteractableAction<TextClipboardImplementationViewModel>
+        {
+            private static string lastDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+
+            public SaveToFileInteractableAction() : base("Save as file", new MouseGesture(MouseAction.LeftClick, ModifierKeys.Control), new KeyGesture(Key.F, ModifierKeys.Alt | ModifierKeys.Control))
+            {
+            }
+
+            protected override async void Execute(TextClipboardImplementationViewModel parameter)
+            {
+                var dialog = new SaveFileDialog
+                {
+                    Title = "Save text",
+                    Filter = "Text|*.txt|All files|*.*",
+                    OverwritePrompt = true,
+                    ValidateNames = true,
+                    CheckPathExists = true,
+                    CheckFileExists = false,
+                    DefaultExt = ".txt",
+                    InitialDirectory = lastDirectory,
+                    DereferenceLinks = true,
+                };
+                if (dialog.ShowDialog() == true)
+                {
+                    using (var sw = new StreamWriter(dialog.FileName, false, Encoding.Unicode))
+                    {
+                        await sw.WriteAsync(parameter.Model.Source).ConfigureAwait(true);
+                    }
+
+                    lastDirectory = System.IO.Path.GetDirectoryName(dialog.FileName);
+                }
             }
         }
     }

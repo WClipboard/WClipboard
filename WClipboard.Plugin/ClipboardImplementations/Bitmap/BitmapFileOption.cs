@@ -20,7 +20,7 @@ namespace WClipboard.Plugin.ClipboardImplementations.Bitmap
         {
             var encoderType = typeof(TEncoder);
             name ??= encoderType.Name.Substring(0, encoderType.Name.LastIndexOf(nameof(BitmapEncoder)));
-            extension ??= name.ToLowerInvariant();
+            extension ??= "." + name.ToLowerInvariant();
 
             return new BitmapFileOption(name, extension, encoderType);
         }
