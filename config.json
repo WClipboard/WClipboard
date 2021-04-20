@@ -1,0 +1,8 @@
+{
+    "version": "0.1.1.0",
+    "name": "WClipboard",
+    "author": "Wibren Wiersma",
+    "repository": "https://github.com/WClipboard/WClipboard",
+    "website": "https://wclipboard.com",
+    "subject": "An intelligent, free to use, opensource clipboard manager"
+}
