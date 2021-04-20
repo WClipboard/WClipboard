@@ -41,7 +41,16 @@ namespace WClipboard.Core.WPF.Models
             string? keyPart = KeyGesture?.GetDisplayStringForCulture(Thread.CurrentThread.CurrentUICulture);
             if (keyPart != null)
                 keyPart = $"({keyPart})";
-            string? mousePart = string.Join(" + ", new[] { MouseGesture.MouseAction.ToString() }.Concat(MouseGesture.Modifiers.GetFlags().Where(f => f != ModifierKeys.None).Select(m => m.ToString())));
+            string? mousePart = string.Join("+", MouseGesture.Modifiers.GetFlags().Select(m =>
+                m switch
+                {
+                    ModifierKeys.Alt => "Alt",
+                    ModifierKeys.Control => "Ctrl",
+                    ModifierKeys.Shift => "Shift",
+                    ModifierKeys.Windows => "Win",
+                    _ => null,
+                }
+            ).Where(s => s != null).Concat(new[] { MouseGesture.MouseAction.ToString() }));
             if (mousePart == MouseAction.LeftClick.ToString())
                 mousePart = null;
             else if (mousePart != null)
