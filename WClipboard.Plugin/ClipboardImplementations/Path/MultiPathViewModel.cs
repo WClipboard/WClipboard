@@ -3,10 +3,10 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows.Input;
 using WClipboard.Core.Utilities;
-using WClipboard.Core.WPF.Native.Helpers;
 using WClipboard.Core.WPF.Utilities;
 using WClipboard.Core.WPF.ViewModels;
 using WClipboard.Plugin.ClipboardImplementations.Path.Interactables;
+using WClipboard.Windows.Helpers;
 
 namespace WClipboard.Plugin.ClipboardImplementations.Path
 {

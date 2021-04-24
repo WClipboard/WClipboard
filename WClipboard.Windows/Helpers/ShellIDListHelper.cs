@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using WClipboard.Windows.Native;
 
-namespace WClipboard.Core.WPF.Native.Helpers
+// Source: https://stackoverflow.com/questions/35636953/show-multiple-file-properties-in-c-sharp
+
+namespace WClipboard.Windows.Helpers
 {
     public static class ShellIDListHelper
     {
-        //https://stackoverflow.com/questions/35636953/show-multiple-file-properties-in-c-sharp
+        
         public static MemoryStream Create(IReadOnlyCollection<string> filenames)
         {
             // first convert all files into pidls list

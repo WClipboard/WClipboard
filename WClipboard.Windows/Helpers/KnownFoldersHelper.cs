@@ -1,12 +1,15 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿// Source: https://www.codeproject.com/Articles/878605/Getting-All-Special-Folders-in-NET
 
-namespace WClipboard.Core.WPF.Native.Helpers
+using System;
+using System.Runtime.InteropServices;
+using WClipboard.Windows.Native;
+
+namespace WClipboard.Windows
 {
     /// <summary>
     /// Class containing methods to retrieve specific file system paths.
     /// </summary>
-    public static class KnownFolders
+    public static class KnownFoldersHelper
     {
         #region ---- MEMBERS ------------------------------------------------------------------------------
         #endregion
@@ -112,7 +115,6 @@ namespace WClipboard.Core.WPF.Native.Helpers
         #endregion
 
         #region ---- METHODS (PUBLIC) ---------------------------------------------------------------------
-        #endregion
 
         /// <summary>
         /// Gets the current path to the specified known folder as currently configured. This does
@@ -195,8 +197,9 @@ namespace WClipboard.Core.WPF.Native.Helpers
             GetPath(knownFolder, KnownFolderFlags.Create | KnownFolderFlags.Init, defaultUser);
         }
 
-        #region ---- METHODS (PRIVATE) --------------------------------------------------------------------
         #endregion
+
+        #region ---- METHODS (PRIVATE) --------------------------------------------------------------------
 
         private static string GetPath(KnownFolder knownFolder, KnownFolderFlags flags,
             bool defaultUser)
@@ -214,8 +217,9 @@ namespace WClipboard.Core.WPF.Native.Helpers
             }
         }
 
-        #region ---- ENUMERATIONS -------------------------------------------------------------------------
         #endregion
+
+        #region ---- ENUMERATIONS -------------------------------------------------------------------------
 
         [Flags]
         private enum KnownFolderFlags : uint
@@ -231,6 +235,8 @@ namespace WClipboard.Core.WPF.Native.Helpers
             NoAppcontainerRedirection = 0x00010000,
             AliasOnly = 0x80000000
         }
+
+        #endregion
     }
 
     /// <summary>

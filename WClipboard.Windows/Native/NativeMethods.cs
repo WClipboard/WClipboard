@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
-namespace WClipboard.Core.WPF.Native
+namespace WClipboard.Windows.Native
 {
     internal static class NativeMethods
     {

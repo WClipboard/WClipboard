@@ -4,17 +4,25 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using WClipboard.Windows.Native;
 
-namespace WClipboard.Core.WPF.Native.Helpers
+namespace WClipboard.Windows
 {
-    public class KeyboardHookEventArgs : EventArgs
+    public interface IGlobalKeyboardListener
+    {
+        event EventHandler<GlobalKeyboardEventArgs>? NotifyKeyStateChanged;
+
+        HashSet<Key> NotifyKeys { get; }
+    }
+
+    public class GlobalKeyboardEventArgs : EventArgs
     {
         public Key NotifyKey { get; }
         public KeyStates State { get; }
         public IReadOnlyCollection<Key> DownStateKeys { get; }
         public long MessageTime { get; }
 
-        internal KeyboardHookEventArgs(Key notifyKey, KeyStates state, IReadOnlyCollection<Key> downStateKeys, long messageTime)
+        internal GlobalKeyboardEventArgs(Key notifyKey, KeyStates state, IReadOnlyCollection<Key> downStateKeys, long messageTime)
         {
             NotifyKey = notifyKey;
             State = state;
@@ -23,7 +31,7 @@ namespace WClipboard.Core.WPF.Native.Helpers
         }
     }
 
-    internal class KeyHookHelper : IDisposable
+    internal class GlobalKeyboardListener : IGlobalKeyboardListener, IDisposable
     {
         private IntPtr hhook;
         private HookCallback? cashedCallback;
@@ -31,9 +39,9 @@ namespace WClipboard.Core.WPF.Native.Helpers
 
         public HashSet<Key> NotifyKeys { get; }
 
-        public event EventHandler<KeyboardHookEventArgs>? NotifyKeyStateChanged;
+        public event EventHandler<GlobalKeyboardEventArgs>? NotifyKeyStateChanged;
 
-        internal KeyHookHelper()
+        public GlobalKeyboardListener()
         {
             keyStates = new bool[256];
 
@@ -91,7 +99,7 @@ namespace WClipboard.Core.WPF.Native.Helpers
 
             var key = KeyInterop.KeyFromVirtualKey(castedLParam.vkCode);
             long time = castedLParam.time;
-            Task.Run(() => NotifyKeyStateChanged?.Invoke(this, new KeyboardHookEventArgs(key, state, modifyStateKeys, time)));
+            Task.Run(() => NotifyKeyStateChanged?.Invoke(this, new GlobalKeyboardEventArgs(key, state, modifyStateKeys, time)));
 
             return NativeMethods.CallNextHookEx(hhook, code, wParam, lParam);
         }
@@ -118,7 +126,7 @@ namespace WClipboard.Core.WPF.Native.Helpers
         }
 
         // override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        ~KeyHookHelper()
+        ~GlobalKeyboardListener()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: false);

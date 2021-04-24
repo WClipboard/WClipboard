@@ -1,46 +1,37 @@
 ﻿using System;
-using System.Windows;
-using System.Windows.Interop;
-using WClipboard.Core.DI;
-using Microsoft.Extensions.DependencyInjection;
-using WClipboard.Core.WPF.Clipboard;
-using WClipboard.Core.Clipboard.Trigger;
-using WClipboard.Core.Clipboard.Trigger.Defaults;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using WClipboard.Windows.Native;
 
-namespace WClipboard.Core.WPF.Native.Helpers
+namespace WClipboard.Windows
 {
-    public class WindowClipboardViewerHelper
+    public interface IClipboardViewer
     {
-        public static void AttachTo(Window window) => new WindowClipboardViewerHelper(window);
+        event EventHandler? ClipboardChanged;
+    }
 
-        private IntPtr nextViewer = IntPtr.Zero;
-        private readonly IClipboardObjectsManager manager;
+    public class ClipboardViewer : IClipboardViewer, IDisposable
+    {
+        private IntPtr nextViewer;
+        private bool disposedValue;
 
-        private WindowClipboardViewerHelper(Window window)
+        private readonly IHiddenWindowMessages hiddenWindow;
+
+        public event EventHandler? ClipboardChanged;
+
+        public ClipboardViewer(IHiddenWindowMessages hiddenWindow)
         {
-            manager = DiContainer.SP!.GetRequiredService<IClipboardObjectsManager>();
-            window.SourceInitialized += Window_SourceInitialized;
+            this.hiddenWindow = hiddenWindow;
+
+            nextViewer = NativeMethods.SetClipboardViewer(hiddenWindow.Handle);
+            if (nextViewer == IntPtr.Zero && Marshal.GetLastWin32Error() != 0)
+                throw new Win32Exception();
+
+            hiddenWindow.AddHook(WindowProc);
+            hiddenWindow.Disposed += Source_Disposed;
         }
 
-        private void Window_SourceInitialized(object? sender, EventArgs e)
-        {
-            if (sender is Window window)
-            {
-                var handle = (new WindowInteropHelper(window)).Handle;
-                nextViewer = NativeMethods.SetClipboardViewer(handle);
-                var source = HwndSource.FromHwnd(handle);
-                source.AddHook(WindowProc);
-                source.Disposed += Source_Disposed;
-            }
-        }
-
-        private void Source_Disposed(object? sender, EventArgs e)
-        {
-            if (sender is HwndSource source)
-            {
-                NativeMethods.ChangeClipboardChain(source.Handle, nextViewer);
-            }
-        }
+        private void Source_Disposed(object? sender, EventArgs e) => Dispose();
 
         private IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
@@ -60,7 +51,7 @@ namespace WClipboard.Core.WPF.Native.Helpers
                     // on to the next window in the clipboard viewer chain.
                     //
                     NativeMethods.SendMessage(nextViewer, msg, wParam, lParam);
-                    manager.ProcessClipboardTrigger(new ClipboardTrigger(DefaultClipboardTriggerTypes.OS, WindowInfoHelper.GetForegroundWindowInfo()));
+                    ClipboardChanged?.Invoke(this, new EventArgs());
                     handled = true;
                     break;
 
@@ -101,6 +92,34 @@ namespace WClipboard.Core.WPF.Native.Helpers
                     break;
             }
             return IntPtr.Zero;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    
+                }
+
+                NativeMethods.ChangeClipboardChain(hiddenWindow.Handle, nextViewer);
+
+                disposedValue = true;
+            }
+        }
+
+        ~ClipboardViewer()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

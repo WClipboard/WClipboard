@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text;
-using WClipboard.Core.WPF.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using WClipboard.Core;
 using WClipboard.Core.Clipboard.Trigger;
+using WClipboard.Windows.Extensions;
+using WClipboard.Windows.Native;
 
-namespace WClipboard.Core.WPF.Native.Helpers
+namespace WClipboard.Windows.Helpers
 {
     public static class WindowInfoHelper
     {

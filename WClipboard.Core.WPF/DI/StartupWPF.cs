@@ -55,6 +55,8 @@ namespace WClipboard.Core.WPF.DI
             services.AddClipboardObjectMetadataFactory<DefaultClipboardObjectMetadataFactory>();
             services.AddFiltersProvider<FormatFiltersProvider>();
             services.AddFiltersProvider<ProgramFiltersProvider>();
+
+            services.AddSingletonWithAutoInject<ClipboardViewerListener>();
         }
 
         void IAfterWPFAppStartupListener.AfterWPFAppStartup()

@@ -5,9 +5,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using WClipboard.Core.Extensions;
 using WClipboard.Core.WPF.Extensions;
 using WClipboard.Core.WPF.ViewModels.Icons;
+using WClipboard.Windows.Extensions;
 //using Symbol = Windows.UI.Xaml.Controls.Symbol;
 
 namespace WClipboard.Core.WPF.CustomControls

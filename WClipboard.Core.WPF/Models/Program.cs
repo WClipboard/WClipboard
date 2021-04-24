@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using WClipboard.Core.Extensions;
-using WClipboard.Core.WPF.Native.Helpers;
+using WClipboard.Windows.Helpers;
 
 namespace WClipboard.Core.WPF.Models
 {

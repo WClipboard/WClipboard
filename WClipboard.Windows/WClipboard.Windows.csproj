@@ -21,10 +21,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!--<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.1" />-->
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\WClipboard.Core\WClipboard.Core.csproj" />
   </ItemGroup>
 

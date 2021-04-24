@@ -5,7 +5,7 @@ using WClipboard.App.Models;
 using WClipboard.App.Setup;
 using WClipboard.Core.DI;
 using WClipboard.Core.WPF.DI;
-using WClipboard.Notifications.DI;
+using WClipboard.Windows.DI;
 using WClipboard.Plugin.DI;
 
 namespace WClipboard.App
@@ -55,7 +55,7 @@ namespace WClipboard.App
         {
             DiContainer.Setup()
                 .Add<StartupCore>()
-                .Add<StartupNotifications>()
+                .Add<StartupWindows>()
                 .Add<StartupWpf>()
                 .Add<StartupPlugin>()
                 .Add<StartupApp>()

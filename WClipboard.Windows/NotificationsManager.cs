@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WClipboard.Core;
 using System.IO;
 
-namespace WClipboard.Notifications
+namespace WClipboard.Windows
 {
     public interface INotificationsManager
     {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
-using WClipboard.Core.WPF.Native.Helpers;
+using WClipboard.Windows.Helpers;
 
 namespace WClipboard.Core.WPF.CustomControls
 {

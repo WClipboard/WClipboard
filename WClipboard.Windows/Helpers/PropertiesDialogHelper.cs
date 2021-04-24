@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using WClipboard.Windows.Native;
 
-namespace WClipboard.Core.WPF.Native.Helpers
+namespace WClipboard.Windows.Helpers
 {
     public static class PropertiesDialogHelper
     {

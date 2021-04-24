@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows.Input;
 using WClipboard.Core.WPF.Clipboard.Implementation.ViewModel;
 using WClipboard.Core.WPF.Clipboard.ViewModel;
-using WClipboard.Core.WPF.Native.Helpers;
+using WClipboard.Windows.Helpers;
 
 namespace WClipboard.Plugin.ClipboardImplementations.Path
 {

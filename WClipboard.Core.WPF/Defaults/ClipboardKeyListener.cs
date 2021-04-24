@@ -7,7 +7,7 @@ using WClipboard.Core.WPF.Clipboard;
 using WClipboard.Core.WPF.Listeners;
 using WClipboard.Core.WPF.Managers;
 using WClipboard.Core.WPF.Models;
-using WClipboard.Core.WPF.Native.Helpers;
+using WClipboard.Windows.Helpers;
 
 namespace WClipboard.Core.WPF.Defaults
 {

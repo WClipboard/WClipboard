@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Input;
-using WClipboard.Core.WPF.Native.Helpers;
+using WClipboard.Windows;
 
 namespace WClipboard.Core.WPF.Listeners
 {
@@ -20,7 +20,7 @@ namespace WClipboard.Core.WPF.Listeners
             lastDownTime = null;
         }
 
-        void IGlobalKeyEventListener.OnEvent(KeyboardHookEventArgs e, ModifierKeys modifierKeys)
+        void IGlobalKeyEventListener.OnEvent(GlobalKeyboardEventArgs e, ModifierKeys modifierKeys)
         {
             if (e.State == KeyStates.Down && modifierKeys == ModifierKeys && e.NotifyKey == Key && !lastDownTime.HasValue)
             {

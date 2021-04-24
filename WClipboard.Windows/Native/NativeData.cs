@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace WClipboard.Core.WPF.Native
+namespace WClipboard.Windows.Native
 {
     [StructLayout(LayoutKind.Sequential)]
     internal struct POINT

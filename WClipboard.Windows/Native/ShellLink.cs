@@ -9,7 +9,7 @@ namespace ShellLinkPlus
     // Modified from http://smdn.jp/programming/tips/createlnk/
     // Originally from http://www.vbaccelerator.com/home/NET/Code/Libraries/Shell_Projects/Creating_and_Modifying_Shortcuts/article.asp
     // Partly based on Sending toast notifications from desktop apps sample
-    public class ShellLink : IDisposable
+    internal class ShellLink : IDisposable
     {
         #region Win32 and COM
 

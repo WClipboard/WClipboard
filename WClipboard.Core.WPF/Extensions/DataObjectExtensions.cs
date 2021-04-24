@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Windows;
-
+using WClipboard.Windows.Helpers;
 using SysClipboard = System.Windows.Clipboard;
 
 namespace WClipboard.Core.WPF.Extensions
@@ -16,12 +16,12 @@ namespace WClipboard.Core.WPF.Extensions
 
         public static void SetShellFileIDList(this IDataObject dataObject, IReadOnlyCollection<string> files)
         {
-            dataObject.SetData(ShellFileIDListFormat, Native.Helpers.ShellIDListHelper.Create(files), true);
+            dataObject.SetData(ShellFileIDListFormat, ShellIDListHelper.Create(files), true);
         }
 
         public static void SetShellFileIDList(this IDataObject dataObject, params string[] files)
         {
-            dataObject.SetData(ShellFileIDListFormat, Native.Helpers.ShellIDListHelper.Create(files), true);
+            dataObject.SetData(ShellFileIDListFormat, ShellIDListHelper.Create(files), true);
         }
 
         public static void SetWClipboardId(this IDataObject dataObject, Guid guid)

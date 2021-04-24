@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WClipboard.Core.Tests", "WC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WClipboard.Core.WPF.Tests", "WClipboard.Core.WPF.Tests\WClipboard.Core.WPF.Tests.csproj", "{0DDE39E4-4653-47A0-A449-062AFFCFBFAB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WClipboard.Notifications", "WClipboard.Notifications\WClipboard.Notifications.csproj", "{37D7853B-D7ED-4DCC-A5F3-D9FDB276C03C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WClipboard.Windows", "WClipboard.Windows\WClipboard.Windows.csproj", "{37D7853B-D7ED-4DCC-A5F3-D9FDB276C03C}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "WClipboard.Setup", "WClipboard.Setup\WClipboard.Setup.vdproj", "{E3E8BBC8-22A5-454F-8FDA-94FA3F1F4093}"
 EndProject

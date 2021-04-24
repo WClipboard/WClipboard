@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows.Media.Imaging;
-using WClipboard.Core.WPF.Extensions;
+using WClipboard.Windows.Extensions;
+using WClipboard.Windows.Native;
 
-namespace WClipboard.Core.WPF.Native.Helpers
+namespace WClipboard.Windows.Helpers
 {
     public enum IconType
     {

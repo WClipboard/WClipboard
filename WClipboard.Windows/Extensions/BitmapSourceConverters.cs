@@ -3,9 +3,9 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using WClipboard.Core.WPF.Native;
+using WClipboard.Windows.Native;
 
-namespace WClipboard.Core.WPF.Extensions
+namespace WClipboard.Windows.Extensions
 {
     public static class BitmapSourceConverters
     {

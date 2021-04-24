@@ -2,6 +2,7 @@
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using WClipboard.Core.DI;
 using Xunit;
 
@@ -18,6 +19,8 @@ namespace WClipboard.Core.Tests.DI
         public IReadOnlyList<string> Args { get; }
 
         public Version Version { get; }
+
+        public Icon Icon { get; }
     }
 
     public class DIContainerTests

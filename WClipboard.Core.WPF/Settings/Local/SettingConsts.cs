@@ -2,7 +2,7 @@
 {
     public static class SettingConsts
     {
-        public const string ThemeKey = "WClipboard.Theme";
+        public const string ThemeKey = "User Interface.Theme";
         public const string ThemeDefaultName = "Default";
     }
 }
