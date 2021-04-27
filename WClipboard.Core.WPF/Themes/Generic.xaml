@@ -53,16 +53,16 @@
 
                             <StackPanel WindowChrome.IsHitTestVisibleInChrome="True" HorizontalAlignment="Right" Orientation="Horizontal" KeyboardNavigation.IsTabStop="False" KeyboardNavigation.DirectionalNavigation="Contained">
                                 <Button Command="{x:Static cc:CustomWindow.Minimize}" Style="{DynamicResource WindowHeaderButton}" ToolTip="Minimize">
-                                    <cc:IconPresenter Icon="MinimizeIcon" Width="16" Height="16" />
+                                    <cc:IconPresenter Icon="WI:0xE921" Width="10" Height="10" />
                                 </Button>
                                 <Button Command="{x:Static cc:CustomWindow.Maximize}" Style="{DynamicResource WindowHeaderButton}" ToolTip="Maximize">
-                                    <cc:IconPresenter Icon="MaximizeIcon" Width="16" Height="16" />
+                                    <cc:IconPresenter Icon="WI:0xE922" Width="10" Height="10" />
                                 </Button>
                                 <Button Command="{x:Static cc:CustomWindow.Restore}" Style="{DynamicResource WindowHeaderButton}" ToolTip="Restore">
-                                    <cc:IconPresenter Icon="RestoreIcon" Width="16" Height="16" />
+                                    <cc:IconPresenter Icon="WI:0xE923" Width="10" Height="10" />
                                 </Button>
                                 <Button Command="{x:Static ApplicationCommands.Close}" Style="{DynamicResource WindowHeaderCloseButton}" ToolTip="Close">
-                                    <cc:IconPresenter Icon="CloseIcon" Width="16" Height="16" />
+                                    <cc:IconPresenter Icon="WI:0xE8BB" Width="10" Height="10" />
                                 </Button>
                             </StackPanel>
                         </Grid>
