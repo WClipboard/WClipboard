@@ -10,7 +10,7 @@ namespace WClipboard.Core.DI
     {
         void IStartup.ConfigureServices(IServiceCollection services, IStartupContext context)
         {
-            context.IOSettingsManager.AddSerializers(new DefaultIOSettingsSerializer());
+            context.IOSettingsManager.AddSerializers(new DefaultIOSettingsSerializer(), new EnumIOSettingsSerializer());
 
             services.AddSingleton<IClipboardFormatCategoriesManager, ClipboardFormatCategoriesManager>();
             services.AddSingleton<IClipboardFormatsManager, ClipboardFormatsManager>();
