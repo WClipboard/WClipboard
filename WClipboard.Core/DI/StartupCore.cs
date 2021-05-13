@@ -3,6 +3,7 @@ using System.Net.Http;
 using WClipboard.Core.Clipboard.Format;
 using WClipboard.Core.IO;
 using WClipboard.Core.Settings.Defaults;
+using WClipboard.Core.Utilities;
 
 namespace WClipboard.Core.DI
 {
@@ -18,6 +19,8 @@ namespace WClipboard.Core.DI
             services.AddSingleton<ITempManager, TempManager>();
 
             services.AddSingleton<HttpClient>();
+
+            services.AddTransient(typeof(ILogger<>), typeof(Logger<>));
         }
     }
 }

@@ -7,6 +7,7 @@ using WClipboard.Core.DI;
 using WClipboard.Core.WPF.DI;
 using WClipboard.Windows.DI;
 using WClipboard.Plugin.DI;
+using System.Windows;
 
 namespace WClipboard.App
 {
@@ -36,13 +37,16 @@ namespace WClipboard.App
                 {
                     installer.Install();
                     return;
-                } 
+                }
+#if DEBUG
+#else
                 else if (installedState == InstalledState.NewerVersionPresent)
                 {
+                    MessageBox.Show($"There is already a newer version of {appInfo.Name} installed, use that version", "Version conflict", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
+#endif
             }
-
 
             if (args.Contains("/nodebug")) {
                 LaunchApp(appInfo);

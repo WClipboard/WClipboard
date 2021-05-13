@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using WClipboard.Core.Clipboard.Format;
 using WClipboard.Core.Clipboard.Trigger;
+using WClipboard.Core.DI;
 using WClipboard.Core.Utilities.Collections;
 using WClipboard.Core.WPF.Clipboard.Implementation;
 using WClipboard.Core.WPF.Clipboard.Trigger;
@@ -43,7 +44,7 @@ namespace WClipboard.Core.WPF.Clipboard
 
         private ResolvedClipboardTrigger? _lastResolvedTrigger;
 
-        public ClipboardObjectsManager(IClipboardFormatsManager formatsManager, IClipboardObjectManager objectManager)
+        public ClipboardObjectsManager(IClipboardFormatsManager formatsManager, IClipboardObjectManager objectManager, IServiceProvider serviceProvider)
         {
             _formatsManager = formatsManager;
             _objectManager = objectManager;
@@ -53,7 +54,7 @@ namespace WClipboard.Core.WPF.Clipboard
 
             _listeners = new List<IClipboardObjectsListener>();
 
-            _clipboardCloner = new ClipboardClonerThread(this);
+            _clipboardCloner = serviceProvider.Create<ClipboardClonerThread>(this);
         }
 
         public Task<ResolvedClipboardTrigger> ProcessClipboardTrigger(ClipboardTrigger trigger)
