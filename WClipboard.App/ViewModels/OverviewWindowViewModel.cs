@@ -31,12 +31,13 @@ namespace WClipboard.App.ViewModels
     {
         private static ClipboardTriggerType? dragAndDropType;
 
+        private readonly OverviewWindow overviewWindow;
+
         private readonly IClipboardObjectsManager clipboardObjectsManager;
         private readonly IClipboardObjectManager clipboardObjectManager;
         private readonly IClipboardFormatsManager clipboardFormatsManager;
         private readonly IInteractablesManager interactablesManager;
         private readonly ITaskbarIcon taskbarIcon;
-        private readonly OverviewWindow _overviewWindow;
         private readonly IIOSetting minimizeToSetting;
 
         private readonly CloseInteractable clipboadObjectViewModelCloseInteractable;
@@ -57,11 +58,18 @@ namespace WClipboard.App.ViewModels
 
         IReadOnlyList<InteractableState> IHasInteractables.Interactables => Interactables;
 
-        public Window Window => _overviewWindow;
+        public Window Window => overviewWindow;
 
         public FilterHelper FilterHelper { get; }
 
-        public OverviewWindowViewModel(OverviewWindow overviewWindow, IServiceProvider serviceProvider)
+        public OverviewWindowViewModel(OverviewWindow overviewWindow, 
+            IClipboardObjectsManager clipboardObjectsManager,
+            IClipboardObjectManager clipboardObjectManager,
+            IClipboardFormatsManager clipboardFormatsManager,
+            IInteractablesManager interactablesManager,
+            ITaskbarIcon taskbarIcon,
+            IIOSettingsManager settingsManager
+            )
         {
             if (dragAndDropType == null)
                 dragAndDropType = new ClipboardTriggerType("Drag and drop", "DragAndDropIcon", ClipboardTriggerSourceType.Extern, 0);
@@ -77,17 +85,16 @@ namespace WClipboard.App.ViewModels
 
             FilterHelper = new FilterHelper(SynchronizationContext, ObjectsView);
 
-            clipboardObjectsManager = serviceProvider.GetRequiredService<IClipboardObjectsManager>();
-            clipboardObjectManager = serviceProvider.GetRequiredService<IClipboardObjectManager>();
-            clipboardFormatsManager = serviceProvider.GetRequiredService<IClipboardFormatsManager>();
-            interactablesManager = serviceProvider.GetRequiredService<IInteractablesManager>();
-            taskbarIcon = serviceProvider.GetRequiredService<ITaskbarIcon>();
+            this.clipboardObjectsManager = clipboardObjectsManager;
+            this.clipboardObjectManager = clipboardObjectManager;
+            this.clipboardFormatsManager = clipboardFormatsManager;
+            this.interactablesManager = interactablesManager;
+            this.taskbarIcon = taskbarIcon;
             taskbarIcon.OnMouseAction += TaskbarIcon_OnMouseAction;
 
-            var settingsManager = serviceProvider.GetRequiredService<IIOSettingsManager>();
             minimizeToSetting = settingsManager.GetSetting(AppUISettingsFactory.MinimizeTo);
 
-            _overviewWindow = overviewWindow;
+            this.overviewWindow = overviewWindow;
             overviewWindow.Loaded += OverviewWindow_Loaded;
             overviewWindow.Closed += OverviewWindow_Closed;
             overviewWindow.DragEnter += OverviewWindow_DragEnter;
@@ -103,9 +110,9 @@ namespace WClipboard.App.ViewModels
 
         private void OverviewWindow_StateChanged(object? sender, EventArgs e)
         {
-            if (_overviewWindow.WindowState == WindowState.Minimized && (minimizeToSetting.Value?.Equals(MinimizeTo.SystemTray) ?? false))
+            if (overviewWindow.WindowState == WindowState.Minimized && (minimizeToSetting.Value?.Equals(MinimizeTo.SystemTray) ?? false))
             {
-                _overviewWindow.ShowInTaskbar = false;
+                overviewWindow.ShowInTaskbar = false;
             }
         }
 
@@ -114,11 +121,11 @@ namespace WClipboard.App.ViewModels
             switch (e.MouseAction)
             {
                 case MouseAction.LeftClick:
-                    if (_overviewWindow.WindowState == WindowState.Minimized)
-                        _overviewWindow.WindowState = WindowState.Normal;
-                    if (!_overviewWindow.ShowInTaskbar)
-                        _overviewWindow.ShowInTaskbar = true;
-                    _overviewWindow.Focus();
+                    if (overviewWindow.WindowState == WindowState.Minimized)
+                        overviewWindow.WindowState = WindowState.Normal;
+                    if (!overviewWindow.ShowInTaskbar)
+                        overviewWindow.ShowInTaskbar = true;
+                    overviewWindow.Focus();
                     break;
             }
         }

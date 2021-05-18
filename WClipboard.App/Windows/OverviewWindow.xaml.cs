@@ -13,7 +13,7 @@ namespace WClipboard.App.Windows
         {
             InitializeComponent();
 
-            DataContext = new OverviewWindowViewModel(this, DiContainer.SP!);
+            DataContext = DiContainer.SP!.Create<OverviewWindowViewModel>(this);
         }
     }
 }

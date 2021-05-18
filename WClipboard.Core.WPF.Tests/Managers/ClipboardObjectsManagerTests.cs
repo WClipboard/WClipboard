@@ -20,12 +20,14 @@ namespace WClipboard.Core.WPF.Tests.Managers
         private readonly Mock<IClipboardFormatsManager> _formatsManagerMock;
         private readonly Mock<IClipboardObjectManager> _clipboardObjectManager;
         private readonly Mock<IClipboardObjectsListener> _listenerMock;
+        private readonly Mock<IServiceProvider> _serviceProviderMock;
 
         public ClipboardObjectsManagerTests()
         {
             _formatsManagerMock = new Mock<IClipboardFormatsManager>();
             _clipboardObjectManager = new Mock<IClipboardObjectManager>();
             _listenerMock = new Mock<IClipboardObjectsListener>();
+            _serviceProviderMock = new Mock<IServiceProvider>();
         }
 
         [Fact]
@@ -38,7 +40,7 @@ namespace WClipboard.Core.WPF.Tests.Managers
             });
 
             //act
-            using (var sut = new ClipboardObjectsManager(_formatsManagerMock.Object, _clipboardObjectManager.Object))
+            using (var sut = new ClipboardObjectsManager(_formatsManagerMock.Object, _clipboardObjectManager.Object, _serviceProviderMock.Object))
             {
                 sut.AddListener(_listenerMock.Object);
                 sut.AddTriggerToQueue();
@@ -65,7 +67,7 @@ namespace WClipboard.Core.WPF.Tests.Managers
             });
 
             //act
-            using (var sut = new ClipboardObjectsManager(_formatsManagerMock.Object, _clipboardObjectManager.Object))
+            using (var sut = new ClipboardObjectsManager(_formatsManagerMock.Object, _clipboardObjectManager.Object, _serviceProviderMock.Object))
             {
                 sut.AddListener(_listenerMock.Object);
                 sut.AddTriggerToQueue();
@@ -96,7 +98,7 @@ namespace WClipboard.Core.WPF.Tests.Managers
             _listenerMock.Setup(x => x.IsInterestedIn(It.IsAny<ClipboardObject>())).Returns(true);
 
             //act
-            using (var sut = new ClipboardObjectsManager(_formatsManagerMock.Object, _clipboardObjectManager.Object))
+            using (var sut = new ClipboardObjectsManager(_formatsManagerMock.Object, _clipboardObjectManager.Object, _serviceProviderMock.Object))
             {
                 sut.AddListener(_listenerMock.Object);
                 sut.AddTriggerToQueue();
@@ -127,7 +129,7 @@ namespace WClipboard.Core.WPF.Tests.Managers
             _listenerMock.Setup(x => x.IsInterestedIn(It.IsAny<ClipboardObject>())).Returns(true);
 
             //act
-            using (var sut = new ClipboardObjectsManager(_formatsManagerMock.Object, _clipboardObjectManager.Object))
+            using (var sut = new ClipboardObjectsManager(_formatsManagerMock.Object, _clipboardObjectManager.Object, _serviceProviderMock.Object))
             {
                 sut.AddListener(_listenerMock.Object);
                 sut.AddTriggerToQueue();
@@ -162,7 +164,7 @@ namespace WClipboard.Core.WPF.Tests.Managers
             _listenerMock.Setup(x => x.IsInterestedIn(It.IsAny<ClipboardObject>())).Returns(true);
 
             //act
-            using (var sut = new ClipboardObjectsManager(_formatsManagerMock.Object, _clipboardObjectManager.Object))
+            using (var sut = new ClipboardObjectsManager(_formatsManagerMock.Object, _clipboardObjectManager.Object, _serviceProviderMock.Object))
             {
                 sut.AddListener(_listenerMock.Object);
                 sut.AddTriggerToQueue();
@@ -197,7 +199,7 @@ namespace WClipboard.Core.WPF.Tests.Managers
             _listenerMock.Setup(x => x.IsInterestedIn(It.IsAny<ClipboardObject>())).Returns(false);
 
             //act
-            using (var sut = new ClipboardObjectsManager(_formatsManagerMock.Object, _clipboardObjectManager.Object))
+            using (var sut = new ClipboardObjectsManager(_formatsManagerMock.Object, _clipboardObjectManager.Object, _serviceProviderMock.Object))
             {
                 sut.AddListener(_listenerMock.Object);
                 sut.AddTriggerToQueue();

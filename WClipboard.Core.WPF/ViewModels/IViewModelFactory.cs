@@ -1,9 +1,5 @@
 ﻿
-#nullable enable
-
-using WClipboard.Core.WPF.ViewModels;
-
-namespace WClipboard.Core.WPF.Utilities
+namespace WClipboard.Core.WPF.ViewModels
 {
     public interface IViewModelFactory
     {

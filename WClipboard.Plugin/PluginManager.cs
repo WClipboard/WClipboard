@@ -32,6 +32,7 @@ namespace WClipboard.Plugin
                 TryLoadPlugin(pluginLocation);
             }
 
+#if DEBUG
             var debugFileName = Path.Combine(pluginDirectory, "debug.txt");
             if (File.Exists(debugFileName))
             {
@@ -48,6 +49,7 @@ namespace WClipboard.Plugin
                     }
                 }
             }
+#endif
         }
 
         private void TryLoadPlugin(string pluginLocation)

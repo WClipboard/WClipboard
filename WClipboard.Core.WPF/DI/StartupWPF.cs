@@ -12,7 +12,6 @@ using WClipboard.Core.WPF.Clipboard;
 using WClipboard.Core.Settings.Defaults;
 using WClipboard.Core.WPF.Themes;
 using WClipboard.Core.WPF.Settings.Local;
-using WClipboard.Core.WPF.Clipboard.Implementation.LinkedContent;
 using WClipboard.Core.WPF.Clipboard.Metadata.Defaults;
 using WClipboard.Core.WPF.Settings.Defaults;
 using WClipboard.Core.WPF.Clipboard.ViewModel.Filters;
@@ -27,6 +26,8 @@ namespace WClipboard.Core.WPF.DI
             context.IOSettingsManager.AddSettings(new KeyedCollectionSetting<string, Theme, IThemesManager>(SettingConsts.ThemeKey, SettingConsts.ThemeDefaultName));
 
 
+            services.AddSingleton<IViewModelFactoriesManager, ViewModelFactoriesManager>();
+
             services.AddSingleton<IImageDownloader, ImageDownloader>();
 
             services.AddSingleton<IClipboardObjectManager, ClipboardObjectManager>();
@@ -34,8 +35,6 @@ namespace WClipboard.Core.WPF.DI
             services.AddSingleton<ITypeDataTemplateManager, TypeDataTemplateManager>();
             services.AddSingleton<IProgramManager, ProgramManager>();
             services.AddSingleton<IFiltersManager, FiltersManager>();
-
-            services.AddSingleton<ILinkedContentFactoriesManagersManager, LinkedContentFactoriesManagersManager>();
 
             services.AddSingleton<IUISettingsManager, UISettingsManager>();
             services.AddSingleton<IThemesManager, ThemesManager>();

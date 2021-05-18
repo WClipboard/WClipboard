@@ -6,15 +6,7 @@
                     xmlns:co="clr-namespace:WClipboard.Core.WPF.Clipboard.ViewModel"
                     xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes">
     <DataTemplate x:Key="NotLinkedImplementationBaseView" DataType="{x:Type im:ClipboardImplementationViewModel}">
-        <StackPanel>
-            <ContentPresenter ContentTemplateSelector="{StaticResource TypeTemplateSelector}" e:CommandsBinding.InputBindings="{Binding Interactables}" HorizontalAlignment="Stretch" />
-            <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MaxHeight="300">
-                <StackPanel>
-                    <cc:ContaineredItemsControl ItemsSource="{Binding LinkedImplementations}" ItemTemplateSelector="{StaticResource TypeTemplateSelector}" ItemContainerStyle="{StaticResource QuoteItemContainerStyle}" />
-                    <cc:ContaineredItemsControl ItemsSource="{Binding LinkedContent}" ItemTemplateSelector="{StaticResource TypeTemplateSelector}" ItemContainerStyle="{StaticResource QuoteItemContainerStyle}" />
-                </StackPanel>
-            </ScrollViewer>
-        </StackPanel>
+        <ContentPresenter ContentTemplateSelector="{StaticResource TypeTemplateSelector}" e:CommandsBinding.InputBindings="{Binding Interactables}" HorizontalAlignment="Stretch" />
     </DataTemplate>
 
     <DataTemplate x:Key="ImplementationHeaderView" DataType="{x:Type im:ClipboardImplementationViewModel}" >

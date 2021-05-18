@@ -6,7 +6,7 @@ using WClipboard.Core.WPF.Clipboard.ViewModel.Filters;
 using WClipboard.Core.WPF.Models;
 using WClipboard.Core.WPF.Settings;
 using WClipboard.Core.WPF.Themes;
-using WClipboard.Core.WPF.Utilities;
+using WClipboard.Core.WPF.ViewModels;
 
 namespace WClipboard.Core.WPF.Extensions
 {
