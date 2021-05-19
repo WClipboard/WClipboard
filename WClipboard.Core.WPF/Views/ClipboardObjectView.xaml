@@ -61,7 +61,7 @@
                     </StackPanel>
                 </ToggleButton>
                 <ItemsControl VerticalAlignment="Stretch" DockPanel.Dock="Right" ItemsSource="{Binding Interactables}" ItemsPanel="{StaticResource ItemsStackPanelHorizontal}" ItemTemplateSelector="{StaticResource TypeTemplateSelector}" />
-                <Thumb VerticalAlignment="Stretch" Cursor="Hand" Background="Transparent" BorderThickness="0" e:DragDropEx.Drag="{Binding }">
+                <Thumb VerticalAlignment="Stretch" Cursor="{StaticResource DragableCursor}" Background="Transparent" BorderThickness="0" e:DragDropEx.Drag="{Binding }">
                     <Thumb.Style>
                         <Style TargetType="Thumb">
                             <Setter Property="Template">

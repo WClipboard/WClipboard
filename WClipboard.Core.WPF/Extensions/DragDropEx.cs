@@ -8,6 +8,8 @@ namespace WClipboard.Core.WPF.Extensions
 {
     public static class DragDropEx
     {
+        //private static readonly Lazy<Cursor> dragCursor = new Lazy<Cursor>(() => DiContainer.SP!.GetRequiredService<ICursorManager>()["Drag"]);
+
         public static DependencyProperty DragProperty = DependencyProperty.RegisterAttached("Drag", typeof(IDragSource), typeof(DragDropEx), new PropertyMetadata(OnDragPropertyChanged));
 
         public static void SetDrag(UIElement target, IDragSource value)
@@ -37,12 +39,20 @@ namespace WClipboard.Core.WPF.Extensions
             if (e.OldValue is null && !(e.NewValue is null))
             {
                 target.MouseMove += Target_MouseMove;
+                //target.GiveFeedback += Target_GiveFeedback;
             }
             else if (!(e.OldValue is null) && e.NewValue is null)
             {
                 target.MouseMove -= Target_MouseMove;
+                //target.GiveFeedback -= Target_GiveFeedback;
             }
         }
+
+        //private static void Target_GiveFeedback(object sender, GiveFeedbackEventArgs e)
+        //{
+        //    Mouse.SetCursor(dragCursor.Value);
+        //    e.Handled = true;
+        //}
 
         private static void DoDrag(UIElement uiElement)
         {
@@ -72,10 +82,12 @@ namespace WClipboard.Core.WPF.Extensions
             if (e.OldValue is null && !(e.NewValue is null))
             {
                 target.DragStarted += Target_DragStarted;
+                //target.GiveFeedback += Target_GiveFeedback;
             }
             else if (!(e.OldValue is null) && e.NewValue is null)
             {
                 target.DragStarted -= Target_DragStarted;
+                //target.GiveFeedback -= Target_GiveFeedback;
             }
         }
 

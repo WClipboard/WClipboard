@@ -25,6 +25,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\drag.cur" />
+    <None Remove="Resources\dragable.cur" />
     <None Remove="Resources\WClipboard.ico" />
     <None Remove="Themes\Light.xaml" />
     <None Remove="Themes\Dark.xaml" />
@@ -42,6 +44,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\drag.cur" />
+    <Resource Include="Resources\dragable.cur" />
     <Resource Include="Resources\WClipboard.ico" />
   </ItemGroup>
 
