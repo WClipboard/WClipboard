@@ -21,7 +21,7 @@ namespace WClipboard.Windows.Native
         //https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-sendmessage
         internal static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
 
-        [DllImport("user32.dll", EntryPoint = "SendMessage", CharSet = CharSet.Auto)]
+        [DllImport("user32.dll", EntryPoint = "SendMessage", CharSet = CharSet.Unicode)]
         //https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-sendmessage
         internal static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, StringBuilder lParam);
 
@@ -74,6 +74,10 @@ namespace WClipboard.Windows.Native
         );
 
         [DllImport("user32.dll")]
+        //https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboardowner
+        internal static extern IntPtr GetClipboardOwner();
+
+        [DllImport("user32.dll")]
         //https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getkeystate
         internal static extern short GetKeyState(int keyCode);
 
@@ -103,7 +107,7 @@ namespace WClipboard.Windows.Native
         #endregion
 
         #region shell32.dll
-        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         //https://docs.microsoft.com/en-us/windows/desktop/api/shellapi/nf-shellapi-shgetfileinfoa
         // If uFlags does not contain EXETYPE or SYSICONINDEX, the return value is nonzero if successful, or zero otherwise.
         // If uFlags contains the EXETYPE flag, the return value specifies the type of the executable file. It will be one of the following values.
@@ -125,7 +129,7 @@ namespace WClipboard.Windows.Native
         internal static extern int SHMultiFileProperties(IDataObject dataObj, int flags);
 
 
-        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         //https://docs.microsoft.com/en-us/windows/desktop/api/shlobj_core/nf-shlobj_core-ilcreatefrompath
         //Use ILFree to free resource
         internal static extern IntPtr ILCreateFromPath(string path);

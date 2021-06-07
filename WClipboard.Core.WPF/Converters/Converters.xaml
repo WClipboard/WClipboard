@@ -45,4 +45,6 @@
     <c:DataTemplateSelectorConverter x:Key="DataTemplateSelectorConverter" DataTemplateSelector="{StaticResource TypeTemplateSelector}" />
 
     <c:DictionaryToItemConverter x:Key="DictionaryToItemConverter" />
+
+    <c:FirstNotNullConverter x:Key="FirstNotNullConverter" />
 </ResourceDictionary>

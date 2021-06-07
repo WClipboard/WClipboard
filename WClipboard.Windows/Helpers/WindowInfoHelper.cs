@@ -11,7 +11,17 @@ namespace WClipboard.Windows.Helpers
 {
     public static class WindowInfoHelper
     {
-        public static WindowInfo? GetForegroundWindowInfo()
+        public static (WindowInfo, ProgramInfo)? GetClipboardOwnerWindowInfo()
+        {
+            var hWnd = NativeMethods.GetClipboardOwner();
+
+            if (hWnd == IntPtr.Zero)
+                return null;
+
+            return GetWindowInfoForHandle(hWnd);
+        }
+
+        public static (WindowInfo, ProgramInfo)? GetForegroundWindowInfo()
         {
             var hWnd = NativeMethods.GetForegroundWindow();
 
@@ -21,19 +31,33 @@ namespace WClipboard.Windows.Helpers
             return GetWindowInfoForHandle(hWnd);
         }
 
-        public static WindowInfo? GetFromWpfWindow(System.Windows.Window window)
+        public static (WindowInfo, ProgramInfo)? GetFromWpfWindow(System.Windows.Window window)
         {
-            var handle = (new System.Windows.Interop.WindowInteropHelper(window)).Handle;
+            var handle = new System.Windows.Interop.WindowInteropHelper(window).Handle;
 
             if (handle == IntPtr.Zero)
                 return null;
 
             NativeMethods.GetWindowThreadProcessId(handle, out var processId);
 
-            return new WindowInfo(window.Title, window.Icon, new ProcessInfo(processId));
+            return (new WindowInfo(window.Title, window.Icon), new ProgramInfo(processId));
         }
 
-        public static WindowInfo? GetWindowInfoForHandle(IntPtr hWnd)
+        public static (WindowInfo?, ProgramInfo)? GetForegroundOrClipboardOwnerInfo()
+        {
+            var forgroundInfo = ((WindowInfo?, ProgramInfo)?)GetForegroundWindowInfo();
+            var clipboardOwnerInfo = GetClipboardOwnerWindowInfo()?.Item2;
+
+            return (forgroundInfo, clipboardOwnerInfo) switch
+            {
+                (var fi, var coi) when fi.HasValue && !(coi is null) => fi.Value.Item2 == coi ? fi : (null, coi),
+                (var fi, _) when fi.HasValue => fi,
+                (_, var coi) when !(coi is null) => (null, coi),
+                _ => null
+            };
+        }
+
+        public static (WindowInfo, ProgramInfo)? GetWindowInfoForHandle(IntPtr hWnd)
         {
             if (hWnd == IntPtr.Zero)
                 return null;
@@ -42,14 +66,14 @@ namespace WClipboard.Windows.Helpers
 
             var process = Process.GetProcessById(processId);
             var iconSource = GetWindowIconSource(hWnd, Core.DI.DiContainer.SP!.GetRequiredService<IAppInfo>().ProcessId == process.Id);
-            string title = GetWindowTitle(hWnd);
+            var title = GetWindowTitle(hWnd);
 
-            return new WindowInfo(title, iconSource, new ProcessInfo(processId));
+            return (new WindowInfo(title, iconSource), new ProgramInfo(processId));
         }
 
         private static string GetWindowTitle(IntPtr hWnd)
         {
-            int titleSize = NativeMethods.SendMessage(hWnd, (int)NativeConsts.Message.WM_GETTEXTLENGTH, IntPtr.Zero, IntPtr.Zero).ToInt32();
+            var titleSize = NativeMethods.SendMessage(hWnd, (int)NativeConsts.Message.WM_GETTEXTLENGTH, IntPtr.Zero, IntPtr.Zero).ToInt32();
 
             if (titleSize == 0)
                 return string.Empty;

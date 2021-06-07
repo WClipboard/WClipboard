@@ -246,7 +246,7 @@ namespace WClipboard.Core.WPF.Tests.Managers
         public static void AddTriggerToQueue(this ClipboardObjectsManager sut, ClipboardTriggerType triggerType = null)
         {
             triggerType ??= new ClipboardTriggerType("Test", "Test", ClipboardTriggerSourceType.Intern, 0);
-            sut.ProcessClipboardTrigger(new ClipboardTrigger(triggerType, new WindowInfo("Test", "Test", new ProcessInfo(Process.GetCurrentProcess()))));
+            sut.ProcessClipboardTrigger(new ClipboardTrigger(triggerType, new ProgramInfo(Process.GetCurrentProcess()), new WindowInfo("Test", "Test")));
         }
     }
 }

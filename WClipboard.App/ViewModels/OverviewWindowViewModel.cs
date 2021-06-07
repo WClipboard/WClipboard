@@ -24,6 +24,7 @@ using WClipboard.Core.WPF.Managers;
 using WClipboard.Core.WPF.Utilities;
 using WClipboard.Core.WPF.ViewModels;
 using WClipboard.Windows;
+using WClipboard.Windows.Helpers;
 
 namespace WClipboard.App.ViewModels
 {
@@ -136,7 +137,7 @@ namespace WClipboard.App.ViewModels
 
             foreach(var service in DiContainer.SP!.GetServices<IAfterMainWindowLoadedListener>())
             {
-                service.AfterMainWindowLoaded();
+                service.AfterMainWindowLoaded(this);
             }
         }
 
@@ -191,7 +192,8 @@ namespace WClipboard.App.ViewModels
             OverviewWindow_DragLeave(sender, e);
             if (e.AllowedEffects.HasFlag(DragDropEffects.Copy))
             {
-                clipboardObjectsManager.ProcessExternalTrigger(new ClipboardTrigger(dragAndDropType!, null), e.Data);
+                var info = WindowInfoHelper.GetFromWpfWindow(Window);
+                var _ = clipboardObjectsManager.ProcessExternalTrigger(new ClipboardTrigger(dragAndDropType!, info?.Item2, info?.Item1), e.Data);
             }
         }
 

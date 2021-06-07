@@ -10,6 +10,7 @@ using WClipboard.Core.Extensions;
 using WClipboard.Core.Utilities;
 using WClipboard.Core.Utilities.Json;
 using WClipboard.Core.WPF.LifeCycle;
+using WClipboard.Core.WPF.ViewModels;
 using WClipboard.Windows.Notifications;
 
 namespace WClipboard.App.Setup
@@ -42,7 +43,7 @@ namespace WClipboard.App.Setup
             this.logger = logger;
         }
 
-        public void AfterMainWindowLoaded()
+        public void AfterMainWindowLoaded(IMainWindowViewModel _)
         {
             Task.Run(CheckForUpdates);
         }

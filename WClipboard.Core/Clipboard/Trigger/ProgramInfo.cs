@@ -4,29 +4,34 @@ using WClipboard.Core.Extensions;
 
 namespace WClipboard.Core.Clipboard.Trigger
 {
-    public class ProcessInfo : IEquatable<ProcessInfo>, IEquatable<Process>
+    public class ProgramInfo : IEquatable<ProgramInfo>, IEquatable<Process>
     {
-        public int Id { get; }
+        public int? ProcessId { get; }
         public string? Path { get; }
 
-        public ProcessInfo(Process process)
+        public ProgramInfo(Process process)
         {
-            Id = process.Id;
+            ProcessId = process.Id;
             Path = process.GetPath();
         }
 
-        public ProcessInfo(int id)
+        public ProgramInfo(int id)
         {
             using (var process = Process.GetProcessById(id))
             {
-                Id = process.Id;
+                ProcessId = process.Id;
                 Path = process.GetPath();
             }
         }
 
+        public ProgramInfo(string path)
+        {
+            Path = path;
+        }
+
         public override bool Equals(object? obj)
         {
-            if (obj is ProcessInfo info)
+            if (obj is ProgramInfo info)
                 return Equals(info);
             else if (obj is Process proc)
                 return Equals(proc);
@@ -34,37 +39,37 @@ namespace WClipboard.Core.Clipboard.Trigger
                 return base.Equals(obj);
         }
 
-        public bool Equals(ProcessInfo? other)
+        public bool Equals(ProgramInfo? other)
         {
-            return !(other is null) && other.Id == Id && other.Path == other.Path;
+            return !(other is null) && other.ProcessId == ProcessId && other.Path == other.Path;
         }
 
         public bool Equals(Process? other)
         {
-            return !(other is null) && Equals(new ProcessInfo(other));
+            return !(other is null) && Equals(new ProgramInfo(other));
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Path);
+            return HashCode.Combine(ProcessId, Path);
         }
 
-        public static bool operator ==(ProcessInfo first, ProcessInfo? second)
+        public static bool operator ==(ProgramInfo first, ProgramInfo? second)
         {
             return first.Equals(second);
         }
 
-        public static bool operator !=(ProcessInfo first, ProcessInfo? second)
+        public static bool operator !=(ProgramInfo first, ProgramInfo? second)
         {
             return !first.Equals(second);
         }
 
-        public static bool operator ==(ProcessInfo first, Process? second)
+        public static bool operator ==(ProgramInfo first, Process? second)
         {
             return first.Equals(second);
         }
 
-        public static bool operator !=(ProcessInfo first, Process? second)
+        public static bool operator !=(ProgramInfo first, Process? second)
         {
             return !first.Equals(second);
         }

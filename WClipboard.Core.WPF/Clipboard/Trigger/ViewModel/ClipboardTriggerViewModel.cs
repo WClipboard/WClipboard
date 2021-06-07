@@ -13,9 +13,9 @@ namespace WClipboard.Core.WPF.Clipboard.Trigger.ViewModel
 
         public ClipboardTriggerViewModel(ClipboardTrigger model) : base(model)
         {
-            if (model.WindowInfo != null)
+            if (!(model.ProgramInfo is null))
             {
-                Program = DiContainer.SP!.GetRequiredService<IProgramManager>().GetProgram(model.WindowInfo.ProcessInfo);
+                Program = DiContainer.SP!.GetRequiredService<IProgramManager>().GetProgram(model.ProgramInfo);
             }
         }
     }

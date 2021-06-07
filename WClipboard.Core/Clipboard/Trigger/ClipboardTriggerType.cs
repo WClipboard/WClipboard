@@ -14,7 +14,7 @@ namespace WClipboard.Core.Clipboard.Trigger
             if (priority < 0)
                 throw new ArgumentOutOfRangeException(nameof(priority), $"The minimal {nameof(priority)} is 0");
             if (source != ClipboardTriggerSourceType.Extern && priority != 0)
-                throw new ArgumentException(nameof(priority), $"The {nameof(priority)} must be 0 if {nameof(source)} is not {nameof(ClipboardTriggerSourceType.Extern)}");
+                throw new ArgumentException($"The {nameof(priority)} must be 0 if {nameof(source)} is not {nameof(ClipboardTriggerSourceType.Extern)}", nameof(priority));
 
             Name = name ?? throw new ArgumentNullException(nameof(name));
             IconSource = iconSource ?? throw new ArgumentNullException(nameof(iconSource));

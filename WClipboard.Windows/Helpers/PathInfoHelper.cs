@@ -15,6 +15,8 @@ namespace WClipboard.Windows.Helpers
 
     public static class PathInfoHelper
     {
+        private static readonly object lockObject = new object();
+
         public static BitmapSource? GetIcon(string fullPath, IconType iconType)
         {
             var info = new SHFILEINFO(true);
@@ -27,9 +29,12 @@ namespace WClipboard.Windows.Helpers
 
             var fileAttributes = NativeConsts.FILE_ATTRIBUTE.Normal;
 
-            if (NativeMethods.SHGetFileInfo(fullPath, fileAttributes, out info, (uint)Marshal.SizeOf(info), flags) != 0 && info.hIcon != IntPtr.Zero)
+            lock (lockObject)
             {
-                return BitmapSourceConverters.ToBitmapSource(info.hIcon);
+                if (NativeMethods.SHGetFileInfo(fullPath, fileAttributes, out info, (uint)Marshal.SizeOf(info), flags) != 0 && info.hIcon != IntPtr.Zero)
+                {
+                    return BitmapSourceConverters.ToBitmapSource(info.hIcon);
+                }
             }
             return null;
         }
@@ -40,9 +45,12 @@ namespace WClipboard.Windows.Helpers
 
             var fileAttributes = NativeConsts.FILE_ATTRIBUTE.Normal;
 
-            if (NativeMethods.SHGetFileInfo(fullPath, fileAttributes, out info, (uint)Marshal.SizeOf(info), NativeConsts.SHGFI.TypeName) != 0 && !string.IsNullOrWhiteSpace(info.szTypeName))
+            lock (lockObject)
             {
-                return info.szTypeName;
+                if (NativeMethods.SHGetFileInfo(fullPath, fileAttributes, out info, (uint)Marshal.SizeOf(info), NativeConsts.SHGFI.TypeName) != 0 && !string.IsNullOrWhiteSpace(info.szTypeName))
+                {
+                    return info.szTypeName;
+                }
             }
             return null;
         }

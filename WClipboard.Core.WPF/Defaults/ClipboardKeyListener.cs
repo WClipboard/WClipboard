@@ -48,7 +48,8 @@ namespace WClipboard.Core.WPF.Defaults
 
             if(!(triggerType is null))
             {
-                _ = _clipboardObjectsManager.ProcessClipboardTrigger(new ClipboardTrigger(triggerType, WindowInfoHelper.GetForegroundWindowInfo(), new TimeKeyDownInfo(pressedTime)));
+                var info = WindowInfoHelper.GetForegroundOrClipboardOwnerInfo();
+                _ = _clipboardObjectsManager.ProcessClipboardTrigger(new ClipboardTrigger(triggerType, info?.Item2, info?.Item1, new TimeKeyDownInfo(pressedTime)));
             }
         }
     }

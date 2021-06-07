@@ -55,7 +55,14 @@
             <DockPanel LastChildFill="True">
                 <ToggleButton VerticalAlignment="Stretch" DockPanel.Dock="Left" IsChecked="{Binding ShowMetadata}" ToolTip="Show metadata">
                     <StackPanel Orientation="Horizontal" e:Spacing.Spacing="3">
-                        <cc:IconPresenter Width="16" Height="16" Icon="{Binding MainTrigger.Model.WindowInfo.IconSource}" ToolTip="{Binding MainTrigger.Program.Name}" />
+                        <cc:IconPresenter Width="16" Height="16" ToolTip="{Binding MainTrigger.Program.Name}">
+                            <cc:IconPresenter.Icon>
+                                <MultiBinding Converter="{StaticResource FirstNotNullConverter}">
+                                    <Binding Path="MainTrigger.Model.WindowInfo.IconSource" />
+                                    <Binding Path="MainTrigger.Program.IconSource" />
+                                </MultiBinding>
+                            </cc:IconPresenter.Icon>
+                        </cc:IconPresenter>
                         <cc:IconPresenter Width="16" Height="16" Icon="{Binding MainTrigger.Model.Type.IconSource}" ToolTip="{Binding MainTrigger.Model.Type.Name}" />
                         <cc:DateTimeSpanPresenter Source="{Binding MainTrigger.Model.When}" />
                     </StackPanel>

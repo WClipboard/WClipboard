@@ -36,6 +36,6 @@ namespace WClipboard.Core.WPF.Managers
 
     public static class IProgramManagerExtensions
     {
-        public static Program GetProgram(this IProgramManager programManager, ProcessInfo processInfo) => programManager.GetProgram(processInfo.Path ?? throw new ArgumentException(nameof(processInfo), $"{nameof(processInfo)}.{nameof(processInfo.Path)} must not be null"));
+        public static Program GetProgram(this IProgramManager programManager, ProgramInfo processInfo) => programManager.GetProgram(processInfo.Path ?? throw new ArgumentException($"{nameof(processInfo)}.{nameof(processInfo.Path)} must not be null", nameof(processInfo)));
     }
 }

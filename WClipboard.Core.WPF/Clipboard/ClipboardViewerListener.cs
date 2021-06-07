@@ -19,7 +19,8 @@ namespace WClipboard.Core.WPF.Clipboard
 
         private void ClipboardViewer_ClipboardChanged(object? sender, EventArgs e)
         {
-            clipboardObjectsManager.ProcessClipboardTrigger(new ClipboardTrigger(DefaultClipboardTriggerTypes.OS, WindowInfoHelper.GetForegroundWindowInfo()));
+            var info = WindowInfoHelper.GetForegroundOrClipboardOwnerInfo();
+            var _ = clipboardObjectsManager.ProcessClipboardTrigger(new ClipboardTrigger(DefaultClipboardTriggerTypes.OS, info?.Item2, info?.Item1));
         }
 
         public void AfterDIContainerBuild()

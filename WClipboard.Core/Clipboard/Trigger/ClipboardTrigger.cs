@@ -9,6 +9,7 @@ namespace WClipboard.Core.Clipboard.Trigger
     {
         public DateTime When { get; }
         public WindowInfo? WindowInfo { get; }
+        public ProgramInfo? ProgramInfo { get; }
 
         public ObservableObjectTypeCollection AdditionalInfo { get; }
 
@@ -19,17 +20,18 @@ namespace WClipboard.Core.Clipboard.Trigger
             set => SetProperty(ref _type, value);
         }
 
-        public ClipboardTrigger(DateTime when, ClipboardTriggerType type, WindowInfo? windowInfo, IEnumerable<object> additionalInfo)
+        public ClipboardTrigger(DateTime when, ClipboardTriggerType type, ProgramInfo? programInfo, WindowInfo? windowInfo, IEnumerable<object> additionalInfo)
         {
             When = when;
             WindowInfo = windowInfo;
+            ProgramInfo = programInfo;
             _type = type;
             AdditionalInfo = new ObservableObjectTypeCollection(additionalInfo ?? Array.Empty<object>());
         }
 
-        public ClipboardTrigger(DateTime when, ClipboardTriggerType type, WindowInfo? windowInfo, params object[] additionalInfo) : this(when, type, windowInfo, (IEnumerable<object>)additionalInfo) { }
-        public ClipboardTrigger(ClipboardTriggerType type, WindowInfo? windowInfo, IEnumerable<object> additionalInfo) : this(DateTime.Now, type, windowInfo, additionalInfo) { }
-        public ClipboardTrigger(ClipboardTriggerType type, WindowInfo? windowInfo, params object[] additionalInfo) : this(DateTime.Now, type, windowInfo, additionalInfo) { }
+        public ClipboardTrigger(DateTime when, ClipboardTriggerType type, ProgramInfo? programInfo, WindowInfo? windowInfo, params object[] additionalInfo) : this(when, type, programInfo, windowInfo, (IEnumerable<object>)additionalInfo) { }
+        public ClipboardTrigger(ClipboardTriggerType type, ProgramInfo? programInfo, WindowInfo? windowInfo, IEnumerable<object> additionalInfo) : this(DateTime.Now, type, programInfo, windowInfo, additionalInfo) { }
+        public ClipboardTrigger(ClipboardTriggerType type, ProgramInfo? programInfo, WindowInfo? windowInfo, params object[] additionalInfo) : this(DateTime.Now, type, programInfo, windowInfo, additionalInfo) { }
 
         public bool TryMerge(ClipboardTrigger other)
         {
