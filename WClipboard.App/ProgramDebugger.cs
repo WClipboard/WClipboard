@@ -12,7 +12,7 @@ namespace WClipboard.App
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
         internal static extern int SendMessage(IntPtr hWnd, int uMsg, int wParam, string lParam);
 
-        private readonly Process? program;
+        private readonly Process program;
 
         private ProgramDebugger(AppInfo appInfo)
         {
@@ -21,7 +21,7 @@ namespace WClipboard.App
                 RedirectStandardError = true,
                 UseShellExecute = false
             };
-            program = Process.Start(info);
+            program = Process.Start(info) ?? throw new Exception($"Could not start {appInfo.Name}");
         }
 
         internal static void Run(AppInfo appInfo)
@@ -32,9 +32,6 @@ namespace WClipboard.App
 
         private void Run()
         {
-            if (program is null)
-                return;
-
             program.WaitForExit();
 
             if(program.ExitCode != 0)
@@ -45,7 +42,7 @@ namespace WClipboard.App
 
         private void ShowError()
         {
-            var errorData = "Oops! WClipboard crashed :(\n\n ###### Error log: ######" + program?.StandardError.ReadToEnd();
+            var errorData = $"Oops! WClipboard crashed :(\nExit Code: {program.ExitCode}\n\n###### Error log: ######\n{program.StandardError.ReadToEnd()}";
 
             var notepad = Process.Start("notepad");
             notepad.WaitForInputIdle();
