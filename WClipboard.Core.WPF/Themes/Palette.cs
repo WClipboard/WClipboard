@@ -8,6 +8,9 @@ namespace WClipboard.Core.WPF.Themes
 {
     public class Palette
     {
+        private const string DARK_TEXT_KEY = "DarkText";
+        private const string LIGHT_TEXT_KEY = "LightText";
+
         private static readonly string[] _supportedTypes = new[] { nameof(Brush), nameof(Color) };
 
         public static readonly DependencyProperty ActiveProperty = DependencyProperty.RegisterAttached("Active", typeof(object), typeof(Palette), new FrameworkPropertyMetadata(OnActivePropertyChanged), IsValidPalette);
@@ -40,9 +43,37 @@ namespace WClipboard.Core.WPF.Themes
                     palette = frameworkElement.TryFindResource<Palette>(resource + nameof(Palette));
                 }
 
-                ResetResource(frameworkElement, nameof(Foreground), palette?.Foreground);
+                //Do something with foreground
+                ResetResource(frameworkElement, nameof(Foreground), palette?.Foreground ?? GetResolvedTextColor(frameworkElement, palette?.Background));
                 ResetResource(frameworkElement, nameof(Background), palette?.Background);
                 ResetResource(frameworkElement, nameof(Border), palette?.Border);
+            }
+        }
+
+        private static string? GetResolvedTextColor(FrameworkElement frameworkElement, string? background)
+        {
+            if (background is null ||
+                !TryGetColor(frameworkElement, LIGHT_TEXT_KEY, out var lightColor) ||
+                !TryGetColor(frameworkElement, DARK_TEXT_KEY, out var darkColor) ||
+                !TryGetColor(frameworkElement, background, out var backgroundColor) ||
+                backgroundColor.A != 255)
+                return null;
+
+            var lightContrast = ColorExtensions.ContrastWith(lightColor, backgroundColor);
+            var darkContrast = ColorExtensions.ContrastWith(darkColor, backgroundColor);
+
+            return lightContrast > darkContrast ? LIGHT_TEXT_KEY : DARK_TEXT_KEY;
+        }
+
+        private static bool TryGetColor(FrameworkElement frameworkElement, string resource, out Color color)
+        {
+            if (frameworkElement.TryFindResource(resource + "Color", out color)) {
+                return true;
+            } else if (frameworkElement.TryFindResource(resource + "Brush", out Brush brush) && brush is SolidColorBrush sBrush) {
+                color = sBrush.Color;
+                return true;
+            } else {
+                return false;
             }
         }
 
@@ -52,13 +83,13 @@ namespace WClipboard.Core.WPF.Themes
             {
                 string resourceName = $"{nameof(Palette)}{propertyName}{type}";
 
-                if (propertyValue != null)
+                if (propertyValue is null)
                 {
-                    frameworkElement.Resources[resourceName] = frameworkElement.FindResource($"{propertyValue}{type}");
+                    frameworkElement.Resources.Remove(resourceName);
                 }
                 else
                 {
-                    frameworkElement.Resources.Remove(resourceName);
+                    frameworkElement.Resources[resourceName] = frameworkElement.FindResource($"{propertyValue}{type}");
                 }
             }
         }

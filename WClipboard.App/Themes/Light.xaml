@@ -3,7 +3,9 @@
                     xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes;assembly=WClipboard.Core.WPF">
     <!-- https://material.io/design/color/the-color-system.html -->
     <!-- https://material.io/tools/color/#!/?view.left=0&view.right=0&secondary.color=561F02&primary.color=2196F3 -->
-
+    <Color x:Key="LightTextColor">#FFFFFFFF</Color>
+    <Color x:Key="DarkTextColor">#FF000000</Color>
+    
     <Color x:Key="PrimaryColor">#FF2196F3</Color>
     <Color x:Key="PrimaryBColor">#FF6EC6FF</Color>
     <Color x:Key="PrimaryBIColor">#FF0069C0</Color>
@@ -20,17 +22,8 @@
     <Color x:Key="ErrorColor">#FFC51162</Color>
     <Color x:Key="WarningColor">#FFFFC107</Color>
 
-    <Color x:Key="OnPrimaryColor">#FF000000</Color>
-    <Color x:Key="OnSecondaryColor">#FFFFFFFF</Color>
-
-    <Color x:Key="OnContentColor">#FF000000</Color>
-    <Color x:Key="OnSurfaceColor">#FF000000</Color>
-    <Color x:Key="OnUIElementColor">#FF000000</Color>
-
-    <Color x:Key="OnInfoColor">#FF000000</Color>
-    <Color x:Key="OnErrorColor">#FFFFFFFF</Color>
-    <Color x:Key="OnWarningColor">#FF000000</Color>
-
+    <SolidColorBrush x:Key="LightTextBrush" Color="{StaticResource LightTextColor}" />
+    <SolidColorBrush x:Key="DarkTextBrush" Color="{StaticResource DarkTextColor}" />
 
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}" />
     <SolidColorBrush x:Key="PrimaryBIBrush" Color="{StaticResource PrimaryBIColor}" />
@@ -48,26 +41,15 @@
     <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}" />
     <SolidColorBrush x:Key="InfoBrush" Color="{StaticResource InfoColor}" />
 
-    <SolidColorBrush x:Key="OnPrimaryBrush" Color="{StaticResource OnPrimaryColor}" />
-    <SolidColorBrush x:Key="OnSecondaryBrush" Color="{StaticResource OnSecondaryColor}" />
+    <t:Palette x:Key="PrimaryPalette" Background="Primary" />
+    <t:Palette x:Key="SecondaryPalette" Background="Secondary" />
+    <t:Palette x:Key="ContentPalette" Background="Content" />
+    <t:Palette x:Key="SurfacePalette" Background="Surface" />
+    <t:Palette x:Key="UIElementPalette" Background="UIElement" />
 
-    <SolidColorBrush x:Key="OnContentBrush" Color="{StaticResource OnContentColor}" />
-    <SolidColorBrush x:Key="OnSurfaceBrush" Color="{StaticResource OnSurfaceColor}" />
-    <SolidColorBrush x:Key="OnUIElementBrush" Color="{StaticResource OnUIElementColor}" />
-
-    <SolidColorBrush x:Key="OnErrorBrush" Color="{StaticResource OnErrorColor}" />
-    <SolidColorBrush x:Key="OnWarningBrush" Color="{StaticResource OnWarningColor}" />
-    <SolidColorBrush x:Key="OnInfoBrush" Color="{StaticResource OnInfoColor}" />
-
-    <t:Palette x:Key="PrimaryPalette" Background="Primary" Foreground="OnPrimary" />
-    <t:Palette x:Key="SecondaryPalette" Background="Secondary" Foreground="OnSecondary" />
-    <t:Palette x:Key="ContentPalette" Background="Content" Foreground="OnContent" />
-    <t:Palette x:Key="SurfacePalette" Background="Surface" Foreground="OnSurface" />
-    <t:Palette x:Key="UIElementPalette" Background="UIElement" Foreground="OnUIElement" />
-
-    <t:Palette x:Key="ErrorPalette" Background="Error" Foreground="OnError" />
-    <t:Palette x:Key="WarningPalette" Background="Warning" Foreground="OnWarning" />
-    <t:Palette x:Key="InfoPalette" Background="Info" Foreground="OnInfo" />
+    <t:Palette x:Key="ErrorPalette" Background="Error" />
+    <t:Palette x:Key="WarningPalette" Background="Warning" />
+    <t:Palette x:Key="InfoPalette" Background="Info" />
 
     <Color x:Key="RedColor">Red</Color>
     <SolidColorBrush x:Key="RedBrush" Color="{StaticResource RedColor}" />

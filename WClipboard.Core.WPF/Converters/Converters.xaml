@@ -47,4 +47,6 @@
     <c:DictionaryToItemConverter x:Key="DictionaryToItemConverter" />
 
     <c:FirstNotNullConverter x:Key="FirstNotNullConverter" />
+
+    <c:ContrastTextColorConverter x:Key="ContrastTextColorConverter" />
 </ResourceDictionary>

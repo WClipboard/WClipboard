@@ -89,7 +89,7 @@ namespace WClipboard.Core.WPF.Themes
                 else if (targetObject is FrameworkContentElement fce)
                 {
                     //Walk up the path to find a framework element
-                    var parentTree = RecursiveEnumerable.Get((object?)fce, (fce => (fce as FrameworkContentElement)?.Parent), null);
+                    var parentTree = RecursiveEnumerable.Get((object?)fce, fce => (fce as FrameworkContentElement)?.Parent, null);
                     element = parentTree.FirstOrDefault(i => i is FrameworkElement) as FrameworkElement;
                     if (element != null)
                     {
@@ -129,7 +129,7 @@ namespace WClipboard.Core.WPF.Themes
             }
 
             return resource;
-        } 
+        }
 
         private string GetResourceKey(DependencyProperty? dp)
         {

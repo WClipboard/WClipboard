@@ -63,7 +63,7 @@
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="t:Palette.Active" Value="Primay" />
                             <Setter Property="Background" Value="{t:FromPalette PrimaryB}" />
-                            <Setter Property="Foreground" Value="{t:FromPalette OnPrimary}" />
+                            <Setter Property="Foreground" Value="{t:FromPalette PrimaryB, Converter={StaticResource ContrastTextColorConverter}}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.5" />
