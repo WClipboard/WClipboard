@@ -19,7 +19,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type ctvm:ClipboardTriggerViewModel}">
                         <StackPanel Orientation="Horizontal" e:Spacing.Spacing="2">
-                            <cc:IconPresenter Width="16" Height="16" Icon="{Binding Model.WindowInfo.IconSource}" ToolTip="{Binding Program.Name}" />
+                            <cc:IconPresenter Width="16" Height="16" ToolTip="{Binding Title}" Icon="{Binding IconSource}" />
                             <cc:IconPresenter Width="16" Height="16" Icon="{Binding Model.Type.IconSource}" ToolTip="{Binding Model.Type.Name}" />
                             <TextBlock Text="{Binding Model.When, StringFormat=HH:mm:ss}" />
                         </StackPanel>
@@ -40,6 +40,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
@@ -50,13 +51,17 @@
                             <TextBlock VerticalAlignment="Center" Text="On:" />
                             <TextBlock Grid.ColumnSpan="2" VerticalAlignment="Center" Text="{Binding Model.When, StringFormat='HH:mm:ss, dd-MM-yyyy'}" />
 
-                            <TextBlock VerticalAlignment="Center" Text="App:" />
-                            <cc:IconPresenter VerticalAlignment="Center" Width="16" Height="16" Icon="{Binding Program.IconSource}" />
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Program.Name}" TextWrapping="Wrap" />
+                            <TextBlock VerticalAlignment="Center" Text="Active App:" />
+                            <cc:IconPresenter VerticalAlignment="Center" Width="16" Height="16" Icon="{Binding ForegroundProgram.IconSource}" />
+                            <TextBlock VerticalAlignment="Center" Text="{Binding ForegroundProgram.Name}" TextWrapping="Wrap" />
 
-                            <TextBlock VerticalAlignment="Center" Text="Window:" />
-                            <cc:IconPresenter VerticalAlignment="Center" Width="16" Height="16" Icon="{Binding Model.WindowInfo.IconSource}" />
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Model.WindowInfo.Title}" TextWrapping="Wrap" />
+                            <TextBlock VerticalAlignment="Center" Text="Active Window:" />
+                            <cc:IconPresenter VerticalAlignment="Center" Width="16" Height="16" Icon="{Binding Model.ForegroundWindow.IconSource}" />
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Model.ForegroundWindow.Title}" TextWrapping="Wrap" />
+
+                            <TextBlock VerticalAlignment="Center" Text="Data Source:" />
+                            <cc:IconPresenter VerticalAlignment="Center" Width="16" Height="16" Icon="{Binding DataSourceProgram.IconSource}" />
+                            <TextBlock VerticalAlignment="Center" Text="{Binding DataSourceProgram.Name}" TextWrapping="Wrap" />
                         </Grid>
                     </DataTemplate>
                 </ContentControl.ContentTemplate>

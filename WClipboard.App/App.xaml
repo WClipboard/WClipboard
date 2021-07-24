@@ -37,7 +37,7 @@
                 <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Styles/TextBoxes.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Styles/TreeViewItems.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Styles/DateTimeSpanPresenters.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Views/ClipboardObjectView.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WClipboard.Core.WPF;component/Clipboard/ClipboardObjectView.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

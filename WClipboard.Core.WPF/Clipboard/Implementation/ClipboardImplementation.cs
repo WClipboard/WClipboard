@@ -1,6 +1,7 @@
 ﻿using System;
 using WClipboard.Core.Clipboard.Format;
 using WClipboard.Core.Utilities;
+using WClipboard.Core.WPF.Clipboard.Format;
 
 namespace WClipboard.Core.WPF.Clipboard.Implementation
 {

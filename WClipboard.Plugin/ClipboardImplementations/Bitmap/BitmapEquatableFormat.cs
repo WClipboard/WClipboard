@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Security.Cryptography;
 using System.Windows.Media.Imaging;
 using WClipboard.Core.Clipboard.Format;
-using WClipboard.Core.WPF.Clipboard.Implementation;
+using WClipboard.Core.WPF.Clipboard.Format;
 using WClipboard.Core.WPF.Extensions;
 
 namespace WClipboard.Plugin.ClipboardImplementations.Bitmap
@@ -15,7 +14,7 @@ namespace WClipboard.Plugin.ClipboardImplementations.Bitmap
 
         private byte[] hash = null;
 
-        public BitmapEquatableFormat(ClipboardImplementationFactory factory, Type implementationType, ClipboardFormat format, BitmapSource bitmapSource) : base(factory, implementationType, format)
+        public BitmapEquatableFormat(ClipboardFormat format, BitmapSource bitmapSource) : base(format)
         {
             BitmapSource = bitmapSource;
             Size = new IntSize(bitmapSource.PixelWidth, bitmapSource.PixelHeight);

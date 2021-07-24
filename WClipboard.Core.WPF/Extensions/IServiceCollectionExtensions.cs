@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using WClipboard.Core.WPF.Clipboard.Filter;
+using WClipboard.Core.WPF.Clipboard.Format;
 using WClipboard.Core.WPF.Clipboard.Implementation;
 using WClipboard.Core.WPF.Clipboard.Implementation.ViewModel;
 using WClipboard.Core.WPF.Clipboard.Metadata;
@@ -53,6 +55,16 @@ namespace WClipboard.Core.WPF.Extensions
         public static void AddFiltersProvider<TFiltersProvider>(this IServiceCollection services) where TFiltersProvider : class, IFiltersProvider
         {
             services.AddSingleton<IFiltersProvider, TFiltersProvider>();
+        }
+
+        public static void AddFormatsExtractor<TFormatsExtractor>(this IServiceCollection services) where TFormatsExtractor : class, IFormatsExtractor
+        {
+            services.AddSingleton<IFormatsExtractor, TFormatsExtractor>();
+        }
+
+        public static void AddClipboardFilter<TClipboardFilter>(this IServiceCollection services) where TClipboardFilter : class, IClipboardFilter
+        {
+            services.AddSingleton<IClipboardFilter, TClipboardFilter>();
         }
     }
 }

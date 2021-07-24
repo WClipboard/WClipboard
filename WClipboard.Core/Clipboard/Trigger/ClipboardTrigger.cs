@@ -8,8 +8,9 @@ namespace WClipboard.Core.Clipboard.Trigger
     public sealed class ClipboardTrigger : BindableBase
     {
         public DateTime When { get; }
-        public WindowInfo? WindowInfo { get; }
-        public ProgramInfo? ProgramInfo { get; }
+        public WindowInfo? ForegroundWindow { get; }
+        public ProgramInfo? ForegroundProgram { get; }
+        public ProgramInfo? DataSourceProgram { get; }
 
         public ObservableObjectTypeCollection AdditionalInfo { get; }
 
@@ -20,46 +21,28 @@ namespace WClipboard.Core.Clipboard.Trigger
             set => SetProperty(ref _type, value);
         }
 
-        public ClipboardTrigger(DateTime when, ClipboardTriggerType type, ProgramInfo? programInfo, WindowInfo? windowInfo, IEnumerable<object> additionalInfo)
+        public ClipboardTrigger(DateTime when, ClipboardTriggerType type, ProgramInfo? dataSourceProgram, ProgramInfo? foregroundProgram, WindowInfo? foregroundWindow, IEnumerable<object> additionalInfo)
         {
             When = when;
-            WindowInfo = windowInfo;
-            ProgramInfo = programInfo;
+            ForegroundWindow = foregroundWindow;
+            ForegroundProgram = foregroundProgram;
+            DataSourceProgram = dataSourceProgram;
             _type = type;
             AdditionalInfo = new ObservableObjectTypeCollection(additionalInfo ?? Array.Empty<object>());
         }
 
-        public ClipboardTrigger(DateTime when, ClipboardTriggerType type, ProgramInfo? programInfo, WindowInfo? windowInfo, params object[] additionalInfo) : this(when, type, programInfo, windowInfo, (IEnumerable<object>)additionalInfo) { }
-        public ClipboardTrigger(ClipboardTriggerType type, ProgramInfo? programInfo, WindowInfo? windowInfo, IEnumerable<object> additionalInfo) : this(DateTime.Now, type, programInfo, windowInfo, additionalInfo) { }
-        public ClipboardTrigger(ClipboardTriggerType type, ProgramInfo? programInfo, WindowInfo? windowInfo, params object[] additionalInfo) : this(DateTime.Now, type, programInfo, windowInfo, additionalInfo) { }
+        public ClipboardTrigger(DateTime when, ClipboardTriggerType type, ProgramInfo? dataSourceProgram, ProgramInfo? foregroundProgram, WindowInfo? foregroundWindow, params object[] additionalInfo) : this(when, type, dataSourceProgram, foregroundProgram, foregroundWindow, (IEnumerable<object>)additionalInfo) { }
+        public ClipboardTrigger(ClipboardTriggerType type, ProgramInfo? dataSourceProgram, ProgramInfo? foregroundProgram, WindowInfo? foregroundWindow, IEnumerable<object> additionalInfo) : this(DateTime.Now, type, dataSourceProgram, foregroundProgram, foregroundWindow, additionalInfo) { }
+        public ClipboardTrigger(ClipboardTriggerType type, ProgramInfo? dataSourceProgram, ProgramInfo? foregroundProgram, WindowInfo? foregroundWindow, params object[] additionalInfo) : this(DateTime.Now, type, dataSourceProgram, foregroundProgram, foregroundWindow, additionalInfo) { }
 
-        public bool TryMerge(ClipboardTrigger other)
+        public void Merge(ClipboardTrigger other)
         {
-            switch (Type.Source)
-            {
-                case ClipboardTriggerSourceType.Custom: //Custom cannot be merged
-                case ClipboardTriggerSourceType.Extern: //Extern cannot be merged
-                    return false;
-                //case ClipboardTriggerSourceType.Extern when other.Type.Source != ClipboardTriggerSourceType.Extern: //Extern can only be overwritten by extern with higher priority
-                //    return false;
-                case ClipboardTriggerSourceType.Intern when other.Type.Source == ClipboardTriggerSourceType.Custom: //Intern can be overwritten by intern with higher priority or by an extern
-                    return false;
-                default:
-                    if (Type.Priority > other.Type.Priority || When.AddMilliseconds(other.Type.Priority) < other.When) //If same type check if higher priority
-                        return false;
-                    break;
-            }
-
-            //All validation passed, we can merge now
-
             Type = other.Type;
 
             foreach(var ai in other.AdditionalInfo)
             {
                 AdditionalInfo.Add(ai);
             }
-
-            return true;
         }
     }
 }

@@ -40,6 +40,7 @@ namespace WClipboard.App.ViewModels
         private readonly IInteractablesManager interactablesManager;
         private readonly ITaskbarIcon taskbarIcon;
         private readonly IIOSetting minimizeToSetting;
+        private readonly IProgramManager programManager;
 
         private readonly CloseInteractable clipboadObjectViewModelCloseInteractable;
 
@@ -69,11 +70,12 @@ namespace WClipboard.App.ViewModels
             IClipboardFormatsManager clipboardFormatsManager,
             IInteractablesManager interactablesManager,
             ITaskbarIcon taskbarIcon,
-            IIOSettingsManager settingsManager
+            IIOSettingsManager settingsManager,
+            IProgramManager programManager
             )
         {
             if (dragAndDropType == null)
-                dragAndDropType = new ClipboardTriggerType("Drag and drop", "DragAndDropIcon", ClipboardTriggerSourceType.Extern, 0);
+                dragAndDropType = new CustomClipboardTriggerType("Drag and drop", "DragAndDropIcon");
 
             SynchronizationContext = SynchronizationContext.Current!;
 
@@ -90,6 +92,7 @@ namespace WClipboard.App.ViewModels
             this.clipboardObjectManager = clipboardObjectManager;
             this.clipboardFormatsManager = clipboardFormatsManager;
             this.interactablesManager = interactablesManager;
+            this.programManager = programManager;
             this.taskbarIcon = taskbarIcon;
             taskbarIcon.OnMouseAction += TaskbarIcon_OnMouseAction;
 
@@ -156,7 +159,7 @@ namespace WClipboard.App.ViewModels
 
         private void Add(ClipboardObject clipboardObject)
         {
-            var viewModel = new ClipboardObjectViewModel(clipboardObject, this, clipboardObjectManager, interactablesManager, SynchronizationContext);
+            var viewModel = new ClipboardObjectViewModel(clipboardObject, this, clipboardObjectManager, interactablesManager, programManager, SynchronizationContext);
 
             Objects.Insert(0, viewModel);
 
@@ -193,7 +196,7 @@ namespace WClipboard.App.ViewModels
             if (e.AllowedEffects.HasFlag(DragDropEffects.Copy))
             {
                 var info = WindowInfoHelper.GetFromWpfWindow(Window);
-                var _ = clipboardObjectsManager.ProcessExternalTrigger(new ClipboardTrigger(dragAndDropType!, info?.Item2, info?.Item1), e.Data);
+                var _ = clipboardObjectsManager.ProcessClipboardTrigger(new ClipboardTrigger(dragAndDropType!, null, info?.Item2, info?.Item1), e.Data);
             }
         }
 
@@ -234,7 +237,7 @@ namespace WClipboard.App.ViewModels
 
         bool IClipboardObjectsListener.CanRemove(ClipboardObject clipboardObject, ClipboardObjectRemoveType type)
         {
-            if(type == ClipboardObjectRemoveType.Manual)
+            if (type == ClipboardObjectRemoveType.Manual)
             {
                 return !Objects.Any(vm => vm.Model == clipboardObject);
             }

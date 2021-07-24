@@ -7,7 +7,7 @@ namespace WClipboard.Core.Settings
     public interface IIOSettingsSerializer
     {
         IEnumerable<Type> SupportedTypes { get; }
-        void Serialize(object? value, XmlElement settingElement);
-        object? Deserialize(Type type, XmlElement settingElement);
+        void Serialize(object? value, XmlElement settingElement, IIOSettingsManager settingsManager);
+        object? Deserialize(Type type, XmlElement settingElement, IIOSettingsManager settingsManager);
     }
 }

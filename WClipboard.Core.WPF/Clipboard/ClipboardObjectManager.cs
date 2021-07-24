@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using WClipboard.Core.Clipboard.Format;
 using WClipboard.Core.Extensions;
+using WClipboard.Core.WPF.Clipboard.Format;
 using WClipboard.Core.WPF.Clipboard.Implementation;
 using WClipboard.Core.WPF.Clipboard.Implementation.ViewModel;
 using WClipboard.Core.WPF.Clipboard.Metadata;
@@ -16,7 +17,6 @@ namespace WClipboard.Core.WPF.Clipboard
 {
     public interface IClipboardObjectManager
     {
-        IReadOnlyList<EqualtableFormat> GetEqualtableFormats(DataObject dataObject);
         Task AddImplementationsAsync(ClipboardObject clipboardObject, IEnumerable<EqualtableFormat> equaltableFormats);
         Task AddImplementationsAsync(ClipboardObject clipboardObject, Stream stream, ClipboardFormat format);
         IAsyncEnumerable<ClipboardImplementation> CreateLinkedImplementationsAsync(DataObject dataObject, ClipboardImplementation implementation);
@@ -43,26 +43,14 @@ namespace WClipboard.Core.WPF.Clipboard
             _interactablesManager = interactablesManager;
         }
 
-        public IReadOnlyList<EqualtableFormat> GetEqualtableFormats(DataObject dataObject)
-        {
-            var formats = new List<EqualtableFormat>();
-
-            foreach(var factory in _implementationFactories)
-            {
-                formats.AddRange(factory.CreateEquatables(dataObject) ?? Enumerable.Empty<EqualtableFormat>());
-            }
-
-            return formats;
-        }
-
         public async Task AddImplementationsAsync(ClipboardObject clipboardObject, IEnumerable<EqualtableFormat> equaltableFormats)
         {
-            await Task.WhenAll(equaltableFormats.Select(ef => AddImplementationAsync(clipboardObject, ef))).ConfigureAwait(false);
+            await Task.WhenAll(equaltableFormats.Select(ef => AddImplementationsAsync(clipboardObject, ef))).ConfigureAwait(false);
         }
 
-        private async Task AddImplementationAsync(ClipboardObject clipboardObject, EqualtableFormat equatableFormat)
+        private async Task AddImplementationsAsync(ClipboardObject clipboardObject, EqualtableFormat equatableFormat)
         {
-            clipboardObject.Implementations.Add(await equatableFormat.Factory.CreateFromEquatable(clipboardObject, equatableFormat).ConfigureAwait(false));
+            clipboardObject.Implementations.AddRange((await Task.WhenAll(_implementationFactories.Select(f => f.CreateFromEquatable(clipboardObject, equatableFormat))).ConfigureAwait(false)).NotNull());
         }
 
         public async Task AddImplementationsAsync(ClipboardObject clipboardObject, Stream stream, ClipboardFormat format)

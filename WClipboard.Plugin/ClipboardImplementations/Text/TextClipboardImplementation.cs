@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using WClipboard.Core.Clipboard.Format;
 using WClipboard.Core.DI;
 using WClipboard.Core.WPF.Clipboard;
+using WClipboard.Core.WPF.Clipboard.Format;
 using WClipboard.Core.WPF.Clipboard.Implementation;
 using WClipboard.Plugin.ClipboardImplementations.Text.LinkedContent;
 
@@ -30,7 +31,7 @@ namespace WClipboard.Plugin.ClipboardImplementations.Text
             Task.Run(() => DiContainer.SP!.GetRequiredService<LinkedTextContentFactoriesManager>().ProvideAsync(this));
         }
 
-        public TextClipboardImplementation(ClipboardObject clipboardObject, TextEquatableFormat source) : base(source.Format, source.Factory, clipboardObject)
+        public TextClipboardImplementation(ClipboardObject clipboardObject, ClipboardImplementationFactory factory, TextEquatableFormat source) : base(source.Format, factory, clipboardObject)
         {
             Source = source.Text;
             LinkedContent = new ObservableCollection<ILinkedTextContent>();

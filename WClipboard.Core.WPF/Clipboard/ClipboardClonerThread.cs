@@ -36,7 +36,7 @@ namespace WClipboard.Core.WPF.Clipboard
             {
                 try
                 {
-                    queueItem.Task.SetResult(_clipboardObjectsManager.ProcessExternalTrigger(queueItem.Trigger, SysClipboard.GetDataObject()));
+                    queueItem.Task.SetResult(_clipboardObjectsManager.ProcessClipboardTrigger(queueItem.Trigger, SysClipboard.GetDataObject()));
                 }
                 catch(Exception ex)
                 {

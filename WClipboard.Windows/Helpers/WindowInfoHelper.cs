@@ -43,20 +43,6 @@ namespace WClipboard.Windows.Helpers
             return (new WindowInfo(window.Title, window.Icon), new ProgramInfo(processId));
         }
 
-        public static (WindowInfo?, ProgramInfo)? GetForegroundOrClipboardOwnerInfo()
-        {
-            var forgroundInfo = ((WindowInfo?, ProgramInfo)?)GetForegroundWindowInfo();
-            var clipboardOwnerInfo = GetClipboardOwnerWindowInfo()?.Item2;
-
-            return (forgroundInfo, clipboardOwnerInfo) switch
-            {
-                (var fi, var coi) when fi.HasValue && !(coi is null) => fi.Value.Item2 == coi ? fi : (null, coi),
-                (var fi, _) when fi.HasValue => fi,
-                (_, var coi) when !(coi is null) => (null, coi),
-                _ => null
-            };
-        }
-
         public static (WindowInfo, ProgramInfo)? GetWindowInfoForHandle(IntPtr hWnd)
         {
             if (hWnd == IntPtr.Zero)

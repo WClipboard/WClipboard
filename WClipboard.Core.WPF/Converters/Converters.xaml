@@ -32,6 +32,11 @@
         <c:BooleanToVisibilityConverter />
     </c:ChainConverter>
 
+    <c:ChainConverter x:Key="VisibleIfZeroConverter">
+        <c:CompareConverter Expression="EqualTo" With="0" />
+        <c:BooleanToVisibilityConverter />
+    </c:ChainConverter>
+
     <c:ChainConverter x:Key="VisibileIfNotNullConverter">
         <c:IsNullConverter Inverse="True"/>
         <c:BooleanToVisibilityConverter />

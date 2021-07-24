@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WClipboard.Core.Clipboard.Format;
 using WClipboard.Core.Clipboard.Trigger;
 using WClipboard.Core.WPF.Clipboard;
+using WClipboard.Core.WPF.Clipboard.Formats;
 using WClipboard.Core.WPF.Clipboard.Implementation;
 using WClipboard.Core.WPF.Clipboard.Trigger;
 using Xunit;
@@ -136,7 +137,7 @@ namespace WClipboard.Core.WPF.Tests.Managers
 
                 await Task.Delay(100);
 
-                sut.AddTriggerToQueue(new ClipboardTriggerType("Second", "Second_Icon", ClipboardTriggerSourceType.Extern, 100000));
+                sut.AddTriggerToQueue(new CustomClipboardTriggerType("Second", "Second_Icon"));
 
                 await Task.Delay(100);
             }
@@ -245,8 +246,8 @@ namespace WClipboard.Core.WPF.Tests.Managers
     {
         public static void AddTriggerToQueue(this ClipboardObjectsManager sut, ClipboardTriggerType triggerType = null)
         {
-            triggerType ??= new ClipboardTriggerType("Test", "Test", ClipboardTriggerSourceType.Intern, 0);
-            sut.ProcessClipboardTrigger(new ClipboardTrigger(triggerType, new ProgramInfo(Process.GetCurrentProcess()), new WindowInfo("Test", "Test")));
+            triggerType ??= new CustomClipboardTriggerType("Test", "Test");
+            sut.ProcessClipboardTrigger(new ClipboardTrigger(triggerType, new ProgramInfo(Process.GetCurrentProcess()), new ProgramInfo(Process.GetCurrentProcess()), new WindowInfo("Test", "Test")));
         }
     }
 }

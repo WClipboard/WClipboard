@@ -1,0 +1,63 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:WClipboard.Core.WPF.Settings.Local"
+                    xmlns:m="clr-namespace:WClipboard.Core.WPF.Models"
+                    xmlns:cc="clr-namespace:WClipboard.Core.WPF.CustomControls"
+                    xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes"
+                    xmlns:e="clr-namespace:WClipboard.Core.WPF.Extensions">
+    <DataTemplate x:Key="ProgramView" DataType="{x:Type m:Program}">
+        <Grid e:Spacing.Spacing="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <cc:IconPresenter Grid.Column="0" Grid.RowSpan="2" Icon="{Binding IconSource}" Width="20" Height="20" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Name}" VerticalAlignment="Center" e:Spacing.Add="0,0,0,-2" />
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Path}" Foreground="{t:FromPalette Gray}" FontSize="8" e:Spacing.Add="0,-3,0,0"/>
+        </Grid>
+    </DataTemplate>
+
+    <Style x:Key="ProgramContainerStyle" TargetType="ContentControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContentControl">
+                    <Button Command="{Binding DataContext.RemoveProgramCommand, RelativeSource={e:ItemsHost}}" CommandParameter="{Binding }" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" ToolTip="Remove program">
+                        <ContentPresenter />
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource ClearButton}">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Opacity" Value="0.3" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <DataTemplate x:Key="ProgramFilterSettingView" DataType="{x:Type local:ProgramFilterSettingViewModel}">
+        <StackPanel Orientation="Vertical" e:Spacing.Spacing="10,2,0,2" MinWidth="500">
+            <TextBlock Text="{Binding Description, StringFormat={}{0}:}" e:Spacing.Add="-10,0,0,0" />
+            <!--<ListBox ItemsSource="{Binding Value}" Visibility="{Binding Value.Count, Converter={StaticResource VisibleIfGreaterThanZeroConverter}}" ItemTemplate="{StaticResource ProgramView}" ItemContainerStyle="{StaticResource BackgroundListBoxItem}"/>-->
+            <cc:ContaineredItemsControl t:Palette.Active="Content"  Foreground="{t:FromPalette}" Background="{t:FromPalette}" ItemsSource="{Binding Value}" ItemTemplate="{StaticResource ProgramView}" ItemContainerStyle="{StaticResource ProgramContainerStyle}" HorizontalContentAlignment="Stretch" />
+
+            <TextBlock Text="No programs" t:Palette.Active="Content" Foreground="{t:FromPalette}" Background="{t:FromPalette}" TextAlignment="Center" Visibility="{Binding Value.Count, Converter={StaticResource VisibleIfZeroConverter}}" Padding="2"/>
+
+            <TextBlock Text="Add program:" e:Spacing.Add="0,4,0,0" />
+
+            <DockPanel LastChildFill="True" e:Spacing.Spacing="1,0">
+                <cc:IconPresenter DockPanel.Dock="Left" Icon="SearchIcon" Width="16" Height="16" VerticalAlignment="Center" />
+                <Button DockPanel.Dock="Right" Content="Browse..." Command="{Binding BrowseCommand}" Style="{StaticResource UIElementButton}" />
+                <cc:SearchBox ItemsSource="{Binding SearchPrograms}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ItemTemplate="{StaticResource ProgramView}" SelectedItem="{Binding SelectedSearchProgram}" VerticalAlignment="Center" />
+            </DockPanel>
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

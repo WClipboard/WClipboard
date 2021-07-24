@@ -16,10 +16,10 @@ namespace WClipboard.Core.WPF.LifeCycle
         }
 
         void IAfterMainWindowLoadedListener.AfterMainWindowLoaded(IMainWindowViewModel mainWindow) {
-            var coi = WindowInfoHelper.GetClipboardOwnerWindowInfo();
-            var info = coi != null ? (null, coi.Value.Item2) : ((WindowInfo?, ProgramInfo)?) WindowInfoHelper.GetFromWpfWindow(mainWindow.Window);
+            var dataSource = WindowInfoHelper.GetClipboardOwnerWindowInfo();
+            var foreground = WindowInfoHelper.GetFromWpfWindow(mainWindow.Window);
 
-            clipboardObjectsManager.ProcessClipboardTrigger(new ClipboardTrigger(DefaultClipboardTriggerTypes.OS, info?.Item2, info?.Item1));
+            clipboardObjectsManager.ProcessClipboardTrigger(new ClipboardTrigger(DefaultClipboardTriggerTypes.OS, dataSource?.Item2, foreground?.Item2, foreground?.Item1));
         }
     }
 }

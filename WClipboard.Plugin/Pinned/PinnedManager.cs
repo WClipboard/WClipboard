@@ -26,7 +26,7 @@ namespace WClipboard.Plugin.Pinned
         public PinnedManager(IClipboardFormatsManager formatsManager, IClipboardObjectsManager clipboardObjectsManager, IClipboardObjectManager clipboardObjectManager, IAppDataManager appDataManager)
         {
             if (pinnedTriggerType == null)
-                pinnedTriggerType = new ClipboardTriggerType("Pinned", "PinIcon", ClipboardTriggerSourceType.Custom);
+                pinnedTriggerType = new CustomClipboardTriggerType("Pinned", "PinIcon");
 
             this.formatsManager = formatsManager;
             this.clipboardObjectsManager = clipboardObjectsManager;
@@ -62,7 +62,7 @@ namespace WClipboard.Plugin.Pinned
 
             fs.Write(1UL); //Serialization version
             fs.Write(clipboardObject.MainTrigger.When.ToBinary());
-            fs.Write(clipboardObject.MainTrigger.ProgramInfo?.Path ?? "");
+            fs.Write(clipboardObject.MainTrigger.ForegroundProgram?.Path ?? "");
 
             using var ms = new MemoryStream();
 
@@ -105,7 +105,7 @@ namespace WClipboard.Plugin.Pinned
             var ticks = fs.ReadInt64();
             var path = fs.ReadString(); //process path
 
-            var trigger = new ClipboardTrigger(DateTime.FromBinary(ticks), pinnedTriggerType, new ProgramInfo(path), null);
+            var trigger = new ClipboardTrigger(DateTime.FromBinary(ticks), pinnedTriggerType, new ProgramInfo(path), null, null);
             var resolvedClipboardTrigger = clipboardObjectsManager.CreateResolvedCustomClipboardTrigger(trigger, null, id);
 
             using var ms = new MemoryStream();

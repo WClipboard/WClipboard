@@ -1,10 +1,12 @@
-﻿namespace WClipboard.Core.Clipboard.Trigger.Defaults
+﻿using System;
+
+namespace WClipboard.Core.Clipboard.Trigger.Defaults
 {
     public static class DefaultClipboardTriggerTypes
     {
-        public static ClipboardTriggerType OS { get; } = new ClipboardTriggerType(nameof(OS), "WindowsIcon", ClipboardTriggerSourceType.Intern, 0);
-        public static ClipboardTriggerType Copy { get;  } = new ClipboardTriggerType(nameof(Copy), "CopyIcon", ClipboardTriggerSourceType.Extern, 2000);
-        public static ClipboardTriggerType Cut { get; } = new ClipboardTriggerType(nameof(Cut), "CutIcon", ClipboardTriggerSourceType.Extern, 2000);
-        public static ClipboardTriggerType Paste { get; } = new ClipboardTriggerType(nameof(Paste), "PasteIcon", ClipboardTriggerSourceType.Extern, 1000);
+        public static ClipboardTriggerType OS { get; } = new OSClipboardTriggerType(nameof(OS), "WindowsIcon");
+        public static ClipboardTriggerType Copy { get;  } = new MergableClipboardTriggerType(nameof(Copy), "CopyIcon", TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(0.5));
+        public static ClipboardTriggerType Cut { get; } = new MergableClipboardTriggerType(nameof(Cut), "CutIcon", TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(0.5));
+        public static ClipboardTriggerType Paste { get; } = new ReferenceClipboardTriggerType(nameof(Paste), "PasteIcon");
     }
 }

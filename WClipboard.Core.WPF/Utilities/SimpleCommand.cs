@@ -29,6 +29,11 @@ namespace WClipboard.Core.WPF.Utilities
                 return Create((_) => execute(), (_) => canExecute());
         }
         public static ICommand Create<T>(Action<T> execute, Func<T, bool>? canExecute = null) => SimpleCommand<T>.Create(execute, canExecute);
+
+        protected void OnCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, new EventArgs());
+        }
     }
 
     public class SimpleCommand<T> : ICommand
@@ -48,5 +53,10 @@ namespace WClipboard.Core.WPF.Utilities
         }
 
         public static ICommand Create(Action<T> execute, Func<T, bool>? canExecute = null) => new SimpleCommand<T>(execute, canExecute);
+
+        protected void OnCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, new EventArgs());
+        }
     }
 }

@@ -24,6 +24,7 @@ namespace WClipboard.Plugin.DI
             DefaultClipboardFormatCategories.Setup(services);
             DefaultClipboardFormats.Setup(services);
 
+            services.AddFormatsExtractor<DefaultFormatsExtractor>();
             services.AddClipboardImplementationFactory<DefaultClipboardImplementationFactory>();
             services.AddClipboardImplementationViewModelFactory<DefaultClipboardImplementationViewModelFactory>();
 

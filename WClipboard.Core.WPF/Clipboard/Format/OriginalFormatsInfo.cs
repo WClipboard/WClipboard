@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WClipboard.Core.WPF.Models
+namespace WClipboard.Core.WPF.Clipboard.Format
 {
     public class OriginalFormatsInfo
     {

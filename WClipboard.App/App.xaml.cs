@@ -23,6 +23,8 @@ namespace WClipboard.App
         {
             Logger.Log(LogLevel.Critical, $"Exception cathed in {nameof(DispatcherUnhandledException)}");
             Logger.Log(LogLevel.Critical, e.Exception);
+
+            Shutdown(-2);
         }
 
         protected override void OnStartup(StartupEventArgs e)

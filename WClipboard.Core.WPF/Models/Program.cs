@@ -17,14 +17,22 @@ namespace WClipboard.Core.WPF.Models
             Name = process.GetName();
             Path = process.GetPath();
             if(!(Path is null))
+            {
+                Path = System.IO.Path.GetFullPath(Path);
                 IconSource = PathInfoHelper.GetIcon(Path, IconType.Small);
+            }
         }
 
         public Program(string path)
         {
+            path = System.IO.Path.GetFullPath(path);
             Path = path;
             IconSource = PathInfoHelper.GetIcon(Path, IconType.Small);
-            Name = FileVersionInfo.GetVersionInfo(path).FileDescription ?? System.IO.Path.GetFileNameWithoutExtension(path);
+            Name = FileVersionInfo.GetVersionInfo(path).FileDescription ?? "";
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                Name = System.IO.Path.GetFileNameWithoutExtension(path);
+            }
         }
 
         public override bool Equals(object? obj)
@@ -34,8 +42,7 @@ namespace WClipboard.Core.WPF.Models
 
         public bool Equals(Program? other)
         {
-            return !(other is null) &&
-                   Path == other.Path;
+            return !(other is null) && string.Equals(Path, other?.Path, StringComparison.OrdinalIgnoreCase);
         }
 
         public override int GetHashCode()

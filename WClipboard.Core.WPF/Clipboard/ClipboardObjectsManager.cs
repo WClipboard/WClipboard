@@ -2,25 +2,23 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
-using WClipboard.Core.Clipboard.Format;
 using WClipboard.Core.Clipboard.Trigger;
 using WClipboard.Core.DI;
 using WClipboard.Core.Utilities.Collections;
+using WClipboard.Core.WPF.Clipboard.Filter;
+using WClipboard.Core.WPF.Clipboard.Format;
 using WClipboard.Core.WPF.Clipboard.Implementation;
 using WClipboard.Core.WPF.Clipboard.Trigger;
 using WClipboard.Core.WPF.Extensions;
-using WClipboard.Core.WPF.Models;
 
 namespace WClipboard.Core.WPF.Clipboard
 {
     public interface IClipboardObjectsManager : IDisposable
     {
-        Task<ResolvedClipboardTrigger> ProcessClipboardTrigger(ClipboardTrigger trigger);
-        ResolvedClipboardTrigger ProcessExternalTrigger(ClipboardTrigger trigger, IDataObject externalDataObject);
-        ResolvedClipboardTrigger ProcessInternalTrigger(ClipboardTrigger trigger, DataObject internalDataObject);
+        Task ProcessClipboardTrigger(ClipboardTrigger trigger);
+        ResolvedClipboardTrigger ProcessClipboardTrigger(ClipboardTrigger trigger, IDataObject dataObject);
         ResolvedClipboardTrigger CreateResolvedCustomClipboardTrigger(ClipboardTrigger trigger, ClipboardObject? linked = null, Guid? id = null);
         void ProcessResolvedClipboardTrigger(ResolvedClipboardTrigger resolvedClipboardTrigger);
         void AddListener(IClipboardObjectsListener listener);
@@ -32,72 +30,79 @@ namespace WClipboard.Core.WPF.Clipboard
 
     public sealed class ClipboardObjectsManager : IClipboardObjectsManager
     {
-        private readonly IClipboardFormatsManager _formatsManager;
         private readonly IClipboardObjectManager _objectManager;
+        private readonly IEnumerable<IFormatsExtractor> formatsExtractors;
+        private readonly IEnumerable<IClipboardFilter> clipboardFilters;
 
-        private readonly ClipboardClonerThread _clipboardCloner;
+        private readonly ClipboardClonerThread clipboardCloner;
+        private readonly ClipboardTriggerScheduler clipboardTriggerScheduler;
 
         private readonly KeyedCollectionFunc<Guid, ClipboardObject> _allCollection;
         private readonly ConcurrentDictionary<ClipboardObject, List<ClipboardObject>> _linkedCollection;
 
         private readonly List<IClipboardObjectsListener> _listeners;
 
-        private ResolvedClipboardTrigger? _lastResolvedTrigger;
-
-        public ClipboardObjectsManager(IClipboardFormatsManager formatsManager, IClipboardObjectManager objectManager, IServiceProvider serviceProvider)
+        public ClipboardObjectsManager(IClipboardObjectManager objectManager, IEnumerable<IFormatsExtractor> formatsExtractors, IEnumerable<IClipboardFilter> clipboardFilters, IServiceProvider serviceProvider)
         {
-            _formatsManager = formatsManager;
             _objectManager = objectManager;
+            this.formatsExtractors = formatsExtractors;
+            this.clipboardFilters = clipboardFilters;
 
             _allCollection = new KeyedCollectionFunc<Guid, ClipboardObject>(co => co.Id, new ConcurrentDictionary<Guid, ClipboardObject>());
             _linkedCollection = new ConcurrentDictionary<ClipboardObject, List<ClipboardObject>>();
 
             _listeners = new List<IClipboardObjectsListener>();
 
-            _clipboardCloner = serviceProvider.Create<ClipboardClonerThread>(this);
+            clipboardCloner = serviceProvider.Create<ClipboardClonerThread>(this);
+            clipboardTriggerScheduler = serviceProvider.Create<ClipboardTriggerScheduler>(clipboardCloner);
         }
 
-        public Task<ResolvedClipboardTrigger> ProcessClipboardTrigger(ClipboardTrigger trigger)
+        public Task ProcessClipboardTrigger(ClipboardTrigger trigger)
         {
-            return _clipboardCloner.ProcessClipboardTrigger(trigger);
+            return clipboardTriggerScheduler.Schedule(trigger);
         }
 
-        public ResolvedClipboardTrigger ProcessExternalTrigger(ClipboardTrigger trigger, IDataObject externalDataObject)
+        public ResolvedClipboardTrigger ProcessClipboardTrigger(ClipboardTrigger trigger, IDataObject dataObject)
         {
-            if (_lastResolvedTrigger?.Trigger?.TryMerge(trigger) ?? false)
+            // Check if clipboard object already exists in list
+            if (dataObject.TryGetWClipboardId(out var guid) && _allCollection.TryGetValue(guid, out var refClipboardObject))
             {
-                InformListeners(l => l.OnResolvedTriggerUpdated(_lastResolvedTrigger));
-                return _lastResolvedTrigger;
+                return new ResolvedClipboardTrigger(trigger, refClipboardObject, ResolvedClipboardTriggerType.WClipboardId);
             }
-            else
+
+            //Extract Formats
+            //TODO retry exceptions
+            var equatableFormats = formatsExtractors.SelectMany(fe => fe.Extract(trigger, dataObject)).ToList();
+            trigger.AdditionalInfo.Add(new OriginalFormatsInfo(dataObject.GetFormats()));
+
+            //Check if it contains any data
+            if (equatableFormats.Count == 0)
             {
-                var resolvedTrigger = ResolveExternalTrigger(trigger, externalDataObject);
-                ProcessResolvedClipboardTrigger(resolvedTrigger);
-                return resolvedTrigger;
+                return new ResolvedClipboardTrigger(trigger, null, ResolvedClipboardTriggerType.Invalid);
             }
+
+            //Filter
+            if (ShouldFilter(trigger, equatableFormats))
+            {
+                return new ResolvedClipboardTrigger(trigger, null, ResolvedClipboardTriggerType.Filtered);
+            }
+
+            //Check for Equals
+            var resolvedClipboardTrigger = CheckForEqualReference(trigger, dataObject, equatableFormats);
+
+            ProcessResolvedClipboardTrigger(resolvedClipboardTrigger);
+            return resolvedClipboardTrigger;
         }
 
-        public ResolvedClipboardTrigger ProcessInternalTrigger(ClipboardTrigger trigger, DataObject internalDataObject)
+        private bool ShouldFilter(ClipboardTrigger trigger, IEnumerable<EqualtableFormat> equaltableFormats)
         {
-            //TODO requires (internal/)custom trigger??
-
-            if (_lastResolvedTrigger?.Trigger?.TryMerge(trigger) ?? false)
-            {
-                InformListeners(l => l.OnResolvedTriggerUpdated(_lastResolvedTrigger));
-                return _lastResolvedTrigger;
-            }
-            else
-            {
-                var resolvedTrigger = ResolveInternalTrigger(trigger, internalDataObject);
-                ProcessResolvedClipboardTrigger(resolvedTrigger);
-                return resolvedTrigger;
-            }
+            return clipboardFilters.Any(cf => cf.ShouldFilter(trigger, equaltableFormats));
         }
 
         public ResolvedClipboardTrigger CreateResolvedCustomClipboardTrigger(ClipboardTrigger trigger, ClipboardObject? linked = null, Guid? id = null)
         {
-            if (trigger.Type.Source != ClipboardTriggerSourceType.Custom)
-                throw new ArgumentException($"It is not allowed to use {nameof(CreateResolvedCustomClipboardTrigger)} with a {nameof(ClipboardTrigger)} with {nameof(ClipboardTriggerType.Source)}{nameof(ClipboardTrigger.Type)} that is not {nameof(ClipboardTriggerSourceType.Custom)}", nameof(trigger));
+            if (!(trigger.Type is CustomClipboardTriggerType))
+                throw new ArgumentException($"It is not allowed to use {nameof(CreateResolvedCustomClipboardTrigger)} with a {nameof(ClipboardTrigger)} that has a {nameof(ClipboardTrigger.Type)} that is not a {nameof(CustomClipboardTriggerType)}", nameof(trigger));
             if (id.HasValue && _allCollection.ContainsKey(id.Value))
                 throw new ArgumentException($"There is already an {nameof(ClipboardObject)} with this id", nameof(id));
 
@@ -113,8 +118,9 @@ namespace WClipboard.Core.WPF.Clipboard
 
         public void ProcessResolvedClipboardTrigger(ResolvedClipboardTrigger result)
         {
-
-            if (result.ResolvedType == ResolvedClipboardTriggerType.Invalid || result.Object == null)
+            if (result.ResolvedType == ResolvedClipboardTriggerType.Invalid || 
+                result.ResolvedType == ResolvedClipboardTriggerType.Filtered || 
+                result.Object is null)
             {
                 return;
             }
@@ -133,56 +139,11 @@ namespace WClipboard.Core.WPF.Clipboard
                 }
             }
 
-            _lastResolvedTrigger = result;
-
             InformListeners(l => l.OnResolvedTrigger(result));
         }
 
-        private ResolvedClipboardTrigger ResolveExternalTrigger(ClipboardTrigger trigger, IDataObject externalDataObject)
+        private ResolvedClipboardTrigger CheckForEqualReference(ClipboardTrigger trigger, IDataObject dataObject, List<EqualtableFormat> equatableFormats)
         {
-            // Check if clipboard object already exists in list
-            if (externalDataObject.TryGetWClipboardId(out var guid) && _allCollection.TryGetValue(guid, out var clipboardObject))
-            {
-                return new ResolvedClipboardTrigger(trigger, clipboardObject, ResolvedClipboardTriggerType.WClipboardId);
-            }
-
-            // Clone object to prevent modification and allow fast lookup
-            var clonedDataObject = CloneDataObject(externalDataObject);
-
-            //TODO retry exceptions?? Notify user??
-
-            // Check if it contains data
-            if (clonedDataObject.DataObject.GetFormats().Length == 0)
-            {
-                return new ResolvedClipboardTrigger(trigger, null, ResolvedClipboardTriggerType.Invalid);
-            }
-
-            trigger.AdditionalInfo.Add(new OriginalFormatsInfo(clonedDataObject.OriginalFormats));
-
-            return CheckForEqualReference(trigger, clonedDataObject.DataObject);
-        }
-
-        private ResolvedClipboardTrigger ResolveInternalTrigger(ClipboardTrigger trigger, DataObject internalDataObject)
-        {
-            // Check if clipboard object already exists in list
-            if (internalDataObject.TryGetWClipboardId(out var guid) && _allCollection.TryGetValue(guid, out var clipboardObject))
-            {
-                return new ResolvedClipboardTrigger(trigger, clipboardObject, ResolvedClipboardTriggerType.WClipboardId);
-            }
-
-            // Check if it contains data
-            if (!_formatsManager.FilterUnknownFormats(internalDataObject.GetFormats(true)).Any())
-            {
-                return new ResolvedClipboardTrigger(trigger, null, ResolvedClipboardTriggerType.Invalid);
-            }
-
-            return CheckForEqualReference(trigger, internalDataObject);
-        }
-
-        private ResolvedClipboardTrigger CheckForEqualReference(ClipboardTrigger trigger, DataObject dataObject)
-        {
-            var equatableFormats = _objectManager.GetEqualtableFormats(dataObject);
-
             var registrations = new List<ExistsEqualtableFormatContainer>(equatableFormats.Count);
             registrations.AddRange(equatableFormats.Select(ef => new ExistsEqualtableFormatContainer(ef)));
 
@@ -207,7 +168,7 @@ namespace WClipboard.Core.WPF.Clipboard
             {
                 foreach (var implemention in clipboardObject.Implementations)
                 {
-                    if (registration.EqualtableFormat.Format == implemention.Format && registration.EqualtableFormat.Factory == implemention.Factory && implemention.GetType() == registration.EqualtableFormat.ImplementationType)
+                    if (registration.EqualtableFormat.Format == implemention.Format)
                     {
                         registration.Match = implemention;
                         break; //This one found, find next
@@ -251,7 +212,7 @@ namespace WClipboard.Core.WPF.Clipboard
             }
         }
 
-        private ResolvedClipboardTrigger CreateResolvedTrigger(ClipboardTrigger trigger, DataObject dataObject, IEnumerable<EqualtableFormat> equaltableFormats)
+        private ResolvedClipboardTrigger CreateResolvedTrigger(ClipboardTrigger trigger, IDataObject dataObject, IEnumerable<EqualtableFormat> equaltableFormats)
         {
             // Check if linked
             ClipboardObject? linked = null;
@@ -277,37 +238,6 @@ namespace WClipboard.Core.WPF.Clipboard
             while (_allCollection.ContainsKey(id));
 
             return id;
-        }
-
-        private (DataObject DataObject, string[] OriginalFormats, IReadOnlyDictionary<string, Exception> Exceptions) CloneDataObject(IDataObject oldDataObject)
-        {
-            var newDataObject = new DataObject();
-
-            var oldFormats = oldDataObject.GetFormats(true);
-            var copyFormats = _formatsManager.FilterUnknownFormats(oldFormats);
-
-            var exceptions = new Dictionary<string, Exception>();
-
-            foreach (string format in copyFormats)
-            {
-                try
-                {
-                    newDataObject.SetData(format, oldDataObject.GetData(format, true));
-                }
-                catch (COMException ex)
-                {
-                    exceptions.Add(format, ex);
-                }
-            }
-
-            if (newDataObject.ContainsImage())
-            {
-                var temp = newDataObject.GetImage();
-                temp.Freeze();
-                newDataObject.SetImage(temp);
-            }
-
-            return (newDataObject, oldFormats, exceptions);
         }
 
         public void AddListener(IClipboardObjectsListener listener)
@@ -356,11 +286,6 @@ namespace WClipboard.Core.WPF.Clipboard
             }
 
             _allCollection.Remove(clipboardObject);
-
-            if (_lastResolvedTrigger?.Object == clipboardObject)
-            {
-                _lastResolvedTrigger = null;
-            }
 
             InformListeners(l => l.OnClipboardObjectRemoved(clipboardObject));
 
@@ -426,7 +351,7 @@ namespace WClipboard.Core.WPF.Clipboard
                 if (disposing)
                 {
                     _listeners.Clear();
-                    _clipboardCloner.Dispose();
+                    clipboardCloner.Dispose();
                 }
 
                 disposedValue = true;
