@@ -19,11 +19,11 @@ namespace WClipboard.Core.WPF.Clipboard.Filter
 
         public bool ShouldFilter(ClipboardTrigger clipboardTrigger, IEnumerable<EqualtableFormat> equaltableFormats)
         {
-            if (clipboardTrigger.AdditionalInfo.TryGetValue<Windows10HistoryInfo>(out var historyInfo) && !historyInfo.Allowed && (bool)historySetting.Value!)
+            if (clipboardTrigger.AdditionalInfo.TryGetValue<Windows10HistoryInfo>(out var historyInfo) && !historyInfo.Allowed && historySetting.GetValue<bool>())
             {
                 return true;
             }
-            if (clipboardTrigger.AdditionalInfo.TryGetValue<Windows10CloudInfo>(out var cloudInfo) && !cloudInfo.Allowed && (bool)cloudSetting.Value!)
+            if (clipboardTrigger.AdditionalInfo.TryGetValue<Windows10CloudInfo>(out var cloudInfo) && !cloudInfo.Allowed && cloudSetting.GetValue<bool>())
             {
                 return true;
             }

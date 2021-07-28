@@ -36,7 +36,7 @@ namespace WClipboard.Core.WPF.Settings
 
         public TValue GetCurrentValue(SettingViewModel<TValue> setting)
         {
-            return (TValue)((IIOSetting)setting.Model).Value!;
+            return ((IIOSetting)setting.Model).GetValue<TValue>();
         }
     }
 }

@@ -5,8 +5,10 @@ using System.Linq;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using WClipboard.App.Settings;
 using WClipboard.Core;
 using WClipboard.Core.Extensions;
+using WClipboard.Core.Settings;
 using WClipboard.Core.Utilities;
 using WClipboard.Core.Utilities.Json;
 using WClipboard.Core.WPF.LifeCycle;
@@ -32,20 +34,28 @@ namespace WClipboard.App.Setup
     {
         private readonly IAppInfo appInfo;
         private readonly INotificationsManager notificationsManager;
+        private readonly IIOSetting checkPrereleasesSetting;
+        private readonly IIOSetting checkUpdatesOnStartUp;
         private readonly ILogger<UpdateChecker> logger;
 
         private Release? newestRelease;
 
-        public UpdateChecker(IAppInfo appInfo, INotificationsManager notificationsManager, ILogger<UpdateChecker> logger)
+        public UpdateChecker(IAppInfo appInfo, INotificationsManager notificationsManager, IIOSettingsManager ioSettingsManager, ILogger<UpdateChecker> logger)
         {
             this.appInfo = appInfo;
             this.notificationsManager = notificationsManager;
             this.logger = logger;
+
+            checkPrereleasesSetting = ioSettingsManager.GetSetting(AppUISettingsFactory.CheckForPrereleases);
+            checkUpdatesOnStartUp = ioSettingsManager.GetSetting(AppUISettingsFactory.CheckUpdatesOnStartUp);
         }
 
         public void AfterMainWindowLoaded(IMainWindowViewModel _)
         {
-            Task.Run(CheckForUpdates);
+            if (checkUpdatesOnStartUp.GetValue<bool>())
+            {
+                Task.Run(CheckForUpdates);
+            }
         }
 
         private async void CheckForUpdates()
@@ -57,7 +67,8 @@ namespace WClipboard.App.Setup
                     webclient.Headers.Add(HttpRequestHeader.UserAgent, appInfo.Name);
                     var releases = await JsonSerializer.DeserializeAsync<List<Release>>(await webclient.OpenReadTaskAsync($"https://api.github.com/repos/WClipboard/{appInfo.Name}/releases"), new JsonSerializerOptions(JsonSerializerDefaults.Web) { PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy() });
 
-                    newestRelease = releases?.Where(r => !r.Draft).MaxBy(r => r.GetVersion());
+                    var checkForPrereleases = checkPrereleasesSetting.GetValue<bool>();
+                    newestRelease = releases?.Where(r => !r.Draft && (!r.Prerelease || checkForPrereleases)).MaxBy(r => r.GetVersion());
 
                     if (newestRelease != null && newestRelease.GetVersion() > appInfo.Version)
                     {
