@@ -39,7 +39,6 @@ namespace WClipboard.App
                 if (installedState == InstalledState.NotInstalled || installedState == InstalledState.OlderVersionPresent)
                 {
                     installer.Install();
-                    return;
                 }
 #if DEBUG
 #else
