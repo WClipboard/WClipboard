@@ -15,7 +15,7 @@ namespace WClipboard.Plugin.ClipboardImplementations.Path
             var pathViewModels = new MultiPathViewModel[implementation.Paths.Count];
             for(int i = 0; i < implementation.Paths.Count; i++)
             {
-                pathViewModels[i] = new MultiPathViewModel(implementation.Paths[i], clipboardObject.SynchronizationContext);
+                pathViewModels[i] = new MultiPathViewModel(implementation.Paths[i]);
             }
             PathViewModels = new ReadOnlyCollection<MultiPathViewModel>(pathViewModels);
 
@@ -34,7 +34,7 @@ namespace WClipboard.Plugin.ClipboardImplementations.Path
 
             if(currentSubPathIndex > 0)
             {
-                SharedPath = new MultiPathViewModel(firstPathViewModelParts[currentSubPathIndex -1].FullPath, clipboardObject.SynchronizationContext);
+                SharedPath = new MultiPathViewModel(firstPathViewModelParts[currentSubPathIndex -1].FullPath);
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using WClipboard.Core.Utilities;
+using WClipboard.Core.WPF.Utilities;
 
 namespace WClipboard.Core.WPF.ViewModels
 {
@@ -33,13 +33,13 @@ namespace WClipboard.Core.WPF.ViewModels
 
     public abstract class BaseViewModelWithInteractables : BaseViewModel, IHasAssignableInteractables
     {
-        public ObservableCollection<InteractableState> Interactables { get; }
+        public ConcurrentBindableList<InteractableState> Interactables { get; }
 
-        protected BaseViewModelWithInteractables(object model) : this(model, new ObservableCollection<InteractableState>())
+        protected BaseViewModelWithInteractables(object model) : this(model, new ConcurrentBindableList<InteractableState>())
         {
         }
 
-        protected BaseViewModelWithInteractables(object model, ObservableCollection<InteractableState> interactables) : base(model)
+        protected BaseViewModelWithInteractables(object model, ConcurrentBindableList<InteractableState> interactables) : base(model)
         {
             Interactables = interactables;
         }
@@ -49,13 +49,13 @@ namespace WClipboard.Core.WPF.ViewModels
 
     public abstract class BaseViewModelWithInteractables<TModel> : BaseViewModel<TModel>, IHasAssignableInteractables where TModel : notnull
     {
-        public ObservableCollection<InteractableState> Interactables { get; }
+        public ConcurrentBindableList<InteractableState> Interactables { get; }
 
-        protected BaseViewModelWithInteractables(TModel model) : this(model, new ObservableCollection<InteractableState>())
+        protected BaseViewModelWithInteractables(TModel model) : this(model, new ConcurrentBindableList<InteractableState>())
         {
         }
 
-        protected BaseViewModelWithInteractables(TModel model, ObservableCollection<InteractableState> interactables) : base(model)
+        protected BaseViewModelWithInteractables(TModel model, ConcurrentBindableList<InteractableState> interactables) : base(model)
         {
             Interactables = interactables;
         }

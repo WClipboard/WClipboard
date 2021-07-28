@@ -8,7 +8,7 @@ namespace WClipboard.Core.WPF.Clipboard.Implementation.ViewModel
     {
         public ClipboardObjectViewModel ClipboardObject { get; }
 
-        protected ClipboardImplementationViewModel(ClipboardImplementation implementation, ClipboardObjectViewModel clipboardObject) : base(implementation, new BindableObservableCollection<InteractableState>(clipboardObject.SynchronizationContext))
+        protected ClipboardImplementationViewModel(ClipboardImplementation implementation, ClipboardObjectViewModel clipboardObject) : base(implementation, new ConcurrentBindableList<InteractableState>())
         {
             ClipboardObject = clipboardObject;
         }

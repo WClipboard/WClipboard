@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using WClipboard.Core.Clipboard.Trigger;
+using WClipboard.Core.Utilities.Collections;
 using WClipboard.Core.WPF.Clipboard.Implementation;
 using WClipboard.Core.WPF.Extensions;
 
@@ -17,19 +17,19 @@ namespace WClipboard.Core.WPF.Clipboard
         public ClipboardTrigger MainTrigger { get; }
         public ClipboardObject? Linked { get; }
 
-        public ObservableCollection<ClipboardImplementation> Implementations { get; }
-        public ObservableCollection<ClipboardObjectProperty> Properties { get; }
-        public ObservableCollection<ClipboardTrigger> Triggers { get; }
+        public ConcurrentObservableList<ClipboardImplementation> Implementations { get; }
+        public ConcurrentObservableList<ClipboardObjectProperty> Properties { get; }
+        public ConcurrentObservableList<ClipboardTrigger> Triggers { get; }
 
         public ClipboardObject(Guid id, ClipboardTrigger mainTrigger, ClipboardObject? linked)
         {
             Id = id;
             MainTrigger = mainTrigger;
             Linked = linked;
-            Implementations = new ObservableCollection<ClipboardImplementation>();
+            Implementations = new ConcurrentObservableList<ClipboardImplementation>();
             Implementations.CollectionChanged += CheckIfImplementationShouldBeInThis;
-            Properties = new ObservableCollection<ClipboardObjectProperty>();
-            Triggers = new ObservableCollection<ClipboardTrigger>
+            Properties = new ConcurrentObservableList<ClipboardObjectProperty>();
+            Triggers = new ConcurrentObservableList<ClipboardTrigger>
             {
                 MainTrigger
             };

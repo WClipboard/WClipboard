@@ -24,8 +24,8 @@ namespace WClipboard.Plugin.ClipboardImplementations.Text
 
     public class TextClipboardImplementationViewModel : ClipboardImplementationViewModel<TextClipboardImplementation>
     {
-        public BindableObservableCollection<IViewModel> StaticLinkedContent { get; }
-        public BindableObservableCollection<IViewModel> DynamicLinkedContent { get; }
+        public ConcurrentBindableList<IViewModel> StaticLinkedContent { get; }
+        public ConcurrentBindableList<IViewModel> DynamicLinkedContent { get; }
 
         private readonly ICommand linkedContentClickedCommand;
 
@@ -49,8 +49,8 @@ namespace WClipboard.Plugin.ClipboardImplementations.Text
             };
 
             linkedContentClickedCommand = new SimpleCommand<object>(OnLinkedContentClicked);
-            StaticLinkedContent = new BindableObservableCollection<IViewModel>(implementation.LinkedContent!.Where(a => a.Capture.Index == 0 && a.Capture.Length == Model.Source.Length).Select(a => viewModelFactoriesManager.Value.GetViewModel(a.Model, ClipboardObject)).NotNull(), clipboardObject.SynchronizationContext);
-            DynamicLinkedContent = new BindableObservableCollection<IViewModel>(clipboardObject.SynchronizationContext);
+            StaticLinkedContent = new ConcurrentBindableList<IViewModel>(implementation.LinkedContent!.Where(a => a.Capture.Index == 0 && a.Capture.Length == Model.Source.Length).Select(a => viewModelFactoriesManager.Value.GetViewModel(a.Model, ClipboardObject)).NotNull());
+            DynamicLinkedContent = new ConcurrentBindableList<IViewModel>();
             implementation.LinkedContent!.CollectionChanged += LinkedContent_CollectionChanged;
             ReupdateInlines();
         }
@@ -119,12 +119,8 @@ namespace WClipboard.Plugin.ClipboardImplementations.Text
 
         private void OnLinkedContentClicked(object model)
         {
-            DynamicLinkedContent.Clear();
             var viewModel = viewModelFactoriesManager.Value.GetViewModel(model, ClipboardObject);
-            if (viewModel != null)
-            {
-                DynamicLinkedContent.Add(viewModel);
-            }
+            DynamicLinkedContent.ReplaceAll(new[] { viewModel }.NotNull());
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using WClipboard.Core.Clipboard.Format;
 using WClipboard.Core.DI;
+using WClipboard.Core.Utilities.Collections;
 using WClipboard.Core.WPF.Clipboard;
 using WClipboard.Core.WPF.Clipboard.Format;
 using WClipboard.Core.WPF.Clipboard.Implementation;
@@ -16,7 +16,7 @@ namespace WClipboard.Plugin.ClipboardImplementations.Text
     {
         public string Source { get; }
 
-        public ObservableCollection<ILinkedTextContent>? LinkedContent { get; }
+        public ConcurrentObservableList<ILinkedTextContent>? LinkedContent { get; }
 
         public TextClipboardImplementation(ClipboardFormat format, ClipboardImplementationFactory factory, ClipboardImplementation parent, string source) : base(format, factory, parent)
         {
@@ -27,14 +27,14 @@ namespace WClipboard.Plugin.ClipboardImplementations.Text
         public TextClipboardImplementation(ClipboardFormat format, ClipboardImplementationFactory factory, ClipboardObject clipboardObject, string source) : base(format, factory, clipboardObject)
         {
             Source = source;
-            LinkedContent = new ObservableCollection<ILinkedTextContent>();
+            LinkedContent = new ConcurrentObservableList<ILinkedTextContent>();
             Task.Run(() => DiContainer.SP!.GetRequiredService<LinkedTextContentFactoriesManager>().ProvideAsync(this));
         }
 
         public TextClipboardImplementation(ClipboardObject clipboardObject, ClipboardImplementationFactory factory, TextEquatableFormat source) : base(source.Format, factory, clipboardObject)
         {
             Source = source.Text;
-            LinkedContent = new ObservableCollection<ILinkedTextContent>();
+            LinkedContent = new ConcurrentObservableList<ILinkedTextContent>();
             Task.Run(() => DiContainer.SP!.GetRequiredService<LinkedTextContentFactoriesManager>().ProvideAsync(this));
         }
 

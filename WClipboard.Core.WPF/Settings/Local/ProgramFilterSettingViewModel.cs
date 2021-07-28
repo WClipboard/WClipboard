@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using ObservableImmutable;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +22,9 @@ namespace WClipboard.Core.WPF.Settings.Local
             set => SetProperty(ref searchText, value, string.IsNullOrEmpty(value) || !isSelectedSearchProgramUpdating).OnChanged(RefreshSearchPrograms);
         }
 
-        private ObservableImmutableList<Program> searchPrograms;
+        private ConcurrentBindableList<Program> searchPrograms;
 
-        public ObservableImmutableList<Program> SearchPrograms
+        public ConcurrentBindableList<Program> SearchPrograms
         {
             get => searchPrograms;
             set => SetProperty(ref searchPrograms, value);
@@ -65,7 +64,7 @@ namespace WClipboard.Core.WPF.Settings.Local
         {
             this.programManager = programManager;
 
-            searchPrograms = new ObservableImmutableList<Program>(programManager.GetCurrentKnownPrograms().Except(Value));
+            searchPrograms = new ConcurrentBindableList<Program>(programManager.GetCurrentKnownPrograms().Except(Value));
 
             BrowseCommand = new SimpleCommand(Browse, _ => true);
             RemoveProgramCommand = new SimpleCommand<Program>(RemoveProgram, _ => true);
@@ -81,8 +80,7 @@ namespace WClipboard.Core.WPF.Settings.Local
 
         private void RefreshSearchPrograms()
         {
-            searchPrograms.Clear();
-            searchPrograms.AddRange(programManager.GetCurrentKnownPrograms().Except(Value).Where(p => p.Name.Contains(SearchText, StringComparison.CurrentCultureIgnoreCase)));
+            searchPrograms.ReplaceAll(programManager.GetCurrentKnownPrograms().Except(Value).Where(p => p.Name.Contains(SearchText, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         private void Browse(object? _)

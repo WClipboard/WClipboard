@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -44,10 +42,8 @@ namespace WClipboard.App.ViewModels
 
         private readonly CloseInteractable clipboadObjectViewModelCloseInteractable;
 
-        public ObservableCollection<ClipboardObjectViewModel> Objects { get; }
+        public ConcurrentBindableList<ClipboardObjectViewModel> Objects { get; }
         public ListCollectionView ObjectsView { get; }
-
-        public SynchronizationContext SynchronizationContext { get; }
 
         private List<ClipboardFormat>? dragDropFormats;
         public List<ClipboardFormat>? DragAndDropFormats
@@ -56,7 +52,7 @@ namespace WClipboard.App.ViewModels
             set => SetProperty(ref dragDropFormats, value);
         }
 
-        public ObservableCollection<InteractableState> Interactables { get; }
+        public ConcurrentBindableList<InteractableState> Interactables { get; }
 
         IReadOnlyList<InteractableState> IHasInteractables.Interactables => Interactables;
 
@@ -77,16 +73,13 @@ namespace WClipboard.App.ViewModels
             if (dragAndDropType == null)
                 dragAndDropType = new CustomClipboardTriggerType("Drag and drop", "DragAndDropIcon");
 
-            SynchronizationContext = SynchronizationContext.Current!;
+            Interactables = new ConcurrentBindableList<InteractableState>();
 
-            Interactables = new BindableObservableCollection<InteractableState>(SynchronizationContext);
-
-            Objects = new BindableObservableCollection<ClipboardObjectViewModel>(SynchronizationContext);
-            BindingOperations.EnableCollectionSynchronization(Objects, Objects);
+            Objects = new ConcurrentBindableList<ClipboardObjectViewModel>();
 
             ObjectsView = new ListCollectionView(Objects);
 
-            FilterHelper = new FilterHelper(SynchronizationContext, ObjectsView);
+            FilterHelper = new FilterHelper(ObjectsView);
 
             this.clipboardObjectsManager = clipboardObjectsManager;
             this.clipboardObjectManager = clipboardObjectManager;
@@ -159,7 +152,7 @@ namespace WClipboard.App.ViewModels
 
         private void Add(ClipboardObject clipboardObject)
         {
-            var viewModel = new ClipboardObjectViewModel(clipboardObject, this, clipboardObjectManager, interactablesManager, programManager, SynchronizationContext);
+            var viewModel = new ClipboardObjectViewModel(clipboardObject, this, clipboardObjectManager, interactablesManager, programManager);
 
             Objects.Insert(0, viewModel);
 
@@ -213,12 +206,7 @@ namespace WClipboard.App.ViewModels
                     break;
                 case ResolvedClipboardTriggerType.WClipboardId:
                 case ResolvedClipboardTriggerType.EqualsReference:
-                    var index = Objects.FirstIndexOf(vm => vm.Model == result.Object);
-                    if (index != -1)
-                    {
-                        Objects.Move(index, 0);
-                    }
-                    else
+                    if (!Objects.Move(vm => vm.Model == result.Object, 0))
                     {
                         Add(result.Object);
                     }
@@ -228,11 +216,7 @@ namespace WClipboard.App.ViewModels
         void IClipboardObjectsListener.OnResolvedTriggerUpdated(ResolvedClipboardTrigger result) { }
         void IClipboardObjectsListener.OnClipboardObjectRemoved(ClipboardObject clipboardObject)
         {
-            var index = Objects.FirstIndexOf(vm => vm.Model == clipboardObject);
-            if (index != -1)
-            {
-                Objects.RemoveAt(index);
-            }
+            Objects.RemoveAll(vm => vm.Model == clipboardObject);
         }
 
         bool IClipboardObjectsListener.CanRemove(ClipboardObject clipboardObject, ClipboardObjectRemoveType type)

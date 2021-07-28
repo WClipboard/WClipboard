@@ -24,7 +24,7 @@ namespace WClipboard.Core.Clipboard.Trigger
             }
         }
 
-        private string GetPath(Process process)
+        private string? GetPath(Process process)
         {
             var path = process.GetPath();
             if (path != null)
