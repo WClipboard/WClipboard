@@ -7,6 +7,10 @@ using WClipboard.Core.DI;
 using WClipboard.Core.WPF.DI;
 using WClipboard.Windows.DI;
 using WClipboard.Plugin.DI;
+#if DEBUG
+#else
+using System.Windows;
+#endif
 
 namespace WClipboard.App
 {
