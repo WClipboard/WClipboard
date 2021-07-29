@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using WClipboard.Core.Extensions;
 
 namespace WClipboard.Core.Utilities.Collections
@@ -261,12 +262,14 @@ namespace WClipboard.Core.Utilities.Collections
 
         public void AddRange(IEnumerable<T> items)
         {
+            var tempItemsList = items.ToList();
+
             readWriteLock.EnterWrite();
             int count;
             try
             {
                 count = list.Count;
-                list.AddRange(items);
+                list.AddRange(tempItemsList);
                 if (count == list.Count) //No changes, return without event handling
                 {
                     readWriteLock.ExitWrite();
@@ -279,7 +282,7 @@ namespace WClipboard.Core.Utilities.Collections
                 throw;
             }
 
-            ProcessModification(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, items, count));
+            ProcessModification(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, tempItemsList, count));
         }
 
         public void RemoveAll(Predicate<T> predicate)
