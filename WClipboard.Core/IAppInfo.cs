@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace WClipboard.Core
 {
@@ -11,6 +12,8 @@ namespace WClipboard.Core
         public IReadOnlyList<string> Args { get; }
 
         Version Version { get; }
+
+        Icon Icon { get; }
     }
 
     public static class IAppInfoExtensions

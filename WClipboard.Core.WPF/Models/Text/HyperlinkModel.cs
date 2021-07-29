@@ -13,8 +13,8 @@ namespace WClipboard.Core.WPF.Models.Text
         {
             return Create(new Hyperlink()
             {
-                Command = Command,
-                CommandParameter = CommandParameter
+                CommandParameter = CommandParameter,
+                Command = Command
             }, coveringElement);
         }
     }

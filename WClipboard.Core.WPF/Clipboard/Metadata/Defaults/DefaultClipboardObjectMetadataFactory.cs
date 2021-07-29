@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using WClipboard.Core.WPF.Clipboard.Format;
 using WClipboard.Core.WPF.Clipboard.ViewModel;
-using WClipboard.Core.WPF.Models;
 
 namespace WClipboard.Core.WPF.Clipboard.Metadata.Defaults
 {

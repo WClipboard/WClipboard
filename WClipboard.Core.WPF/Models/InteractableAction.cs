@@ -68,7 +68,7 @@ namespace WClipboard.Core.WPF.Models
         {
         }
 
-        public override void Execute(object? parameter) => Execute((TViewModel)parameter);
+        public override void Execute(object? parameter) => Execute((TViewModel)parameter!);
         protected abstract void Execute(TViewModel parameter);
     }
 }

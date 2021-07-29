@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
-using WClipboard.Core.WPF.Native.Helpers;
+using WClipboard.Windows;
 
 namespace WClipboard.Core.WPF.Listeners
 {
     public interface IGlobalKeyEventListener
     {
-        void OnEvent(KeyboardHookEventArgs e, ModifierKeys modifierKeys);
+        void OnEvent(GlobalKeyboardEventArgs e, ModifierKeys modifierKeys);
 
         IEnumerable<Key> GetNotifyKeys();
     }

@@ -1,7 +1,6 @@
 ﻿using WClipboard.Core.WPF.CustomControls;
-using WClipboard.Core.WPF.Native.Helpers;
 using WClipboard.App.ViewModels;
-using System.Windows;
+using WClipboard.Core.DI;
 
 namespace WClipboard.App.Windows
 {
@@ -14,9 +13,7 @@ namespace WClipboard.App.Windows
         {
             InitializeComponent();
 
-            WindowClipboardViewerHelper.AttachTo(this);
-
-            DataContext = new OverviewWindowViewModel(this);
+            DataContext = DiContainer.SP!.Create<OverviewWindowViewModel>(this);
         }
     }
 }

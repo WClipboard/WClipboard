@@ -2,6 +2,7 @@
 using System.Linq;
 using WClipboard.Core.Clipboard.Format;
 using WClipboard.Core.WPF.Clipboard;
+using WClipboard.Core.WPF.Clipboard.Format;
 using WClipboard.Core.WPF.Clipboard.Implementation;
 
 namespace WClipboard.Plugin.ClipboardImplementations.Path
@@ -20,7 +21,7 @@ namespace WClipboard.Plugin.ClipboardImplementations.Path
             Paths = new ReadOnlyCollection<string>(paths);
         }
 
-        public PathsImplementation(ClipboardObject clipboardObject, PathsEquatableFormat source) : base(source.Format, source.Factory, clipboardObject)
+        public PathsImplementation(ClipboardObject clipboardObject, ClipboardImplementationFactory factory, PathsEquatableFormat source) : base(source.Format, factory, clipboardObject)
         {
             Paths = source.Paths;
         }

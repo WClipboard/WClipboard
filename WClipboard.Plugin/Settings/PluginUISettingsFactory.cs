@@ -20,7 +20,7 @@ namespace WClipboard.Plugin.Settings
             {
                 SettingConsts.ToFileBitmapEncoderKey => new ComboBoxSettingViewModel<BitmapFileOption>(model, 
                         new ResolvableIOSettingApplier<BitmapFileOption>(SettingChangeMode.Direct, SettingChangeEffect.AtOnce),
-                    (IKeyedCollectionSetting<string, BitmapFileOption>)model, "Default to file image encoding", null),
+                    (IKeyedCollectionSetting<string, BitmapFileOption>)model, "Default \"to file\" image encoding", null),
                 _ => null,
             };
         }

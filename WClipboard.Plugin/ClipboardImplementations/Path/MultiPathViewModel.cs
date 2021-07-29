@@ -1,33 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading;
 using System.Windows.Input;
 using WClipboard.Core.Utilities;
-using WClipboard.Core.WPF.Native.Helpers;
 using WClipboard.Core.WPF.Utilities;
 using WClipboard.Core.WPF.ViewModels;
 using WClipboard.Plugin.ClipboardImplementations.Path.Interactables;
+using WClipboard.Windows.Helpers;
 
 namespace WClipboard.Plugin.ClipboardImplementations.Path
 {
     public class MultiPathViewModel : BindableBase, IHasAssignableInteractables
     {
-        public BindableObservableCollection<CommandBinding> CommandBindings { get; }
-        public ObservableCollection<InteractableState> Interactables { get; }
+        public ConcurrentBindableList<CommandBinding> CommandBindings { get; }
+        public ConcurrentBindableList<InteractableState> Interactables { get; }
         IReadOnlyList<InteractableState> IHasInteractables.Interactables => Interactables;
         public PathPart Main { get; }
         public object IconSource { get; }
         public string TypeName { get; }
         public ReadOnlyCollection<PathPart> Parts { get; }
 
-        public MultiPathViewModel(string fullPath, SynchronizationContext synchronizationContext)
+        public MultiPathViewModel(string fullPath)
         {
-            CommandBindings = new BindableObservableCollection<CommandBinding>(synchronizationContext)
+            CommandBindings = new ConcurrentBindableList<CommandBinding>()
             {
                 new PathPartOpenCommandBinding()
             };
 
-            Interactables = new BindableObservableCollection<InteractableState>(synchronizationContext)
+            Interactables = new ConcurrentBindableList<InteractableState>()
             {
                 new CopyPathPartInteractable().CreateState(this)
             };

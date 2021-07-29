@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using WClipboard.Core.Clipboard.Trigger;
-using WClipboard.Core.Extensions;
 using WClipboard.Core.WPF.Clipboard.Implementation;
 using WClipboard.Core.WPF.Clipboard.Implementation.ViewModel;
 using WClipboard.Core.WPF.Clipboard.Metadata;
@@ -23,13 +21,12 @@ namespace WClipboard.Core.WPF.Clipboard.ViewModel
     {
         private bool _showMetadata = false;
 
-        protected internal readonly IClipboardObjectManager _clipboardObjectManager;
+        protected internal readonly IClipboardObjectManager clipboardObjectManager;
+        private readonly IProgramManager programManager;
 
-        public SynchronizationContext SynchronizationContext { get; }
-
-        public BindableObservableCollection<ClipboardImplementationViewModel> Implementations { get; }
-        public BindableObservableCollection<ClipboardObjectMetadata> Metadata { get; }
-        public BindableObservableCollection<ClipboardTriggerViewModel> Triggers { get; }
+        public ConcurrentBindableList<ClipboardImplementationViewModel> Implementations { get; }
+        public ConcurrentBindableList<ClipboardObjectMetadata> Metadata { get; }
+        public ConcurrentBindableList<ClipboardTriggerViewModel> Triggers { get; }
 
         public ClipboardTriggerViewModel MainTrigger { get; }
 
@@ -41,18 +38,18 @@ namespace WClipboard.Core.WPF.Clipboard.ViewModel
             set => SetProperty(ref _showMetadata, value).OnChanged(OnShowMetadataChanged);
         }
 
-        public ClipboardObjectViewModel(ClipboardObject @object, IClipboardObjectsListener listener, IClipboardObjectManager clipboardObjectManager, IInteractablesManager interactablesManager, SynchronizationContext synchronizationContext) : base(@object, new BindableObservableCollection<InteractableState>(synchronizationContext))
+        public ClipboardObjectViewModel(ClipboardObject @object, IClipboardObjectsListener listener, IClipboardObjectManager clipboardObjectManager, IInteractablesManager interactablesManager, IProgramManager programManager) : base(@object, new ConcurrentBindableList<InteractableState>())
         {
-            _clipboardObjectManager = clipboardObjectManager;
+            this.clipboardObjectManager = clipboardObjectManager;
+            this.programManager = programManager;
 
             Listener = listener;
-            SynchronizationContext = synchronizationContext;
 
-            MainTrigger = new ClipboardTriggerViewModel(Model.MainTrigger);
+            MainTrigger = new ClipboardTriggerViewModel(Model.MainTrigger, programManager);
 
-            Implementations = new BindableObservableCollection<ClipboardImplementationViewModel>(synchronizationContext);
-            Metadata = new BindableObservableCollection<ClipboardObjectMetadata>(synchronizationContext);
-            Triggers = new BindableObservableCollection<ClipboardTriggerViewModel>(synchronizationContext);
+            Implementations = new ConcurrentBindableList<ClipboardImplementationViewModel>();
+            Metadata = new ConcurrentBindableList<ClipboardObjectMetadata>();
+            Triggers = new ConcurrentBindableList<ClipboardTriggerViewModel>();
 
             Implementations.AddRange(Create(Model.Implementations));
             Triggers.AddRange(Create(Model.Triggers));
@@ -67,18 +64,18 @@ namespace WClipboard.Core.WPF.Clipboard.ViewModel
         {
             if(ShowMetadata && Metadata.Count == 0)
             {
-                _clipboardObjectManager.AddMetadata(this);
+                clipboardObjectManager.AddMetadata(this);
             }
         }
 
         private IEnumerable<ClipboardImplementationViewModel> Create(IEnumerable<ClipboardImplementation> implementations)
         {
-            return implementations.Select(i => _clipboardObjectManager.CreateViewModel(i, this)).OfType<ClipboardImplementationViewModel>();
+            return implementations.Select(i => clipboardObjectManager.CreateViewModel(i, this)).OfType<ClipboardImplementationViewModel>();
         }
 
         private IEnumerable<ClipboardTriggerViewModel> Create(IEnumerable<ClipboardTrigger> triggers)
         {
-            return triggers.Select(t => new ClipboardTriggerViewModel(t));
+            return triggers.Select(t => new ClipboardTriggerViewModel(t, programManager));
         }
 
         private void UpdateImplementations(object? sender, NotifyCollectionChangedEventArgs e)

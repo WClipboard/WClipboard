@@ -21,6 +21,7 @@ namespace WClipboard.Core.Settings
         void AddSerializers(IEnumerable<IIOSettingsSerializer> serializers);
         void AddSerializers(params IIOSettingsSerializer[] serializers);
         void Save();
+        IIOSettingsSerializer FindSerializer(Type type);
     }
 
     public class IOSettingsManager : IIOSettingsManager, IAfterDIContainerBuildListener
@@ -82,7 +83,7 @@ namespace WClipboard.Core.Settings
                 this.settings.Add(setting);
                 if (xmlDocument.SelectNodes($"/{ROOT_ELEMENT_NAME}/{ELEMENT_NAME}[@{KEY_ATTRIBUTE_NAME}='{setting.Key}']")?.FirstOrDefault() is XmlElement settingNode)
                 {
-                    setting.Value = FindSerializer(setting.Type).Deserialize(setting.Type, settingNode);
+                    setting.Value = FindSerializer(setting.Type).Deserialize(setting.Type, settingNode, this);
                 }
                 else
                 {
@@ -119,7 +120,7 @@ namespace WClipboard.Core.Settings
                 {
                     var settingElement = xmlDocument.CreateElement(ELEMENT_NAME);
                     settingElement.SetAttribute(KEY_ATTRIBUTE_NAME, setting.Key);
-                    FindSerializer(setting.Type).Serialize(setting.Value, settingElement);
+                    FindSerializer(setting.Type).Serialize(setting.Value, settingElement, this);
                     rootElement.AppendChild(settingElement);
                 }
             }
@@ -127,7 +128,7 @@ namespace WClipboard.Core.Settings
             xmlDocument.Save(fileName);
         }
 
-        private IIOSettingsSerializer FindSerializer(Type type)
+        public IIOSettingsSerializer FindSerializer(Type type)
         {
             var baseType = type;
             while (baseType != null && baseType != typeof(object))
@@ -142,6 +143,8 @@ namespace WClipboard.Core.Settings
             foreach (var intf in interfaces)
             {
                 if (serializers.TryGetValue(intf, out var serializer))
+                    return serializer;
+                if (intf.IsGenericType && serializers.TryGetValue(intf.GetGenericTypeDefinition(), out serializer))
                     return serializer;
             }
 

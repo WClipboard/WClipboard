@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using WClipboard.Core.DI;
 using WClipboard.Core.Utilities;
 using WClipboard.Core.WPF.Clipboard.ViewModel.Filters;
-using System.Threading;
 using System.Linq;
 using WClipboard.Core.WPF.Utilities;
 using System.Windows.Input;
 using System.Windows.Data;
 using WClipboard.Core.WPF.Clipboard.ViewModel;
-using WClipboard.Core.Extensions;
 
 namespace WClipboard.App.ViewModels
 {
@@ -24,9 +21,9 @@ namespace WClipboard.App.ViewModels
             set => SetProperty(ref searchText, value, string.IsNullOrEmpty(value) || !isSelectedSearchFilterUpdating).OnChanged(RefreshSearchFilters);
         }
 
-        private ObservableCollection<Filter> searchFilters;
+        private ConcurrentBindableList<Filter> searchFilters;
 
-        public ObservableCollection<Filter> SearchFilters 
+        public ConcurrentBindableList<Filter> SearchFilters 
         {
             get => searchFilters;
             set => SetProperty(ref searchFilters, value);
@@ -57,24 +54,24 @@ namespace WClipboard.App.ViewModels
             }
         }
 
-        public ObservableCollection<Filter> SelectedFilters { get; }
+        public ConcurrentBindableList<Filter> SelectedFilters { get; }
 
         public ICommand RemoveSelectedFilterCommand { get; }
         public ICommand RemoveAllSelectedFiltersCommand { get; }
 
         private readonly ListCollectionView collectionView;
 
-        public FilterHelper(SynchronizationContext synchronizationContext, ListCollectionView collectionView)
+        public FilterHelper(ListCollectionView collectionView)
         {
-            searchFilters = new ObservableCollection<Filter>();
+            searchFilters = new ConcurrentBindableList<Filter>();
             this.collectionView = collectionView;
             collectionView.Filter = CollectionFilter;
 
-            SelectedFilters = new BindableObservableCollection<Filter>(synchronizationContext);
+            SelectedFilters = new ConcurrentBindableList<Filter>();
             SelectedFilters.CollectionChanged += SelectedFilters_CollectionChanged;
 
             RemoveSelectedFilterCommand = SimpleCommand.Create<Filter>(OnRemoveSelectedFilter);
-            RemoveAllSelectedFiltersCommand = SimpleCommand.Create(SelectedFilters.Clear);
+            RemoveAllSelectedFiltersCommand = SimpleCommand.Create(_ => SelectedFilters.Clear());
 
             RefreshSearchFilters();
         }
@@ -86,8 +83,7 @@ namespace WClipboard.App.ViewModels
 
         private void RefreshSearchFilters()
         {
-            searchFilters.Clear();
-            searchFilters.AddRange(filtersManager.Value.GetFilters(SearchText).Except(SelectedFilters));
+            searchFilters.ReplaceAll(filtersManager.Value.GetFilters(SearchText).Except(SelectedFilters));
         }
 
         private void OnRemoveSelectedFilter(Filter filter)

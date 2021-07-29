@@ -6,7 +6,7 @@ namespace WClipboard.Core.WPF.Clipboard.Metadata.Defaults
 {
     public class TriggersMetadata : ClipboardObjectMetadata
     {
-        public BindableObservableCollection<ClipboardTriggerViewModel> Triggers { get; }
+        public ConcurrentBindableList<ClipboardTriggerViewModel> Triggers { get; }
 
         public TriggersMetadata(ClipboardObjectViewModel clipboardObject) : base("TimeIcon", "History")
         {

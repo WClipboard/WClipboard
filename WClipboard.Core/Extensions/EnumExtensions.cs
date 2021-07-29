@@ -12,7 +12,7 @@ namespace WClipboard.Core.Extensions
                     yield return (T)value;
         }
 
-        public static IEnumerable<T> GetValues<T>() where T : Enum
+        public static IReadOnlyCollection<T> GetValues<T>() where T : Enum
         {
             return Enum.GetValues(typeof(T)).Cast<T>();
         }

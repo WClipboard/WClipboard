@@ -4,6 +4,7 @@
     {
         WClipboardId,
         Invalid,
+        Filtered,
         EqualsReference,
         Created
     }

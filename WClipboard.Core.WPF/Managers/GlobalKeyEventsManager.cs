@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Input;
-using WClipboard.Core.WPF.Native.Helpers;
 using WClipboard.Core.Extensions;
 using WClipboard.Core.WPF.Listeners;
 using WClipboard.Core.WPF.Extensions;
+
+using INativeGlobalKeyEventListener = WClipboard.Windows.IGlobalKeyboardListener;
+using WClipboard.Windows;
 
 namespace WClipboard.Core.WPF.Managers
 {
@@ -18,20 +20,20 @@ namespace WClipboard.Core.WPF.Managers
     {
         private static readonly Key[] defaultModifierKeys = new Key[] { Key.LeftCtrl, Key.RightCtrl, Key.LeftShift, Key.RightShift, Key.LeftAlt, Key.RightAlt, Key.LWin, Key.RWin };
 
-        private readonly KeyHookHelper keyboardHookHelper;
+        private readonly INativeGlobalKeyEventListener keyboardHookHelper;
 
         private readonly List<IGlobalKeyEventListener> globalKeyListeners;
 
-        public GlobalKeyEventsManager()
+        public GlobalKeyEventsManager(INativeGlobalKeyEventListener keyboardHookHelper)
         {
-            keyboardHookHelper = new KeyHookHelper();
+            this.keyboardHookHelper = keyboardHookHelper;
             keyboardHookHelper.NotifyKeyStateChanged += KeyboardHookHelper_NotifyKeyStateChanged;
             keyboardHookHelper.NotifyKeys.AddRange(defaultModifierKeys);
 
             globalKeyListeners = new List<IGlobalKeyEventListener>();
         }
 
-        private void KeyboardHookHelper_NotifyKeyStateChanged(object? sender, KeyboardHookEventArgs e)
+        private void KeyboardHookHelper_NotifyKeyStateChanged(object? sender, GlobalKeyboardEventArgs e)
         {
             var modifierKeys = e.DownStateKeys.GetModifierKeys();
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using WClipboard.App.Settings;
 using WClipboard.Core;
+using WClipboard.Windows;
 
 namespace WClipboard.App.Setup
 {
@@ -101,7 +102,7 @@ By pressing OK you are informed about and accept; the related security and priva
                 appRegisteryKey.SetValue("Version", appInfo.Version.ToString(), RegistryValueKind.String);
             }
 
-            Notifications.NotificationsManager.CreateStartMenuShortcut(appInfo);
+            new StartMenuShortcutManager(appInfo).EnsureShortcut();
         }
 
         internal void Uninstall()
@@ -113,7 +114,7 @@ By pressing OK you are informed about and accept; the related security and priva
             // Now start removal
             OpenOnStartupSettingsApplier.RemoveStartup(appInfo);
 
-            Notifications.NotificationsManager.DeleteStartMenuShortcut(appInfo);
+            new StartMenuShortcutManager(appInfo).DeleteShortcut();
         }
     }
 }

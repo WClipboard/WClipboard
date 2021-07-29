@@ -24,4 +24,19 @@ namespace WClipboard.Core.WPF.Settings
             return ((IIOSetting)setting.Model).Value;
         }
     }
+
+    public class IOSettingApplier<TValue> : IOSettingApplier, ISettingApplier<TValue>
+    {
+        public IOSettingApplier(SettingChangeMode changeMode, SettingChangeEffect changeEffect) : base(changeMode, changeEffect) { }
+
+        public void Apply(SettingViewModel<TValue> setting)
+        {
+            ((IIOSetting)setting.Model).Value = setting.Value;
+        }
+
+        public TValue GetCurrentValue(SettingViewModel<TValue> setting)
+        {
+            return ((IIOSetting)setting.Model).GetValue<TValue>();
+        }
+    }
 }

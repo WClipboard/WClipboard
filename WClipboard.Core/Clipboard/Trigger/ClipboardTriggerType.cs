@@ -2,24 +2,37 @@
 
 namespace WClipboard.Core.Clipboard.Trigger
 {
-    public sealed class ClipboardTriggerType
+    public class ClipboardTriggerType
     {
         public string Name { get; }
         public object IconSource { get; }
-        public ClipboardTriggerSourceType Source { get; }
-        public int Priority { get; }
 
-        public ClipboardTriggerType(string name, object iconSource, ClipboardTriggerSourceType source, int priority = 0)
+        public ClipboardTriggerType(string name, object iconSource)
         {
-            if (priority < 0)
-                throw new ArgumentOutOfRangeException(nameof(priority), $"The minimal {nameof(priority)} is 0");
-            if (source != ClipboardTriggerSourceType.Extern && priority != 0)
-                throw new ArgumentException(nameof(priority), $"The {nameof(priority)} must be 0 if {nameof(source)} is not {nameof(ClipboardTriggerSourceType.Extern)}");
-
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            IconSource = iconSource ?? throw new ArgumentNullException(nameof(iconSource));
-            Priority = priority;
-            Source = source;
+            Name = name;
+            IconSource = iconSource;
         }
+    }
+
+    public class ReferenceClipboardTriggerType : ClipboardTriggerType {
+        public ReferenceClipboardTriggerType(string name, object iconSource) : base(name, iconSource) { }
+    }
+    public class OSClipboardTriggerType : ClipboardTriggerType {
+        public OSClipboardTriggerType(string name, object iconSource) : base(name, iconSource) { }
+    }
+    public class MergableClipboardTriggerType : ClipboardTriggerType {
+        public TimeSpan MergeTimeout { get; }
+        public TimeSpan MergeBefore { get; }
+
+        public MergableClipboardTriggerType(string name, object iconSource, TimeSpan mergeTimeout, TimeSpan mergeBefore) : base(name, iconSource) {
+            if (mergeTimeout <= TimeSpan.Zero)
+                throw new ArgumentException($"{nameof(mergeTimeout)} must be larger than 0", nameof(mergeTimeout));
+
+            MergeTimeout = mergeTimeout;
+            MergeBefore = mergeBefore;
+        }
+    }
+    public class CustomClipboardTriggerType : ClipboardTriggerType {
+        public CustomClipboardTriggerType(string name, object iconSource) : base(name, iconSource) { }
     }
 }

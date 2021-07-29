@@ -59,5 +59,45 @@ namespace WClipboard.App.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] drag {
+            get {
+                object obj = ResourceManager.GetObject("drag", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] dragable {
+            get {
+                object obj = ResourceManager.GetObject("dragable", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] hand_full {
+            get {
+                object obj = ResourceManager.GetObject("hand_full", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon WClipboard {
+            get {
+                object obj = ResourceManager.GetObject("WClipboard", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }

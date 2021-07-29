@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using WClipboard.Core.Clipboard.Format;
-using WClipboard.Core.WPF.Clipboard.Implementation;
+using WClipboard.Core.WPF.Clipboard.Format;
 
 namespace WClipboard.Plugin.ClipboardImplementations.Path
 {
@@ -9,7 +8,7 @@ namespace WClipboard.Plugin.ClipboardImplementations.Path
     {
         public ReadOnlyCollection<string> Paths { get; }
 
-        public PathsEquatableFormat(ClipboardImplementationFactory factory, Type implementationType, ClipboardFormat format, string[] paths) : base(factory, implementationType, format)
+        public PathsEquatableFormat(ClipboardFormat format, string[] paths) : base(format)
         {
             Paths = new ReadOnlyCollection<string>(paths);
         }

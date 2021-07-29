@@ -2,7 +2,6 @@
 using System.Windows.Media.Imaging;
 using WClipboard.Core.DI;
 using WClipboard.Core.Settings.Defaults;
-using WClipboard.Core.WPF.Clipboard.Implementation.LinkedContent;
 using WClipboard.Core.WPF.Extensions;
 using WClipboard.Core.WPF.LifeCycle;
 using WClipboard.Core.WPF.Managers;
@@ -25,6 +24,7 @@ namespace WClipboard.Plugin.DI
             DefaultClipboardFormatCategories.Setup(services);
             DefaultClipboardFormats.Setup(services);
 
+            services.AddFormatsExtractor<DefaultFormatsExtractor>();
             services.AddClipboardImplementationFactory<DefaultClipboardImplementationFactory>();
             services.AddClipboardImplementationViewModelFactory<DefaultClipboardImplementationViewModelFactory>();
 
@@ -32,7 +32,7 @@ namespace WClipboard.Plugin.DI
             services.AddSingleton(BitmapFileOption.Create<BmpBitmapEncoder>());
             services.AddSingleton(BitmapFileOption.Create<GifBitmapEncoder>());
             services.AddSingleton(BitmapFileOption.Create<PngBitmapEncoder>());
-            services.AddSingleton(BitmapFileOption.Create<JpegBitmapEncoder>());
+            services.AddSingleton(BitmapFileOption.Create<JpegBitmapEncoder>(extension: ".jpg"));
             services.AddSingleton(BitmapFileOption.Create<TiffBitmapEncoder>());
             services.AddSingleton(BitmapFileOption.Create<WmpBitmapEncoder>());
 
@@ -46,7 +46,7 @@ namespace WClipboard.Plugin.DI
             services.AddSingleton<ILinkedTextContentFactory, PathLinkedImplementationFactory>();
 
             //Text
-            services.AddSingleton<ILinkedContentFactoriesManager, LinkedTextContentFactoriesManager>();
+            services.AddSingleton<LinkedTextContentFactoriesManager>();
             services.AddInteractable<ClipboardImplementations.Text.Interactables.ConvertToFileInteractable>();
             services.AddFiltersProvider<TextSearchFilterProvider>();
 
@@ -69,6 +69,7 @@ namespace WClipboard.Plugin.DI
             var serviceProvider = DiContainer.SP;
 
             serviceProvider.AddTypeDateTemplate<TextClipboardImplementationViewModel>("ClipboardImplementations/Text/TextClipboardImplementationView.xaml");
+            serviceProvider.AddTypeDateTemplate<LinkedTextClipboardImplementationViewModel>("ClipboardImplementations/Text/TextClipboardImplementationView.xaml");
             serviceProvider.AddTypeDateTemplate<MultiPathsViewModel>("ClipboardImplementations/Path/MultiPathsView.xaml");
             serviceProvider.AddTypeDateTemplate<SinglePathViewModel>("ClipboardImplementations/Path/SinglePathView.xaml");
             serviceProvider.AddTypeDateTemplate<BitmapImplementationViewModel>("ClipboardImplementations/Bitmap/BitmapImplementationView.xaml");

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using WClipboard.Core.Clipboard.Format;
 using WClipboard.Core.WPF.Clipboard;
+using WClipboard.Core.WPF.Clipboard.Format;
 using WClipboard.Core.WPF.Clipboard.Implementation;
 using WClipboard.Core.WPF.Extensions;
 using WClipboard.Plugin.ClipboardImplementations.Bitmap;
@@ -15,29 +16,13 @@ namespace WClipboard.Plugin.Defaults
 {
     internal class DefaultClipboardImplementationFactory : ClipboardImplementationFactory
     {
-        public override IEnumerable<EqualtableFormat> CreateEquatables(DataObject dataObject)
-        {
-            if (dataObject.TryGetData(DefaultClipboardFormats.Unicode.Format, out var unicode) && unicode is string unicodeText)
-            {
-                yield return new TextEquatableFormat(this, typeof(TextClipboardImplementation), DefaultClipboardFormats.Unicode, unicodeText);
-            }
-            if (dataObject.TryGetData(DefaultClipboardFormats.FileDrop.Format, out var fileDrop) && fileDrop is string[] paths)
-            {
-                yield return new PathsEquatableFormat(this, typeof(PathsImplementation), DefaultClipboardFormats.FileDrop, paths);
-            }
-            if (dataObject.TryGetData(DefaultClipboardFormats.Bitmap.Format, out var bitmap) && bitmap is BitmapSource bitmapSource)
-            {
-                yield return new BitmapEquatableFormat(this, typeof(BitmapImplementation), DefaultClipboardFormats.Bitmap, bitmapSource);
-            }
-        }
-
         public override Task<ClipboardImplementation> CreateFromEquatable(ClipboardObject clipboardObject, EqualtableFormat equaltableFormat)
         {
             return Task.FromResult<ClipboardImplementation>(
                 equaltableFormat switch {
-                TextEquatableFormat textEquatableFormat => new TextClipboardImplementation(clipboardObject, textEquatableFormat),
-                PathsEquatableFormat pathsEquatableFormat => new PathsImplementation(clipboardObject, pathsEquatableFormat),
-                BitmapEquatableFormat bitmapEquatableFormat => new BitmapImplementation(clipboardObject, bitmapEquatableFormat),
+                TextEquatableFormat textEquatableFormat => new TextClipboardImplementation(clipboardObject, this, textEquatableFormat),
+                PathsEquatableFormat pathsEquatableFormat => new PathsImplementation(clipboardObject, this, pathsEquatableFormat),
+                BitmapEquatableFormat bitmapEquatableFormat => new BitmapImplementation(clipboardObject, this, bitmapEquatableFormat),
                 _ => null,
             });
         }

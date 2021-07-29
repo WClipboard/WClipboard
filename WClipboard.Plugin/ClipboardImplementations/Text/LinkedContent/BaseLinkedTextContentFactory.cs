@@ -2,6 +2,8 @@
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace WClipboard.Plugin.ClipboardImplementations.Text.LinkedContent
 {
     public abstract class BaseLinkedTextContentFactory : ILinkedTextContentFactory
@@ -13,6 +15,6 @@ namespace WClipboard.Plugin.ClipboardImplementations.Text.LinkedContent
             Regexes = regexes;
         }
 
-        public abstract Task<object> Create(TextClipboardImplementation textClipboardImplementation, Regex regex, Match match);
+        public abstract Task<ILinkedTextContent?> Create(TextClipboardImplementation textClipboardImplementation, Regex regex, Match match);
     }
 }

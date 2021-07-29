@@ -1,6 +1,5 @@
-﻿using System;
-using WClipboard.Core.Clipboard.Format;
-using WClipboard.Core.WPF.Clipboard.Implementation;
+﻿using WClipboard.Core.Clipboard.Format;
+using WClipboard.Core.WPF.Clipboard.Format;
 
 namespace WClipboard.Plugin.ClipboardImplementations.Text
 {
@@ -8,7 +7,7 @@ namespace WClipboard.Plugin.ClipboardImplementations.Text
     {
         public string Text { get; }
 
-        public TextEquatableFormat(ClipboardImplementationFactory factory, Type implementationType, ClipboardFormat format, string text) : base(factory, implementationType, format)
+        public TextEquatableFormat(ClipboardFormat format, string text) : base(format)
         {
             Text = text;
         }

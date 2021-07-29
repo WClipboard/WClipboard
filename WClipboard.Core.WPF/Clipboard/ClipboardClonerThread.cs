@@ -12,11 +12,14 @@ namespace WClipboard.Core.WPF.Clipboard
     internal class ClipboardClonerThread : IDisposable
     {
         private readonly IClipboardObjectsManager _clipboardObjectsManager;
+        private readonly ILogger<ClipboardClonerThread> _logger;
+
         private readonly BlockingCollection<ClipboardTriggerQueueItem> _triggerQueue;
         private bool _disposedValue;
 
-        public ClipboardClonerThread(IClipboardObjectsManager clipboardObjectsManager)
+        public ClipboardClonerThread(IClipboardObjectsManager clipboardObjectsManager, ILogger<ClipboardClonerThread> logger)
         {
+            _logger = logger;
             _clipboardObjectsManager = clipboardObjectsManager;
             _triggerQueue = new BlockingCollection<ClipboardTriggerQueueItem>();
 
@@ -33,17 +36,15 @@ namespace WClipboard.Core.WPF.Clipboard
             {
                 try
                 {
-                    queueItem.Task.SetResult(_clipboardObjectsManager.ProcessExternalTrigger(queueItem.Trigger, SysClipboard.GetDataObject()));
+                    queueItem.Task.SetResult(_clipboardObjectsManager.ProcessClipboardTrigger(queueItem.Trigger, SysClipboard.GetDataObject()));
                 }
                 catch(Exception ex)
                 {
-                    Logger.Log(LogLevel.Info, "An exception occured while processing clipboard trigger");
-                    Logger.Log(LogLevel.Info, ex);
+                    _logger.Log(LogLevel.Info, "An exception occured while processing clipboard trigger");
+                    _logger.Log(LogLevel.Info, ex);
                     queueItem.Task.SetException(ex);
                 }
             }
-
-            // Thread.CurrentThread.Join(THREAD_MAXIMUM_RESPONSE_TIME);
         }
 
         public Task<ResolvedClipboardTrigger> ProcessClipboardTrigger(ClipboardTrigger trigger)

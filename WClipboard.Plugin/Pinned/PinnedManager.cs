@@ -9,6 +9,7 @@ using WClipboard.Core.Clipboard.Trigger;
 using WClipboard.Core.Clipboard.Format;
 using WClipboard.Core.WPF.Clipboard;
 using WClipboard.Core.IO;
+using WClipboard.Core.WPF.ViewModels;
 
 namespace WClipboard.Plugin.Pinned
 {
@@ -25,7 +26,7 @@ namespace WClipboard.Plugin.Pinned
         public PinnedManager(IClipboardFormatsManager formatsManager, IClipboardObjectsManager clipboardObjectsManager, IClipboardObjectManager clipboardObjectManager, IAppDataManager appDataManager)
         {
             if (pinnedTriggerType == null)
-                pinnedTriggerType = new ClipboardTriggerType("Pinned", "PinIcon", ClipboardTriggerSourceType.Custom);
+                pinnedTriggerType = new CustomClipboardTriggerType("Pinned", "PinIcon");
 
             this.formatsManager = formatsManager;
             this.clipboardObjectsManager = clipboardObjectsManager;
@@ -61,7 +62,7 @@ namespace WClipboard.Plugin.Pinned
 
             fs.Write(1UL); //Serialization version
             fs.Write(clipboardObject.MainTrigger.When.ToBinary());
-            fs.Write(clipboardObject.MainTrigger.WindowInfo?.ProcessInfo?.Path ?? "");
+            fs.Write(clipboardObject.MainTrigger.ForegroundProgram?.Path ?? "");
 
             using var ms = new MemoryStream();
 
@@ -102,9 +103,9 @@ namespace WClipboard.Plugin.Pinned
             }
 
             var ticks = fs.ReadInt64();
-            var _ = fs.ReadString(); //process path
+            var path = fs.ReadString(); //process path
 
-            var trigger = new ClipboardTrigger(DateTime.FromBinary(ticks), pinnedTriggerType, null, null);
+            var trigger = new ClipboardTrigger(DateTime.FromBinary(ticks), pinnedTriggerType, new ProgramInfo(path), null, null);
             var resolvedClipboardTrigger = clipboardObjectsManager.CreateResolvedCustomClipboardTrigger(trigger, null, id);
 
             using var ms = new MemoryStream();
@@ -128,16 +129,16 @@ namespace WClipboard.Plugin.Pinned
             clipboardObjectsManager.ProcessResolvedClipboardTrigger(resolvedClipboardTrigger);
         }
 
-        async void IAfterMainWindowLoadedListener.AfterMainWindowLoaded()
+        async void IAfterMainWindowLoadedListener.AfterMainWindowLoaded(IMainWindowViewModel _)
         {
             if (Directory.Exists(directory))
             {
                 foreach (var filePath in Directory.EnumerateFiles(directory, "*.wco"))
                 {
                     var fileName = Path.GetFileNameWithoutExtension(filePath); ;
-                    Guid.TryParse(fileName, out var id);
-
-                    await Deserialize(filePath, id).ConfigureAwait(false);
+                    if (Guid.TryParse(fileName, out var id)) {
+                        await Deserialize(filePath, id).ConfigureAwait(false);
+                    }
                 }
             }
         }

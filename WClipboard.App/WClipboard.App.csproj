@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net5.0-windows10.0.18362.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>WClipboard.App.Program</StartupObject>
     <LangVersion>8.0</LangVersion>
@@ -17,14 +17,16 @@
     <RepositoryUrl>https://github.com/WClipboard/WClipboard</RepositoryUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyName>WClipboard</AssemblyName>
-    <AssemblyVersion>0.1.1.0</AssemblyVersion>
-    <FileVersion>0.1.1.0</FileVersion>
-    <Version>0.1.1</Version>
+    <AssemblyVersion>0.2</AssemblyVersion>
+    <FileVersion>0.2</FileVersion>
+    <Version>0.2</Version>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <Platforms>x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\drag.cur" />
+    <None Remove="Resources\dragable.cur" />
     <None Remove="Resources\WClipboard.ico" />
     <None Remove="Themes\Light.xaml" />
     <None Remove="Themes\Dark.xaml" />
@@ -42,6 +44,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\drag.cur" />
+    <Resource Include="Resources\dragable.cur" />
     <Resource Include="Resources\WClipboard.ico" />
   </ItemGroup>
 

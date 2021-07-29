@@ -10,6 +10,7 @@ using WClipboard.Core.Clipboard.Format;
 using WClipboard.Core.IO;
 using WClipboard.Core.WPF.Clipboard.Implementation;
 using WClipboard.Core.WPF.Clipboard;
+using WClipboard.Core.WPF.Clipboard.Format;
 
 namespace WClipboard.Plugin.ClipboardImplementations.Bitmap
 {
@@ -27,7 +28,7 @@ namespace WClipboard.Plugin.ClipboardImplementations.Bitmap
             bitmap.Save(fileName, new BmpBitmapEncoder());
         }
 
-        public BitmapImplementation(ClipboardObject clipboardObject, BitmapEquatableFormat source) : base(source.Format, source.Factory, clipboardObject)
+        public BitmapImplementation(ClipboardObject clipboardObject, ClipboardImplementationFactory factory, BitmapEquatableFormat source) : base(source.Format, factory, clipboardObject)
         {
             fileName = DiContainer.SP.GetService<ITempManager>().GetNewFileName("bmp");
             Size = source.Size;

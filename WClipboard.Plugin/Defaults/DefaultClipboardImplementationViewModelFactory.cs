@@ -13,7 +13,14 @@ namespace WClipboard.Plugin.Defaults
         {
             if (implementation is TextClipboardImplementation textImplementation)
             {
-                return new TextClipboardImplementationViewModel(textImplementation, clipboardObject);
+                if (implementation.Parent is null)
+                {
+                    return new TextClipboardImplementationViewModel(textImplementation, clipboardObject);
+                }
+                else
+                {
+                    return new LinkedTextClipboardImplementationViewModel(textImplementation, clipboardObject);
+                }
             } 
             else if (implementation is PathsImplementation pathsImplementation)
             {

@@ -3,13 +3,14 @@ using System.IO;
 using System.Windows.Input;
 using WClipboard.Core.WPF.Clipboard.Implementation.ViewModel;
 using WClipboard.Core.WPF.Clipboard.ViewModel;
-using WClipboard.Core.WPF.Native.Helpers;
+using WClipboard.Core.WPF.Utilities;
+using WClipboard.Windows.Helpers;
 
 namespace WClipboard.Plugin.ClipboardImplementations.Path
 {
     public class SinglePathViewModel : ClipboardImplementationViewModel<PathsImplementation>
     {
-        public ObservableCollection<CommandBinding> CommandBindings { get; }
+        public ConcurrentBindableList<CommandBinding> CommandBindings { get; }
         public PathPart Main { get; }
         public object IconSource { get; }
         public string TypeName { get; }
@@ -41,7 +42,7 @@ namespace WClipboard.Plugin.ClipboardImplementations.Path
         {
             string fullPath = implementation.Paths[0];
 
-            CommandBindings = new ObservableCollection<CommandBinding>
+            CommandBindings = new ConcurrentBindableList<CommandBinding>
             {
                 new PathPartOpenCommandBinding()
             };

@@ -35,7 +35,13 @@ namespace WClipboard.Core.Extensions
 
         public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> collection) where T : class
         {
-            return collection.Where(e => e != null).Select(e => e!);
+            foreach(var item in collection)
+            {
+                if (item != null)
+                {
+                    yield return item;
+                }
+            }
         }
 
         public static T MaxBy<T, R>(this IEnumerable<T> collection, Func<T, R> evaluate) where R : IComparable<R>

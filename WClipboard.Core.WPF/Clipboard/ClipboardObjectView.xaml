@@ -1,0 +1,82 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cc="clr-namespace:WClipboard.Core.WPF.CustomControls"
+                    xmlns:e="clr-namespace:WClipboard.Core.WPF.Extensions"
+                    xmlns:im="clr-namespace:WClipboard.Core.WPF.Clipboard.Implementation.ViewModel"
+                    xmlns:co="clr-namespace:WClipboard.Core.WPF.Clipboard.ViewModel"
+                    xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes">
+    <DataTemplate x:Key="NotLinkedImplementationBaseView" DataType="{x:Type im:ClipboardImplementationViewModel}">
+        <ContentPresenter ContentTemplateSelector="{StaticResource TypeTemplateSelector}" e:CommandsBinding.InputBindings="{Binding Interactables}" HorizontalAlignment="Stretch" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="ImplementationHeaderView" DataType="{x:Type im:ClipboardImplementationViewModel}" >
+        <cc:IconPresenter Icon="{Binding Model.Format.IconSource, Mode=OneTime}" ToolTip="{Binding Model.Format.Name, Mode=OneTime}" Height="16" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="ImplementationsByCategoryView">
+        <Border BorderThickness="0,1,0,0" BorderBrush="{t:FromPalette GrayB}" Padding="5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <cc:IconPresenter Grid.Column="0" Width="16" Height="20" Icon="{Binding Items[0].Model.Format.Category.IconSource, Mode=OneTime}" ToolTip="{Binding Items[0].Model.Format.Category.Name, Mode=OneTime}" VerticalAlignment="Center" />
+                <TabControl Grid.Column="2" ItemsSource="{Binding Items}" 
+                            ContentTemplate="{StaticResource NotLinkedImplementationBaseView}"
+                            ItemTemplate="{StaticResource ImplementationHeaderView}" />
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MetadataView">
+        <Border BorderThickness="0,1,0,0" BorderBrush="{t:FromPalette GrayB}" Padding="5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <cc:IconPresenter Grid.Column="0" Width="16" Height="16" Icon="{Binding IconSource, Mode=OneTime}" ToolTip="{Binding Name, Mode=OneTime}" VerticalAlignment="Center" />
+                <ContentPresenter Grid.Column="2" ContentTemplateSelector="{StaticResource TypeTemplateSelector}" />
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ClipboardObjectView" DataType="{x:Type co:ClipboardObjectViewModel}">
+        <StackPanel Orientation="Vertical" t:Palette.Active="Surface" Background="{t:FromPalette}">
+            <StackPanel.Resources>
+                <CollectionViewSource x:Key="ClipboardObjectViewImplementationsView" Source="{Binding Implementations}">
+                    <CollectionViewSource.GroupDescriptions>
+                        <PropertyGroupDescription PropertyName="Model.Format.Category" />
+                    </CollectionViewSource.GroupDescriptions>
+                </CollectionViewSource>
+            </StackPanel.Resources>
+            <DockPanel LastChildFill="True">
+                <ToggleButton VerticalAlignment="Stretch" DockPanel.Dock="Left" IsChecked="{Binding ShowMetadata}" ToolTip="Show metadata">
+                    <StackPanel Orientation="Horizontal" e:Spacing.Spacing="3">
+                        <cc:IconPresenter Width="16" Height="16" ToolTip="{Binding MainTrigger.Title}" Icon="{Binding MainTrigger.IconSource}" />
+                        <cc:IconPresenter Width="16" Height="16" Icon="{Binding MainTrigger.Model.Type.IconSource}" ToolTip="{Binding MainTrigger.Model.Type.Name}" />
+                        <cc:DateTimeSpanPresenter Source="{Binding MainTrigger.Model.When}" />
+                    </StackPanel>
+                </ToggleButton>
+                <ItemsControl VerticalAlignment="Stretch" DockPanel.Dock="Right" ItemsSource="{Binding Interactables}" ItemsPanel="{StaticResource ItemsStackPanelHorizontal}" ItemTemplateSelector="{StaticResource TypeTemplateSelector}" />
+                <Thumb VerticalAlignment="Stretch" Cursor="{StaticResource DragableCursor}" Background="Transparent" BorderThickness="0" e:DragDropEx.Drag="{Binding }">
+                    <Thumb.Style>
+                        <Style TargetType="Thumb">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Thumb">
+                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Thumb.Style>
+                </Thumb>
+            </DockPanel>
+            <ItemsControl ItemsSource="{Binding Metadata}" ItemTemplate="{StaticResource MetadataView}" Visibility="{Binding ShowMetadata, Converter={StaticResource BoolToVisibilityConverter}}" />
+            <ItemsControl ItemsSource="{Binding Source={StaticResource ClipboardObjectViewImplementationsView}, Path=Groups}" ItemTemplate="{StaticResource ImplementationsByCategoryView}" />
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

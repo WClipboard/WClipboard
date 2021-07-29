@@ -180,5 +180,10 @@ namespace WClipboard.Core.DI
         {
             return new Lazy<T>(() => serviceProvider.GetService<T>()!, System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
         }
+
+        public static T Create<T>(this IServiceProvider serviceProvider, params object[] parameters)
+        {
+            return ActivatorUtilities.CreateInstance<T>(serviceProvider, parameters);
+        }
     }
 }

@@ -22,8 +22,9 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
+                <Setter Property="t:Palette.Active" Value="Secondary" />
                 <Setter Property="Background" Value="{t:FromPalette Secondary}"/>
-                <Setter Property="Foreground" Value="{t:FromPalette OnSecondary}"/>
+                <Setter Property="Foreground" Value="{t:FromPalette Secondary, Converter={StaticResource ContrastTextColorConverter}}"/>
             </Trigger>
         </Style.Triggers>
     </Style>

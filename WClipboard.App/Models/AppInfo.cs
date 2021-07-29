@@ -4,6 +4,7 @@ using WClipboard.Core.Extensions;
 using WClipboard.Core;
 using System.Reflection;
 using System;
+using System.Drawing;
 
 namespace WClipboard.App.Models
 {
@@ -17,6 +18,8 @@ namespace WClipboard.App.Models
         public IReadOnlyList<string> Args { get; }
 
         public Version Version { get; }
+
+        public Icon Icon { get; }
 
         internal AppInfo(IReadOnlyList<string> args)
         {
@@ -33,6 +36,8 @@ namespace WClipboard.App.Models
                 Path = curProccess.GetPath()!;
                 ProcessId = curProccess.Id;
             }
+
+            Icon = Properties.Resources.WClipboard;
         }
     }
 }

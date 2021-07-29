@@ -12,11 +12,12 @@ using WClipboard.Core.WPF.Clipboard;
 using WClipboard.Core.Settings.Defaults;
 using WClipboard.Core.WPF.Themes;
 using WClipboard.Core.WPF.Settings.Local;
-using WClipboard.Core.WPF.Clipboard.Implementation.LinkedContent;
 using WClipboard.Core.WPF.Clipboard.Metadata.Defaults;
 using WClipboard.Core.WPF.Settings.Defaults;
 using WClipboard.Core.WPF.Clipboard.ViewModel.Filters;
 using WClipboard.Core.WPF.Clipboard.ViewModel.Filters.Defaults;
+using WClipboard.Core.WPF.Clipboard.Filter;
+using WClipboard.Core.WPF.Clipboard.Format;
 
 namespace WClipboard.Core.WPF.DI
 {
@@ -25,7 +26,11 @@ namespace WClipboard.Core.WPF.DI
         void IStartup.ConfigureServices(IServiceCollection services, IStartupContext context)
         {
             context.IOSettingsManager.AddSettings(new KeyedCollectionSetting<string, Theme, IThemesManager>(SettingConsts.ThemeKey, SettingConsts.ThemeDefaultName));
+            context.IOSettingsManager.AddSettings(new ListSetting<string>(SettingConsts.OwnerProgramClipboardFilterKey));
+            context.IOSettingsManager.AddSettings(new BasicSetting<bool>(SettingConsts.Windows10HistoryFilterKey, () => true));
+            context.IOSettingsManager.AddSettings(new BasicSetting<bool>(SettingConsts.Windows10CloudFilterKey, () => false));
 
+            services.AddSingleton<IViewModelFactoriesManager, ViewModelFactoriesManager>();
 
             services.AddSingleton<IImageDownloader, ImageDownloader>();
 
@@ -34,8 +39,6 @@ namespace WClipboard.Core.WPF.DI
             services.AddSingleton<ITypeDataTemplateManager, TypeDataTemplateManager>();
             services.AddSingleton<IProgramManager, ProgramManager>();
             services.AddSingleton<IFiltersManager, FiltersManager>();
-
-            services.AddSingleton<ILinkedContentFactoriesManagersManager, LinkedContentFactoriesManagersManager>();
 
             services.AddSingleton<IUISettingsManager, UISettingsManager>();
             services.AddSingleton<IThemesManager, ThemesManager>();
@@ -55,6 +58,13 @@ namespace WClipboard.Core.WPF.DI
             services.AddClipboardObjectMetadataFactory<DefaultClipboardObjectMetadataFactory>();
             services.AddFiltersProvider<FormatFiltersProvider>();
             services.AddFiltersProvider<ProgramFiltersProvider>();
+
+            services.AddSingletonWithAutoInject<ClipboardViewerListener>();
+
+            services.AddClipboardFilter<OwnerProgramClipboardFilter>();
+            services.AddClipboardFilter<Windows10ClipboardFilter>();
+
+            services.AddFormatsExtractor<Windows10FormatsExtractor>();
         }
 
         void IAfterWPFAppStartupListener.AfterWPFAppStartup()
@@ -64,16 +74,18 @@ namespace WClipboard.Core.WPF.DI
             serviceProvider.AddTypeDateTemplate<InteractableState>("Views/InteractableView.xaml");
             serviceProvider.AddTypeDateTemplate<ToggleableInteractableState>("Views/InteractableToggleView.xaml");
 
-            serviceProvider.AddTypeDateTemplate<TextSettingViewModel>("Views/SettingViews.xaml");
-            serviceProvider.AddTypeDateTemplate<CheckBoxSettingViewModel>("Views/SettingViews.xaml");
-            serviceProvider.AddTypeDateTemplate<ComboBoxSettingViewModel>("Views/SettingViews.xaml");
+            serviceProvider.AddTypeDateTemplate<TextSettingViewModel>("Settings/Defaults/DefaultSettingViews.xaml");
+            serviceProvider.AddTypeDateTemplate<CheckBoxSettingViewModel>("Settings/Defaults/DefaultSettingViews.xaml");
+            serviceProvider.AddTypeDateTemplate<ComboBoxSettingViewModel>("Settings/Defaults/DefaultSettingViews.xaml");
+
+            serviceProvider.AddTypeDateTemplate<ProgramFilterSettingViewModel>("Settings/Local/LocalSettingViews.xaml");
 
             serviceProvider.AddTypeDateTemplate<Theme>("Views/ComboBoxViews.xaml");
 
             serviceProvider.AddTypeDateTemplate<MessageBarViewModel>("Views/MessageBarView.xaml");
 
-            serviceProvider.AddTypeDateTemplate<FormatsMetadata>("Views/MetadataViews.xaml");
-            serviceProvider.AddTypeDateTemplate<TriggersMetadata>("Views/MetadataViews.xaml");
+            serviceProvider.AddTypeDateTemplate<FormatsMetadata>("Clipboard/Metadata/MetadataViews.xaml");
+            serviceProvider.AddTypeDateTemplate<TriggersMetadata>("Clipboard/Metadata/MetadataViews.xaml");
         }
     }
 }

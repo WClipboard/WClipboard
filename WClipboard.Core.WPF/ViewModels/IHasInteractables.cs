@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using WClipboard.Core.WPF.Utilities;
 
 namespace WClipboard.Core.WPF.ViewModels
 {
@@ -16,6 +16,6 @@ namespace WClipboard.Core.WPF.ViewModels
     /// </summary>
     public interface IHasAssignableInteractables : IHasInteractables
     {
-        new ObservableCollection<InteractableState> Interactables { get; }
+        new ConcurrentBindableList<InteractableState> Interactables { get; }
     }
 }

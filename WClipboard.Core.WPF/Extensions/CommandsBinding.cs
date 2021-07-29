@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using WClipboard.Core.Utilities.Collections;
 using WClipboard.Core.WPF.Models;
 using WClipboard.Core.WPF.ViewModels;
@@ -72,7 +73,14 @@ namespace WClipboard.Core.WPF.Extensions
                     {
                         if (weakUiElementRef.TryGetTarget(out var uiElement))
                         {
-                            UpdateInputBindings(uiElement);
+                            if (uiElement is DispatcherObject dispatcherObject && !dispatcherObject.CheckAccess())
+                            {
+                                dispatcherObject.Dispatcher.Invoke(DispatcherPriority.DataBind, new Action<UIElement>(UpdateInputBindings), uiElement);
+                            } 
+                            else
+                            {
+                                UpdateInputBindings(uiElement);
+                            }
                         }
                     });
 

@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using WClipboard.Core.WPF.Extensions;
 
+#nullable enable
+
 namespace WClipboard.Plugin.ClipboardImplementations.Text.LinkedContent.Defaults
 {
     public class PathLinkedImplementationFactory : BaseLinkedTextContentFactory
@@ -23,19 +25,19 @@ namespace WClipboard.Plugin.ClipboardImplementations.Text.LinkedContent.Defaults
             }
         }
 
-        public override Task<object> Create(TextClipboardImplementation textClipboardImplementation, Regex regex, Match match)
+        public override Task<ILinkedTextContent?> Create(TextClipboardImplementation textClipboardImplementation, Regex regex, Match match)
         {
-            string path = null;
+            string? path = null;
             if(ReferenceEquals(urlLinuxRegex, regex))
             {
                 path = match.Groups[1].Value;
                 if(match.Groups[2].Value == "$")
                 {
-                    path = path.Substring(0, 1) + ":" + path.Substring(2);
+                    path = path[0..1] + ":" + path[2..];
                 } 
                 else if(match.Groups[2].Value == "")
                 {
-                    path = path.Substring(0, 1) + ":" + path.Substring(1);
+                    path = path[0..1] + ":" + path[1..];
                 }
                 path = path.Replace('/', '\\');
             } 
@@ -46,13 +48,13 @@ namespace WClipboard.Plugin.ClipboardImplementations.Text.LinkedContent.Defaults
 
             if(path is null)
             {
-                return Task.FromResult<object>(null);
+                return Task.FromResult<ILinkedTextContent?>(null);
             }
             else
             {
                 var dataObject = new DataObject();
                 dataObject.SetFileDropList(path);
-                return Task.FromResult<object>(dataObject);
+                return Task.FromResult<ILinkedTextContent?>(new LinkedTextContent<DataObject>(match.Captures[0], dataObject, "path"));
             }
         }
     }

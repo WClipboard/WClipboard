@@ -4,11 +4,11 @@ using System.Globalization;
 using System.Linq;
 using WClipboard.Core.Extensions;
 using WClipboard.Core.Utilities;
+using WClipboard.Core.WPF.Clipboard.Format;
 using WClipboard.Core.WPF.Clipboard.Implementation.ViewModel;
 using WClipboard.Core.WPF.Clipboard.ViewModel;
 using WClipboard.Core.WPF.Converters;
 using WClipboard.Core.WPF.Extensions;
-using WClipboard.Core.WPF.Models;
 using WClipboard.Core.WPF.Models.Text;
 using WClipboard.Core.WPF.Themes;
 

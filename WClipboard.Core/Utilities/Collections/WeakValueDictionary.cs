@@ -120,7 +120,7 @@ namespace WClipboard.Core.Utilities.Collections
             return dictionary.Select(kv =>
             {
                 kv.Value.TryGetTarget(out var value);
-                return new KeyValuePair<TKey, TValue>(kv.Key, value);
+                return new KeyValuePair<TKey, TValue>(kv.Key, value!);
             }).Where(kv => kv.Value != null).GetEnumerator();
         }
 

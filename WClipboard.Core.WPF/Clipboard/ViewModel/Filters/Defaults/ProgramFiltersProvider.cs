@@ -49,7 +49,7 @@ namespace WClipboard.Core.WPF.Clipboard.ViewModel.Filters.Defaults
 
             public override bool Passes(ClipboardObjectViewModel clipboardObjectViewModel)
             {
-                return clipboardObjectViewModel.MainTrigger.Program == Program;
+                return clipboardObjectViewModel.MainTrigger?.DataSourceProgram == Program || clipboardObjectViewModel.MainTrigger?.ForegroundProgram == Program;
             }
         }
     }

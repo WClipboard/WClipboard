@@ -1,11 +1,41 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:WClipboard.Plugin.ClipboardImplementations.Text"
-                    xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes;assembly=WClipboard.Core.WPF">
+                    xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes;assembly=WClipboard.Core.WPF"
+                    xmlns:cc="clr-namespace:WClipboard.Core.WPF.CustomControls;assembly=WClipboard.Core.WPF"
+                    xmlns:e="clr-namespace:WClipboard.Core.WPF.Extensions;assembly=WClipboard.Core.WPF">
+    <DataTemplate x:Key="LinkedTextClipboardImplementationView" DataType="{x:Type local:LinkedTextClipboardImplementationViewModel}">
+        <StackPanel>
+            <ItemsControl ItemsSource="{Binding Interactables}" ItemsPanel="{StaticResource ItemsStackPanelHorizontal}" ItemTemplateSelector="{StaticResource TypeTemplateSelector}" />
+            <FlowDocumentScrollViewer t:Palette.Active="{StaticResource ContentPalette}" MaxHeight="300" Background="{t:FromPalette}" Foreground="{t:FromPalette}" BorderBrush="{x:Null}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" MinZoom="100">
+                <FlowDocument FontFamily="Segoe UI" FontSize="12" Background="{t:FromPalette}" Foreground="{t:FromPalette}" PagePadding="3" TextAlignment="Left" >
+                    <Paragraph>
+                        <Run Text="{Binding Model.Source}" />
+                    </Paragraph>
+                </FlowDocument>
+            </FlowDocumentScrollViewer>
+        </StackPanel>
+    </DataTemplate>
+    
     <DataTemplate x:Key="TextClipboardImplementationView" DataType="{x:Type local:TextClipboardImplementationViewModel}">
         <StackPanel>
             <ItemsControl ItemsSource="{Binding Interactables}" ItemsPanel="{StaticResource ItemsStackPanelHorizontal}" ItemTemplateSelector="{StaticResource TypeTemplateSelector}" />
-            <TextBox t:Palette.Active="{StaticResource ContentPalette}" Text="{Binding Model.Source, Mode=OneWay}" IsReadOnly="True" MaxHeight="300" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" TextWrapping="Wrap" />
+            <!--<RichTextBox t:Palette.Active="{StaticResource ContentPalette}"  IsReadOnly="True" MaxHeight="300" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="{t:FromPalette}" Foreground="{t:FromPalette}" BorderBrush="{x:Null}" BorderThickness="0">
+                <RichTextBox.Document>
+                    <FlowDocument Background="{t:FromPalette}" Foreground="{t:FromPalette}">
+                        <Paragraph e:TextExtensions.Inlines="{Binding Inlines}" />
+                    </FlowDocument>
+                </RichTextBox.Document>
+            </RichTextBox>-->
+            <FlowDocumentScrollViewer t:Palette.Active="{StaticResource ContentPalette}" MaxHeight="300" Background="{t:FromPalette}" Foreground="{t:FromPalette}" BorderBrush="{x:Null}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" MinZoom="100">
+                <FlowDocument FontFamily="Segoe UI" FontSize="12" Background="{t:FromPalette}" Foreground="{t:FromPalette}" PagePadding="3" TextAlignment="Left" >
+                    <!--PageWidth="{Binding Source={RelativeSource AncestorType=FlowDocumentScrollViewer}, Path=ActualWidth}"-->
+                    <Paragraph e:TextExtensions.Inlines="{Binding Inlines}" />
+                </FlowDocument>
+            </FlowDocumentScrollViewer>
+
+            <cc:ContaineredItemsControl ItemsSource="{Binding DynamicLinkedContent}" ItemTemplateSelector="{StaticResource TypeTemplateSelector}" ItemContainerStyle="{StaticResource QuoteItemContainerStyle}" />
+            <cc:ContaineredItemsControl ItemsSource="{Binding StaticLinkedContent}" ItemTemplateSelector="{StaticResource TypeTemplateSelector}" ItemContainerStyle="{StaticResource QuoteItemContainerStyle}" />
         </StackPanel>
     </DataTemplate>
 </ResourceDictionary>

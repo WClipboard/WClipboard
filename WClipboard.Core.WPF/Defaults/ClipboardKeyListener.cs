@@ -7,14 +7,12 @@ using WClipboard.Core.WPF.Clipboard;
 using WClipboard.Core.WPF.Listeners;
 using WClipboard.Core.WPF.Managers;
 using WClipboard.Core.WPF.Models;
-using WClipboard.Core.WPF.Native.Helpers;
+using WClipboard.Windows.Helpers;
 
 namespace WClipboard.Core.WPF.Defaults
 {
     public class ClipboardKeyListener : IAfterDIContainerBuildListener
     {
-        private const int minimalDelayTime = 100;
-
         private readonly IClipboardObjectsManager _clipboardObjectsManager;
         private readonly IGlobalKeyEventsManager _globalKeyEventsManager;
 
@@ -31,7 +29,7 @@ namespace WClipboard.Core.WPF.Defaults
             _globalKeyEventsManager.AddListener(new GlobalKeyUpEventListener(Key.X, ModifierKeys.Control, OnEvent));
         }
 
-        private async void OnEvent(GlobalKeyUpEventListener sender, long pressedTime)
+        private void OnEvent(GlobalKeyUpEventListener sender, long pressedTime)
         {
             var triggerType = sender.Key switch
             {
@@ -41,14 +39,11 @@ namespace WClipboard.Core.WPF.Defaults
                 _ => null
             };
 
-            if((sender.Key == Key.C || sender.Key == Key.X) && pressedTime < minimalDelayTime)
-            {
-                await Task.Delay((int)(minimalDelayTime - pressedTime)).ConfigureAwait(false);
-            }
-
             if(!(triggerType is null))
             {
-                _ = _clipboardObjectsManager.ProcessClipboardTrigger(new ClipboardTrigger(triggerType, WindowInfoHelper.GetForegroundWindowInfo(), new TimeKeyDownInfo(pressedTime)));
+                var dataSource = WindowInfoHelper.GetClipboardOwnerWindowInfo();
+                var foreground = WindowInfoHelper.GetForegroundWindowInfo();
+                _ = _clipboardObjectsManager.ProcessClipboardTrigger(new ClipboardTrigger(triggerType, dataSource?.Item2, foreground?.Item2, foreground?.Item1, new TimeKeyDownInfo(pressedTime)));
             }
         }
     }

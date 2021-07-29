@@ -8,4 +8,12 @@ namespace WClipboard.Core.Settings
         object? Value { get; set; }
         object? GetDefaultValue(); 
     }
+
+    public static class IIOSettingExtensions
+    {
+        public static T GetValue<T>(this IIOSetting setting)
+        {
+            return (T)setting.Value!;
+        }
+    }
 }

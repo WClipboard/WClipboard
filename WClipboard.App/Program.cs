@@ -5,8 +5,12 @@ using WClipboard.App.Models;
 using WClipboard.App.Setup;
 using WClipboard.Core.DI;
 using WClipboard.Core.WPF.DI;
-using WClipboard.Notifications.DI;
+using WClipboard.Windows.DI;
 using WClipboard.Plugin.DI;
+#if DEBUG
+#else
+using System.Windows;
+#endif
 
 namespace WClipboard.App
 {
@@ -35,14 +39,16 @@ namespace WClipboard.App
                 if (installedState == InstalledState.NotInstalled || installedState == InstalledState.OlderVersionPresent)
                 {
                     installer.Install();
-                    return;
-                } 
+                }
+#if DEBUG
+#else
                 else if (installedState == InstalledState.NewerVersionPresent)
                 {
+                    MessageBox.Show($"There is already a newer version of {appInfo.Name} installed, use that version", "Version conflict", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
+#endif
             }
-
 
             if (args.Contains("/nodebug")) {
                 LaunchApp(appInfo);
@@ -55,7 +61,7 @@ namespace WClipboard.App
         {
             DiContainer.Setup()
                 .Add<StartupCore>()
-                .Add<StartupNotifications>()
+                .Add<StartupWindows>()
                 .Add<StartupWpf>()
                 .Add<StartupPlugin>()
                 .Add<StartupApp>()

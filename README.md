@@ -4,7 +4,7 @@
 WClipboard is an intelligent, free to use, opensource clipboard manager.
 It stores your clipboard history and simplifies your workflow.
 
-WClipboard requires [.NET 5.0 x64 .NET Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/5.0/runtime). We only support a 64 bits Windows 10 machine.
+WClipboard requires [.NET 5.0 x64 .NET Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/5.0/runtime). We only support a 64 bits Windows 10 machine version 1903 or later (Api version 10.0.18362.0).
 ## Installation
 Go to the latest release. There you find in the assets two options to install WClipboard:
 1. Download and run the Setup MSI installer.
