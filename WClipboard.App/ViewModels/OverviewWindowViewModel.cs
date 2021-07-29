@@ -213,7 +213,6 @@ namespace WClipboard.App.ViewModels
                     break;
             }
         }
-        void IClipboardObjectsListener.OnResolvedTriggerUpdated(ResolvedClipboardTrigger result) { }
         void IClipboardObjectsListener.OnClipboardObjectRemoved(ClipboardObject clipboardObject)
         {
             Objects.RemoveAll(vm => vm.Model == clipboardObject);
