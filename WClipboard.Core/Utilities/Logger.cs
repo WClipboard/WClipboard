@@ -17,13 +17,20 @@ namespace WClipboard.Core.Utilities
         private static string GetCurrentThreadName()
         {
             var t = Thread.CurrentThread;
-            if (t.Name != null) {
+            if (t.Name != null)
+            {
                 return t.Name;
-            } else if (t.IsThreadPoolThread) {
+            }
+            else if (t.IsThreadPoolThread)
+            {
                 return "worker";
-            } else if (t.IsBackground) {
+            }
+            else if (t.IsBackground)
+            {
                 return "background";
-            } else {
+            }
+            else
+            {
                 return "no name";
             }
         }
@@ -38,7 +45,11 @@ namespace WClipboard.Core.Utilities
 
         }
 
-        public static void Log(LogLevel level, Exception ex) => Log(level, GenerateExceptionString(ex));
+        public static void Log(LogLevel level, Exception ex)
+            => Log(level, GenerateExceptionString(ex));
+
+        public static void Log(LogLevel level, string message, Exception ex)
+            => Log(level, $"{message}: {GenerateExceptionString(ex)}");
 
         internal static string GenerateExceptionString(Exception ex)
         {
@@ -50,6 +61,7 @@ namespace WClipboard.Core.Utilities
     {
         void Log(LogLevel level, string message, [CallerMemberName] string? callerMethod = null);
         void Log(LogLevel level, Exception ex, [CallerMemberName] string? callerMethod = null);
+        void Log(LogLevel level, string message, Exception ex, [CallerMemberName] string? callerMethod = null);
     }
 
     public class Logger<T> : ILogger<T>
@@ -62,5 +74,8 @@ namespace WClipboard.Core.Utilities
 
         public void Log(LogLevel level, Exception ex, [CallerMemberName] string? callerMethod = null)
             => Log(level, Logger.GenerateExceptionString(ex), callerMethod);
+
+        public void Log(LogLevel level, string message, Exception ex, [CallerMemberName] string? callerMethod = null)
+            => Log(level, $"{message}: {Logger.GenerateExceptionString(ex)}", callerMethod);
     }
 }
