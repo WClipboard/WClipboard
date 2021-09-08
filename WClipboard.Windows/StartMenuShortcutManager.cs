@@ -40,7 +40,7 @@ namespace WClipboard.Windows
                     shortcut.Load(shortcutFile);
 
                 if (shortcut.TargetPath != appInfo.Path) { shortcut.TargetPath = appInfo.Path; isModified = true; }
-                if (shortcut.AppUserModelID != appInfo.Name) { shortcut.TargetPath = appInfo.Name; isModified = true; }
+                if (shortcut.AppUserModelID != appInfo.Name) { shortcut.AppUserModelID = appInfo.Name; isModified = true; }
 
                 if (isModified)
                 {

@@ -64,9 +64,17 @@ namespace WClipboard.Core.WPF.Clipboard
 
         public ResolvedClipboardTrigger ProcessClipboardTrigger(ClipboardTrigger trigger, IDataObject dataObject)
         {
+            var resolvedClipboardTrigger = CreateResolvedClipboardTrigger(trigger, dataObject);
+            ProcessResolvedClipboardTrigger(resolvedClipboardTrigger);
+            return resolvedClipboardTrigger;
+        }
+
+        private ResolvedClipboardTrigger CreateResolvedClipboardTrigger(ClipboardTrigger trigger, IDataObject dataObject)
+        {
             // Check if clipboard object already exists in list
             if (dataObject.TryGetWClipboardId(out var guid) && _allCollection.TryGetValue(guid, out var refClipboardObject))
             {
+                refClipboardObject.Triggers.Add(trigger);
                 return new ResolvedClipboardTrigger(trigger, refClipboardObject, ResolvedClipboardTriggerType.WClipboardId);
             }
 
@@ -88,10 +96,7 @@ namespace WClipboard.Core.WPF.Clipboard
             }
 
             //Check for Equals
-            var resolvedClipboardTrigger = CheckForEqualReference(trigger, dataObject, equatableFormats);
-
-            ProcessResolvedClipboardTrigger(resolvedClipboardTrigger);
-            return resolvedClipboardTrigger;
+            return CheckForEqualsReference(trigger, dataObject, equatableFormats);
         }
 
         private bool ShouldFilter(ClipboardTrigger trigger, IEnumerable<EqualtableFormat> equaltableFormats)
@@ -142,25 +147,27 @@ namespace WClipboard.Core.WPF.Clipboard
             InformListeners(l => l.OnResolvedTrigger(result));
         }
 
-        private ResolvedClipboardTrigger CheckForEqualReference(ClipboardTrigger trigger, IDataObject dataObject, List<EqualtableFormat> equatableFormats)
+        private ResolvedClipboardTrigger CheckForEqualsReference(ClipboardTrigger trigger, IDataObject dataObject, List<EqualtableFormat> equatableFormats)
         {
             var registrations = new List<ExistsEqualtableFormatContainer>(equatableFormats.Count);
             registrations.AddRange(equatableFormats.Select(ef => new ExistsEqualtableFormatContainer(ef)));
 
             foreach(var clipboardObject in _allCollection)
             {
-                var result = CheckForEqualReference(trigger, registrations, clipboardObject);
-                if (result != null)
-                    return result;
+                if (CheckForEqualsReference(registrations, clipboardObject))
+                {
+                    clipboardObject.Triggers.Add(trigger);
+                    return new ResolvedClipboardTrigger(trigger, clipboardObject, ResolvedClipboardTriggerType.EqualsReference);
+                }
             }
 
             return CreateResolvedTrigger(trigger, dataObject, equatableFormats);
         }
 
-        private ResolvedClipboardTrigger? CheckForEqualReference(ClipboardTrigger trigger, List<ExistsEqualtableFormatContainer> registrations, ClipboardObject clipboardObject)
+        private bool CheckForEqualsReference(List<ExistsEqualtableFormatContainer> registrations, ClipboardObject clipboardObject)
         {
             if (registrations.Count != clipboardObject.Implementations.Count) //Its only a match if the formats are equal hence the formats count should also be equal
-                return null;
+                return false;
 
             ResetRegistrations(registrations);
 
@@ -175,21 +182,19 @@ namespace WClipboard.Core.WPF.Clipboard
                     }
                 }
 
-                if (registration.Match == null) //We did not found a match so there not equal
-                    return null;
+                if (registration.Match is null) //We did not found a match so there not equal
+                    return false;
             }
 
             foreach (var registration in registrations)
             {
                 if (!registration.Match!.IsEqual(registration.EqualtableFormat)) //! because if it was null then it will be filtered out in the lines above
                 {
-                    return null;
+                    return false;
                 }
             }
 
-            clipboardObject.Triggers.Add(trigger);
-
-            return new ResolvedClipboardTrigger(trigger, clipboardObject, ResolvedClipboardTriggerType.EqualsReference);
+            return true;
         }
 
         private class ExistsEqualtableFormatContainer

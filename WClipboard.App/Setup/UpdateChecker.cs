@@ -87,18 +87,15 @@ namespace WClipboard.App.Setup
             }
             catch (UriFormatException ex)
             {
-                logger.Log(LogLevel.Critical, "Could not parse newest release html page to uri");
-                logger.Log(LogLevel.Critical, ex);
+                logger.Log(LogLevel.Critical, "Could not parse newest release html page to uri", ex);
             }
             catch (JsonException ex)
             {
-                logger.Log(LogLevel.Warning, "Could not parse github api response to Json");
-                logger.Log(LogLevel.Warning, ex);
+                logger.Log(LogLevel.Warning, "Could not parse github api response to Json", ex);
             }
             catch (WebException ex)
             {
-                logger.Log(LogLevel.Info, "Something went wrong when checking for updates");
-                logger.Log(LogLevel.Info, ex);
+                logger.Log(LogLevel.Info, "Something went wrong when checking for updates", ex);
             }
         }
     }

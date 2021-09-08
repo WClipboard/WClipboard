@@ -40,8 +40,7 @@ namespace WClipboard.Core.WPF.Clipboard
                 }
                 catch(Exception ex)
                 {
-                    _logger.Log(LogLevel.Info, "An exception occured while processing clipboard trigger");
-                    _logger.Log(LogLevel.Info, ex);
+                    _logger.Log(LogLevel.Info, "An exception occured while processing clipboard trigger", ex);
                     queueItem.Task.SetException(ex);
                 }
             }

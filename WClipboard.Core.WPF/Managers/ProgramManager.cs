@@ -8,6 +8,8 @@ using WClipboard.Core.WPF.Models;
 using WClipboard.Windows;
 using ShellLinkPlus;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
+using WClipboard.Core.Utilities;
 
 namespace WClipboard.Core.WPF.Managers
 {
@@ -21,9 +23,11 @@ namespace WClipboard.Core.WPF.Managers
     public class ProgramManager : IProgramManager
     {
         private readonly KeyedCollectionFunc<string, Program> cache;
+        private readonly ILogger<ProgramManager> logger;
 
-        public ProgramManager()
+        public ProgramManager(ILogger<ProgramManager> logger)
         {
+            this.logger = logger;
             cache = new KeyedCollectionFunc<string, Program>(p => p.Path!);
         }
 
@@ -51,20 +55,27 @@ namespace WClipboard.Core.WPF.Managers
                     if (Path.GetFileName(file).Contains("uninstall", StringComparison.InvariantCultureIgnoreCase))
                         continue;
 
-                    using (var shellLink = new ShellLink(file))
+                    try
                     {
-                        var targetPath = shellLink.TargetPath;
+                        using (var shellLink = new ShellLink(file))
+                        {
+                            var targetPath = shellLink.TargetPath;
 
-                        if (!targetPath.EndsWith(".exe", StringComparison.InvariantCultureIgnoreCase))
-                            continue;
+                            if (!targetPath.EndsWith(".exe", StringComparison.InvariantCultureIgnoreCase))
+                                continue;
 
-                        if (Path.GetFileName(targetPath).Contains("uninstall", StringComparison.InvariantCultureIgnoreCase))
-                            continue;
+                            if (Path.GetFileName(targetPath).Contains("uninstall", StringComparison.InvariantCultureIgnoreCase))
+                                continue;
 
-                        if (!File.Exists(targetPath))
-                            continue;
+                            if (!File.Exists(targetPath))
+                                continue;
 
-                        GetProgram(targetPath);
+                            GetProgram(targetPath);
+                        }
+                    }
+                    catch(COMException ex)
+                    {
+                        logger.Log(LogLevel.Info, $"Could not read shortcut {file}", ex);
                     }
                 }
             });

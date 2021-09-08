@@ -21,8 +21,7 @@ namespace WClipboard.App
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            Logger.Log(LogLevel.Critical, $"Exception cathed in {nameof(DispatcherUnhandledException)}");
-            Logger.Log(LogLevel.Critical, e.Exception);
+            Logger.Log(LogLevel.Critical, $"Exception cathed in {nameof(DispatcherUnhandledException)}", e.Exception);
 
             Shutdown(-2);
         }
