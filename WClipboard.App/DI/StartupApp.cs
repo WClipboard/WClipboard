@@ -19,7 +19,8 @@ namespace WClipboard.App.DI
             context.IOSettingsManager.AddSettings(
                 new EnumSetting<MinimizeTo>(AppUISettingsFactory.MinimizeTo, MinimizeTo.Taskbar),
                 new BasicSetting<bool>(AppUISettingsFactory.CheckUpdatesOnStartUp, () => true),
-                new BasicSetting<bool>(AppUISettingsFactory.CheckForPrereleases, () => false)
+                new BasicSetting<bool>(AppUISettingsFactory.CheckForPrereleases, () => false),
+                new BasicSetting<bool>(AppUISettingsFactory.StartupMinimized, () => false)
             );
 
             services.AddSingleton<ICursorManager, CursorManager>();

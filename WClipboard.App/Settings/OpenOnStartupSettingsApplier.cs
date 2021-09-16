@@ -77,7 +77,7 @@ namespace WClipboard.App.Settings
                         }
                         else if (!oldValue.Value)
                         {
-                            Registry.SetValue(CurrentUserRegisteryKey + StartupRegisteryKey, appInfo.Name, $"\"{appInfo.Path}\"", RegistryValueKind.String);
+                            Registry.SetValue(CurrentUserRegisteryKey + StartupRegisteryKey, appInfo.Name, $"\"{appInfo.Path}\" /autostart", RegistryValueKind.String);
                         }
                     }
                     else

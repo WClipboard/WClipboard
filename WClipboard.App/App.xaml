@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:WClipboard.App"
              xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes;assembly=WClipboard.Core.WPF"
              xmlns:cursors="clr-namespace:WClipboard.App.Cursors"
-             StartupUri="Windows/OverviewWindow.xaml" ShutdownMode="OnExplicitShutdown">
+             ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

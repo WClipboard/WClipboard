@@ -8,10 +8,10 @@ using System.Windows.Input;
 using WClipboard.App.Settings;
 using WClipboard.App.ViewModels.Interactables;
 using WClipboard.App.Windows;
+using WClipboard.Core;
 using WClipboard.Core.Clipboard.Format;
 using WClipboard.Core.Clipboard.Trigger;
 using WClipboard.Core.DI;
-using WClipboard.Core.Extensions;
 using WClipboard.Core.Settings;
 using WClipboard.Core.Utilities;
 using WClipboard.Core.WPF.Clipboard;
@@ -60,14 +60,15 @@ namespace WClipboard.App.ViewModels
 
         public FilterHelper FilterHelper { get; }
 
-        public OverviewWindowViewModel(OverviewWindow overviewWindow, 
+        public OverviewWindowViewModel( 
             IClipboardObjectsManager clipboardObjectsManager,
             IClipboardObjectManager clipboardObjectManager,
             IClipboardFormatsManager clipboardFormatsManager,
             IInteractablesManager interactablesManager,
             ITaskbarIcon taskbarIcon,
             IIOSettingsManager settingsManager,
-            IProgramManager programManager
+            IProgramManager programManager,
+            IAppInfo appInfo
             )
         {
             if (dragAndDropType == null)
@@ -91,7 +92,8 @@ namespace WClipboard.App.ViewModels
 
             minimizeToSetting = settingsManager.GetSetting(AppUISettingsFactory.MinimizeTo);
 
-            this.overviewWindow = overviewWindow;
+            overviewWindow = new OverviewWindow();
+            overviewWindow.DataContext = this;
             overviewWindow.Loaded += OverviewWindow_Loaded;
             overviewWindow.Closed += OverviewWindow_Closed;
             overviewWindow.DragEnter += OverviewWindow_DragEnter;
@@ -103,6 +105,10 @@ namespace WClipboard.App.ViewModels
             clipboadObjectViewModelCloseInteractable = new CloseInteractable();
 
             interactablesManager.AssignStates(this);
+
+            if (!appInfo.Args.Contains("/autostart") || !settingsManager.GetValue<bool>(AppUISettingsFactory.StartupMinimized)) {
+                overviewWindow.Show();
+            }
         }
 
         private void OverviewWindow_StateChanged(object? sender, EventArgs e)
@@ -122,7 +128,8 @@ namespace WClipboard.App.ViewModels
                         overviewWindow.WindowState = WindowState.Normal;
                     if (!overviewWindow.ShowInTaskbar)
                         overviewWindow.ShowInTaskbar = true;
-                    overviewWindow.Focus();
+                    overviewWindow.Show();
+                    overviewWindow.Activate();
                     break;
             }
         }

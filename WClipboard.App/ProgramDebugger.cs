@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using WClipboard.App.Models;
 
@@ -16,11 +17,14 @@ namespace WClipboard.App
 
         private ProgramDebugger(AppInfo appInfo)
         {
-            ProcessStartInfo info = new ProcessStartInfo(appInfo.Path, "/nodebug")
+            ProcessStartInfo info = new ProcessStartInfo(appInfo.Path)
             {
                 RedirectStandardError = true,
                 UseShellExecute = false
             };
+            info.ArgumentList.Add("/nodebug");
+            if (appInfo.Args.Contains("/autostart"))
+                info.ArgumentList.Add("/autostart");
             program = Process.Start(info) ?? throw new Exception($"Could not start {appInfo.Name}");
         }
 

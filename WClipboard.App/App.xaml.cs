@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Windows;
+using WClipboard.App.ViewModels;
 using WClipboard.Core.DI;
 using WClipboard.Core.Utilities;
 using WClipboard.Core.WPF.LifeCycle;
@@ -34,6 +34,9 @@ namespace WClipboard.App
             {
                 informService.AfterWPFAppStartup();
             }
+
+            var overviewWindow = DiContainer.SP!.Create<OverviewWindowViewModel>();
+            MainWindow = overviewWindow.Window;
 
             base.OnStartup(e);
         }
