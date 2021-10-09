@@ -10,8 +10,8 @@
 
     <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="Background" Value="{t:FromPalette}" />
-        <Setter Property="BorderBrush" Value="{x:Null}" />
-        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="{t:FromPalette Background}" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Foreground" Value="{t:FromPalette}" />
         <Setter Property="Padding" Value="3" />
         <Style.Triggers>

@@ -44,20 +44,30 @@
     </Style>
 
     <DataTemplate x:Key="ProgramFilterSettingView" DataType="{x:Type local:ProgramFilterSettingViewModel}">
-        <StackPanel Orientation="Vertical" e:Spacing.Spacing="10,2,0,2" MinWidth="500">
-            <TextBlock Text="{Binding Description, StringFormat={}{0}:}" e:Spacing.Add="-10,0,0,0" />
-            <!--<ListBox ItemsSource="{Binding Value}" Visibility="{Binding Value.Count, Converter={StaticResource VisibleIfGreaterThanZeroConverter}}" ItemTemplate="{StaticResource ProgramView}" ItemContainerStyle="{StaticResource BackgroundListBoxItem}"/>-->
-            <cc:ContaineredItemsControl t:Palette.Active="Content"  Foreground="{t:FromPalette}" Background="{t:FromPalette}" ItemsSource="{Binding Value}" ItemTemplate="{StaticResource ProgramView}" ItemContainerStyle="{StaticResource ProgramContainerStyle}" HorizontalContentAlignment="Stretch" />
+        <StackPanel>
+            <TextBlock Text="{Binding Description, StringFormat={}{0}:}" Margin="0,3,0,3" />
 
-            <TextBlock Text="No programs" t:Palette.Active="Content" Foreground="{t:FromPalette}" Background="{t:FromPalette}" TextAlignment="Center" Visibility="{Binding Value.Count, Converter={StaticResource VisibleIfZeroConverter}}" Padding="2"/>
+            <StackPanel MinWidth="500" t:Palette.Active="Content" Background="{t:FromPalette}">
+                <!--<ListBox ItemsSource="{Binding Value}" Visibility="{Binding Value.Count, Converter={StaticResource VisibleIfGreaterThanZeroConverter}}" ItemTemplate="{StaticResource ProgramView}" ItemContainerStyle="{StaticResource BackgroundListBoxItem}"/>-->
+                <cc:ContaineredItemsControl Foreground="{t:FromPalette}" ItemsSource="{Binding Value}" ItemTemplate="{StaticResource ProgramView}" ItemContainerStyle="{StaticResource ProgramContainerStyle}" HorizontalContentAlignment="Stretch" />
 
-            <TextBlock Text="Add program:" e:Spacing.Add="0,4,0,0" />
+                <TextBlock Text="No programs" TextAlignment="Center" Visibility="{Binding Value.Count, Converter={StaticResource VisibleIfZeroConverter}}" Padding="2"/>
 
-            <DockPanel LastChildFill="True" e:Spacing.Spacing="1,0">
-                <cc:IconPresenter DockPanel.Dock="Left" Icon="SearchIcon" Width="16" Height="16" VerticalAlignment="Center" />
-                <Button DockPanel.Dock="Right" Content="Browse..." Command="{Binding BrowseCommand}" Style="{StaticResource UIElementButton}" />
-                <cc:SearchBox ItemsSource="{Binding SearchPrograms}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ItemTemplate="{StaticResource ProgramView}" SelectedItem="{Binding SelectedSearchProgram}" VerticalAlignment="Center" />
-            </DockPanel>
+                <Border t:Palette.Active="Surface" Background="{t:FromPalette}" Padding="2" BorderBrush="{t:FromPalette GrayB}" BorderThickness="1" CornerRadius="3" Margin="5">
+                    <StackPanel e:Spacing.Spacing="0,2,0,2">
+                        <StackPanel e:Spacing.Spacing="3,0,3,0" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <cc:IconPresenter Icon="AddIcon" Width="16" Height="16" VerticalAlignment="Center" />
+                            <TextBlock Text="Add program" e:Spacing.Add="0,4,0,0" TextAlignment="Center" />
+                        </StackPanel>
+
+                        <DockPanel LastChildFill="True" e:Spacing.Spacing="1,0">
+                            <cc:IconPresenter DockPanel.Dock="Left" Icon="SearchIcon" Width="16" Height="16" VerticalAlignment="Center" />
+                            <Button DockPanel.Dock="Right" Content="Browse..." Command="{Binding BrowseCommand}" Style="{StaticResource UIElementButton}" Width="100" />
+                            <cc:SearchBox ItemsSource="{Binding SearchPrograms}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ItemTemplate="{StaticResource ProgramView}" SelectedItem="{Binding SelectedSearchProgram}" VerticalAlignment="Center" />
+                        </DockPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
         </StackPanel>
     </DataTemplate>
 </ResourceDictionary>

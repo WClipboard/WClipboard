@@ -12,7 +12,9 @@
         d:DesignHeight="450" d:DesignWidth="800"
         t:Palette.Active="Surface"
         Title="Settings"
-        ResizeMode="CanMinimize">
+        Width="1000"
+        MaxWidth="1000"
+        Icon="pack://application:,,,/Resources/WClipboard.ico">
     <cc:CustomWindow.Resources>
         <c:ChainConverter x:Key="KeyConverter">
             <c:SplitConverter Seperator="." />
@@ -20,44 +22,33 @@
         </c:ChainConverter>
     </cc:CustomWindow.Resources>
 
-    <DockPanel LastChildFill="True">
-        <StackPanel DockPanel.Dock="Bottom">
-            <ContentControl ContentTemplateSelector="{StaticResource TypeTemplateSelector}" Content="{Binding RestartWarning}" />
-            <StackPanel Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right">
-                <Button Command="{Binding SaveCommand, Mode=OneTime}" Content="Save" Width="100" Style="{StaticResource UIElementButton}" />
-                <Button Command="{Binding RestoreCommand, Mode=OneTime}" Content="Revert" Width="100" Style="{StaticResource UIElementButton}" />
-                <Button Command="{Binding OkCommand, Mode=OneTime}" Content="OK" Width="100" Style="{StaticResource UIElementButton}" />
-            </StackPanel>
-        </StackPanel>
-        <TreeView t:Palette.Active="Content" Background="{t:FromPalette}" Foreground="{t:FromPalette}" ItemsSource="{Binding SettingsTree}" BorderThickness="0" >
-            <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type avm:SectionSettingViewModel}" ItemsSource="{Binding Childs}">
-                    <TextBlock Text="{Binding Key, Converter={StaticResource KeyConverter}}" FontSize="18" />
-                </HierarchicalDataTemplate>
-                <DataTemplate DataType="{x:Type s:SettingViewModel}">
-                    <StackPanel>
-                        <ContentControl ContentTemplateSelector="{StaticResource TypeTemplateSelector}" Content="{Binding }"/>
-                        <ContentControl ContentTemplateSelector="{StaticResource TypeTemplateSelector}" Content="{Binding MessageBar}"/>
+    <Border t:Palette.Active="Content" Background="{t:FromPalette}" BorderBrush="{t:FromPalette GrayB}" BorderThickness="0,1,0,0">
+        <DockPanel LastChildFill="True" >
+            <Border DockPanel.Dock="Bottom" t:Palette.Active="Surface" Background="{t:FromPalette}" BorderBrush="{t:FromPalette GrayB}" BorderThickness="0,1,0,0">
+                <StackPanel>
+                    <ContentControl ContentTemplateSelector="{StaticResource TypeTemplateSelector}" Content="{Binding RestartWarning}" />
+                    <StackPanel Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right">
+                        <Button Command="{Binding SaveCommand, Mode=OneTime}" Content="Save" Width="100" Style="{StaticResource UIElementButton}" />
+                        <Button Command="{Binding RestoreCommand, Mode=OneTime}" Content="Revert" Width="100" Style="{StaticResource UIElementButton}" />
+                        <Button Command="{Binding OkCommand, Mode=OneTime}" Content="OK" Width="100" Style="{StaticResource UIElementButton}" />
                     </StackPanel>
-                </DataTemplate>
-            </TreeView.Resources>
-            <TreeView.ItemContainerStyle>
-                <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-                    <Setter Property="Focusable" Value="False" />
-                    <Setter Property="IsExpanded" Value="True" />
-                    <Setter Property="Padding" Value="0,0,0,5" />
-                    <Style.Triggers>
-                        <Trigger Property="HasItems" Value="True">
-                            <Setter Property="Margin" Value="0,20,0,0" />
-                        </Trigger>
-                        <DataTrigger Binding="{Binding Key, Converter={StaticResource ContainsConverter}, ConverterParameter=.}" Value="False">
-                            <Setter Property="t:Palette.Active" Value="Surface" />
-                            <Setter Property="Background" Value="{t:FromPalette}"/>
-                            <Setter Property="Margin" Value="20,20,20,0" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TreeView.ItemContainerStyle>
-        </TreeView>
-    </DockPanel>
+                </StackPanel>
+            </Border>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding SettingsTree}" t:Palette.Active="Surface" Background="{t:FromPalette}" Foreground="{t:FromPalette}" HorizontalAlignment="Center" MaxWidth="1400" Padding="10" Margin="10">
+                    <ItemsControl.Resources>
+                        <DataTemplate DataType="{x:Type s:SettingViewModel}">
+                            <StackPanel Margin="0,2,0,2">
+                                <ContentControl ContentTemplateSelector="{StaticResource TypeTemplateSelector}" Content="{Binding }"/>
+                                <ContentControl ContentTemplateSelector="{StaticResource TypeTemplateSelector}" Content="{Binding MessageBar}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type avm:HeaderViewModel}">
+                            <TextBlock Text="{Binding Key, Converter={StaticResource KeyConverter}}" FontSize="{Binding FontSize}" Margin="{Binding Margin}" FontWeight="{Binding FontWeight}" />
+                        </DataTemplate>
+                    </ItemsControl.Resources>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
 </cc:CustomWindow>

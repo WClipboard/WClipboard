@@ -13,16 +13,23 @@
     <ControlTemplate x:Key="WindowsFontIconTemplate" TargetType="{x:Type cc:Icon}">
         <TextBlock Text="{Binding Symbol, Converter={StaticResource CharAsStringConverter}, Mode=OneTime}" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{t:FromPalette}" />
     </ControlTemplate>
-
+    
+    <!-- A -->
+    <ControlTemplate x:Key="AddIcon" TargetType="cc:Icon">
+        <Canvas Width="40" Height="40">
+            <Path Canvas.Left="12" Canvas.Top="12" Data="M12.126984,0L19.872009,0 19.872009,12.128 32,12.128 32,19.872999 19.872009,19.872999 19.872009,31.999 12.126984,31.999 12.126984,19.872999 0,19.872999 0,12.128 12.126984,12.128z" Stretch="Uniform" Fill="{t:FromPalette Foreground}" Width="24" Height="24" />
+        </Canvas>
+    </ControlTemplate>
+    
     <!-- C -->
     <ControlTemplate x:Key="ChevronUpIcon" TargetType="cc:Icon">
         <Canvas Width="40" Height="40" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
-            <Path Width="28.5" Height="25.3333" Canvas.Left="5.75" Canvas.Top="7.33335" Stretch="Fill" Fill="{StaticResource Foreground}" Data="F1 M 37.8516,35.625L 34.6849,38.7917L 23.6016,50.2708L 23.6016,39.9792L 37.8516,24.9375L 52.1016,39.9792L 52.1016,50.2708L 41.0182,38.7917L 37.8516,35.625 Z "/>
+            <Path Width="28.5" Height="25.3333" Canvas.Left="5.75" Canvas.Top="7.33335" Stretch="Fill" Fill="{t:FromPalette Foreground}" Data="F1 M 37.8516,35.625L 34.6849,38.7917L 23.6016,50.2708L 23.6016,39.9792L 37.8516,24.9375L 52.1016,39.9792L 52.1016,50.2708L 41.0182,38.7917L 37.8516,35.625 Z "/>
         </Canvas>
     </ControlTemplate>
     <ControlTemplate x:Key="ChevronDownIcon" TargetType="cc:Icon">
         <Canvas Width="40" Height="40" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
-            <Path Width="28.5" Height="25.3333" Canvas.Left="5.75" Canvas.Top="7.33335" Stretch="Fill" Fill="{StaticResource Foreground}" Data="F1 M 37.8516,39.5833L 52.1016,24.9375L 52.1016,35.2292L 37.8516,50.2708L 23.6016,35.2292L 23.6016,24.9375L 37.8516,39.5833 Z "/>
+            <Path Width="28.5" Height="25.3333" Canvas.Left="5.75" Canvas.Top="7.33335" Stretch="Fill" Fill="{t:FromPalette Foreground}" Data="F1 M 37.8516,39.5833L 52.1016,24.9375L 52.1016,35.2292L 37.8516,50.2708L 23.6016,35.2292L 23.6016,24.9375L 37.8516,39.5833 Z "/>
         </Canvas>
     </ControlTemplate>
     <ControlTemplate x:Key="CloseIcon" TargetType="cc:Icon">

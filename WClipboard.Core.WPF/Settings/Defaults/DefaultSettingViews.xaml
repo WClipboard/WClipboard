@@ -9,7 +9,7 @@
     <DataTemplate x:Key="CheckBoxSettingView" DataType="{x:Type local:CheckBoxSettingViewModel}">
         <StackPanel Orientation="Vertical">
             <CheckBox t:Palette.Active="Content" IsChecked="{Binding Value}" IsThreeState="{Binding IsThreeState}" Content="{Binding Description}" />
-            <TextBlock Text="{Binding ValueText}" Visibility="{Binding ValueText, Converter={StaticResource VisibileIfNotNullConverter}}" />
+            <TextBlock Text="{Binding ValueText}" Visibility="{Binding ValueText, Converter={StaticResource VisibileIfNotNullConverter}}" TextWrapping="Wrap" />
         </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="ComboBoxSettingView" DataType="{x:Type local:ComboBoxSettingViewModel}">

@@ -64,7 +64,7 @@ namespace WClipboard.Core.WPF.Settings.Local
         {
             this.programManager = programManager;
 
-            searchPrograms = new ConcurrentBindableList<Program>(programManager.GetCurrentKnownPrograms().Except(Value));
+            searchPrograms = new ConcurrentBindableList<Program>(programManager.GetCurrentKnownPrograms().Except(Value).OrderBy(p => p.Name));
 
             BrowseCommand = new SimpleCommand(Browse, _ => true);
             RemoveProgramCommand = new SimpleCommand<Program>(RemoveProgram, _ => true);
@@ -80,7 +80,7 @@ namespace WClipboard.Core.WPF.Settings.Local
 
         private void RefreshSearchPrograms()
         {
-            searchPrograms.ReplaceAll(programManager.GetCurrentKnownPrograms().Except(Value).Where(p => p.Name.Contains(SearchText, StringComparison.CurrentCultureIgnoreCase)));
+            searchPrograms.ReplaceAll(programManager.GetCurrentKnownPrograms().Except(Value).Where(p => p.Name.Contains(SearchText, StringComparison.CurrentCultureIgnoreCase)).OrderBy(p => p.Name));
         }
 
         private void Browse(object? _)

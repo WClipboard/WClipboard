@@ -1,29 +1,28 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
 using WClipboard.App.Windows;
-using WClipboard.Core.DI;
 using WClipboard.Core.WPF.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using WClipboard.Core.Extensions;
 using System.Collections.Generic;
 using System.ComponentModel;
 using WClipboard.Core.WPF.ViewModels.Commands;
 using System.Linq;
-using WClipboard.Core.Utilities.Collections;
 using WClipboard.Core.WPF.Settings;
 using WClipboard.Core.Settings;
+using WClipboard.Core.Utilities;
 
 namespace WClipboard.App.ViewModels
 {
-    public class SettingsWindowViewModel : BaseViewModel<SettingsWindow>, IWindowViewModel
+    public class SettingsWindowViewModel : BindableBase, IWindowViewModel
     {
         private readonly IUISettingsManager uiSettingsManager;
         private readonly IIOSettingsManager ioSettingsManager;
+        private readonly SettingsWindow settingsWindow;
 
-        public IEnumerable<SettingViewModel> Settings { get; }
-        public IEnumerable<object> SettingsTree { get; }
+        public IReadOnlyCollection<SettingViewModel> Settings { get; }
+        public IReadOnlyCollection<object> SettingsTree { get; }
 
-        Window IWindowViewModel.Window => Model;
+        Window IWindowViewModel.Window => settingsWindow;
 
         public SimpleCommand SaveCommand { get; }
         public SimpleCommand RestoreCommand { get; }
@@ -35,10 +34,10 @@ namespace WClipboard.App.ViewModels
             set => SetProperty(ref _restartWarning, value);
         }
 
-        public SettingsWindowViewModel(SettingsWindow settingsWindow) : base(settingsWindow)
+        public SettingsWindowViewModel(IUISettingsManager uiSettingsManager, IIOSettingsManager ioSettingsManager, Window callerWindow)
         {
-            uiSettingsManager = DiContainer.SP!.GetRequiredService<IUISettingsManager>();
-            ioSettingsManager = DiContainer.SP!.GetRequiredService<IIOSettingsManager>();
+            this.uiSettingsManager = uiSettingsManager;
+            this.ioSettingsManager = ioSettingsManager;
 
             SaveCommand = new SimpleCommand(OnSave, false);
             RestoreCommand = new SimpleCommand(OnRestore, false);
@@ -52,45 +51,50 @@ namespace WClipboard.App.ViewModels
                 setting.PropertyChanged += Setting_PropertyChanged;
             }
 
-            Model.Closed += SettingsWindow_Closed;
-        }
-
-        private IEnumerable<object> BuildTree()
-        {
-            var sections = new KeyedCollectionFunc<string, SectionSettingViewModel>(ssvm => ssvm.Key);
-
-            foreach(var setting in Settings)
+            settingsWindow = new SettingsWindow()
             {
-                var key = setting.Model.Key;
-                key = key.Substring(0, key.LastIndexOf('.'));
+                DataContext = this,
+                Owner = callerWindow
+            };
+            settingsWindow.Closed += SettingsWindow_Closed;
 
-                if(!sections.TryGetValue(key, out var section))
-                {
-                    section = CreateSectionSetting(key, sections);
-                }
-                section.Childs.Add(setting);
-            }
-
-            return ((IEnumerable<SectionSettingViewModel>)sections).Where(ssvm => !ssvm.Key.Contains('.')).ToList();
+            settingsWindow.ShowDialog();
         }
 
-        private SectionSettingViewModel CreateSectionSetting(string key, KeyedCollectionFunc<string, SectionSettingViewModel> sections)
+        private IReadOnlyCollection<object> BuildTree()
         {
-            var section = new SectionSettingViewModel(key);
-            sections.Add(section);
+            var list = new List<object>(Settings.OrderBy(s => s.Model.Key));
 
-            var dotIndex = key.LastIndexOf('.');
-            if (dotIndex != -1) //not root
-            { 
-                key = key.Substring(0, dotIndex);
-                if (!sections.TryGetValue(key, out var parentSection))
+            var lastSubKeys = new List<string>();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if(list[i] is SettingViewModel setting)
                 {
-                    parentSection = CreateSectionSetting(key, sections);
+                    var subKeys = setting.Model.Key.Split('.');
+                    var subKeyPosition = 0;
+                    for(; subKeyPosition < subKeys.Length - 1; subKeyPosition++)
+                    {
+                        if(lastSubKeys.Count <= subKeyPosition || lastSubKeys[subKeyPosition] != subKeys[subKeyPosition])
+                        {
+                            list.Insert(i, new HeaderViewModel(string.Join(".", subKeys[0..(subKeyPosition + 1)])));
+                            i += 1;
+                            if (lastSubKeys.Count > subKeyPosition)
+                            {
+                                lastSubKeys.RemoveRange(subKeyPosition, lastSubKeys.Count - subKeyPosition);
+                            }
+                            lastSubKeys.Add(subKeys[subKeyPosition]);
+                        }
+                    }
+
+                    if (lastSubKeys.Count > subKeyPosition)
+                    {
+                        lastSubKeys.RemoveRange(subKeyPosition, lastSubKeys.Count - subKeyPosition);
+                    }
                 }
-                parentSection.Childs.Add(section);
             }
 
-            return section;
+            return list;
         }
 
         private void Setting_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -144,7 +148,7 @@ namespace WClipboard.App.ViewModels
         {
             ioSettingsManager.Save();
 
-            Model.Closed -= SettingsWindow_Closed;
+            settingsWindow.Closed -= SettingsWindow_Closed;
 
             foreach (var setting in Settings)
             {
@@ -170,7 +174,7 @@ namespace WClipboard.App.ViewModels
 
         private void OnOk(object? parameter)
         {
-            Model.Close();
+            settingsWindow.Close();
         }
     }
 }

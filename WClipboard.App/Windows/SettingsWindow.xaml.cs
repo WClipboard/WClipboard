@@ -9,7 +9,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using WClipboard.App.ViewModels;
 using WClipboard.Core.WPF.CustomControls;
 
 namespace WClipboard.App.Windows
@@ -22,8 +21,6 @@ namespace WClipboard.App.Windows
         public SettingsWindow()
         {
             InitializeComponent();
-
-            DataContext = new SettingsWindowViewModel(this);
         }
     }
 }

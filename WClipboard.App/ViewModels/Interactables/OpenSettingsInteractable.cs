@@ -1,4 +1,5 @@
-﻿using WClipboard.App.Windows;
+﻿using System;
+using WClipboard.Core.DI;
 using WClipboard.Core.WPF.Models;
 using WClipboard.Core.WPF.ViewModels;
 
@@ -6,21 +7,20 @@ namespace WClipboard.App.ViewModels.Interactables
 {
     public class OpenSettingsInteractable : Interactable<IMainWindowViewModel>
     {
-        public OpenSettingsInteractable() : base("SettingsIcon", new OpenSettingsInteractableAction()) { }
+        public OpenSettingsInteractable(IServiceProvider serviceProvider) : base("SettingsIcon", new OpenSettingsInteractableAction(serviceProvider)) { }
 
         private class OpenSettingsInteractableAction : InteractableAction<IMainWindowViewModel>
         {
-            public OpenSettingsInteractableAction() : base("Edit settings")
+            private readonly IServiceProvider serviceProvider;
+
+            public OpenSettingsInteractableAction(IServiceProvider serviceProvider) : base("Edit settings")
             {
+                this.serviceProvider = serviceProvider;
             }
 
             protected override void Execute(IMainWindowViewModel parameter)
             {
-                var settingsWindow = new SettingsWindow
-                {
-                    Owner = parameter.Window
-                };
-                settingsWindow.Show();
+                serviceProvider.Create<SettingsWindowViewModel>(parameter.Window);
             }
         }
     }
