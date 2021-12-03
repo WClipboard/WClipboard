@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
-using WClipboard.App.ViewModels;
+using WClipboard.App.OverviewWindow;
 using WClipboard.Core.DI;
 using WClipboard.Core.Utilities;
 using WClipboard.Core.WPF.LifeCycle;

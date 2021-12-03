@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using WClipboard.App.Cursors;
+using WClipboard.App.OverviewWindow.Interactables;
 using WClipboard.App.Settings;
 using WClipboard.App.Setup;
-using WClipboard.App.ViewModels.Interactables;
 using WClipboard.Core.DI;
-using WClipboard.Core.Settings;
 using WClipboard.Core.Settings.Defaults;
 using WClipboard.Core.WPF.Extensions;
 using WClipboard.Core.WPF.Themes;
@@ -26,6 +25,7 @@ namespace WClipboard.App.DI
             services.AddSingleton<ICursorManager, CursorManager>();
 
             services.AddInteractable<OpenSettingsInteractable>();
+            services.AddInteractable<OpenPluginsManagerInteractable>();
 
             services.AddUISettingsFactory<AppUISettingsFactory>();
 

@@ -2,7 +2,7 @@
 using WClipboard.Core.WPF.Clipboard.ViewModel;
 using WClipboard.Core.WPF.Models;
 
-namespace WClipboard.App.ViewModels.Interactables
+namespace WClipboard.App.OverviewWindow.Interactables
 {
     public class CloseInteractable : Interactable<ClipboardObjectViewModel>
     {

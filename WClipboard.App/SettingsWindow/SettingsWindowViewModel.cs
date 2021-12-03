@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
-using WClipboard.App.Windows;
 using WClipboard.Core.WPF.ViewModels;
 using WClipboard.Core.Extensions;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ using WClipboard.Core.WPF.Settings;
 using WClipboard.Core.Settings;
 using WClipboard.Core.Utilities;
 
-namespace WClipboard.App.ViewModels
+namespace WClipboard.App.SettingsWindow
 {
     public class SettingsWindowViewModel : BindableBase, IWindowViewModel
     {

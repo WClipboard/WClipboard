@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using WClipboard.Core.DI;
@@ -12,10 +13,14 @@ namespace WClipboard.Plugin
     public interface IPluginManager
     {
         IEnumerable<IPlugin> Plugins { get; }
+
+        void TryAddPlugin(string pluginLocation);
     }
     internal class PluginManager : IPluginManager, IStartup
     {
         private readonly List<IPlugin> _plugins;
+        private readonly string _pluginDirectory;
+
         public IEnumerable<IPlugin> Plugins => _plugins;
 
         internal PluginManager(IStartupContext context)
@@ -23,17 +28,17 @@ namespace WClipboard.Plugin
             _plugins = new List<IPlugin>();
 
             var appDirectory = Path.GetDirectoryName(context.AppInfo.Path);
-            var pluginDirectory = Path.Combine(appDirectory, "Plugins");
-            if (!Directory.Exists(pluginDirectory))
+            _pluginDirectory = Path.Combine(appDirectory, "Plugins");
+            if (!Directory.Exists(_pluginDirectory))
                 return;
 
-            foreach(var pluginLocation in Directory.EnumerateFiles(pluginDirectory, "*.dll", SearchOption.TopDirectoryOnly))
+            foreach (var pluginLocation in Directory.EnumerateFiles(_pluginDirectory, "*.dll", SearchOption.AllDirectories))
             {
                 TryLoadPlugin(pluginLocation);
             }
 
 #if DEBUG
-            var debugFileName = Path.Combine(pluginDirectory, "debug.txt");
+            var debugFileName = Path.Combine(_pluginDirectory, "debug.txt");
             if (File.Exists(debugFileName))
             {
                 using(StreamReader sr = new StreamReader(debugFileName))
@@ -42,7 +47,7 @@ namespace WClipboard.Plugin
                     while (!sr.EndOfStream)
                     {
                         pluginLocation = sr.ReadLine();
-                        if(!string.IsNullOrWhiteSpace(pluginLocation))
+                        if (!string.IsNullOrWhiteSpace(pluginLocation))
                         {
                             TryLoadPlugin(Path.Combine(appDirectory, pluginLocation));
                         }
@@ -79,6 +84,11 @@ namespace WClipboard.Plugin
             {
                 Debug.WriteLine($"Failed to load plugin {pluginLocation}. {ex.GetType().Name}: {ex.Message}");
             }
+        }
+
+        public void TryAddPlugin(string pluginLocation)
+        {
+            ZipFile.ExtractToDirectory(pluginLocation, _pluginDirectory, true);
         }
 
         public void ConfigureServices(IServiceCollection services, IStartupContext context)

@@ -1,6 +1,7 @@
 ﻿using ShellLinkPlus;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using WClipboard.Core;
 
 namespace WClipboard.Windows
@@ -34,18 +35,25 @@ namespace WClipboard.Windows
         {
             bool isModified = false;
 
-            using (ShellLink shortcut = new ShellLink())
+            try
             {
-                if (File.Exists(shortcutFile))
-                    shortcut.Load(shortcutFile);
-
-                if (shortcut.TargetPath != appInfo.Path) { shortcut.TargetPath = appInfo.Path; isModified = true; }
-                if (shortcut.AppUserModelID != appInfo.Name) { shortcut.AppUserModelID = appInfo.Name; isModified = true; }
-
-                if (isModified)
+                using (ShellLink shortcut = new ShellLink())
                 {
-                    shortcut.Save(shortcutFile);
+                    if (File.Exists(shortcutFile))
+                        shortcut.Load(shortcutFile);
+
+                    if (shortcut.TargetPath != appInfo.Path) { shortcut.TargetPath = appInfo.Path; isModified = true; }
+                    if (shortcut.AppUserModelID != appInfo.Name) { shortcut.AppUserModelID = appInfo.Name; isModified = true; }
+
+                    if (isModified)
+                    {
+                        shortcut.Save(shortcutFile);
+                    }
                 }
+            }
+            catch(COMException ex)
+            {
+                //TODO logger
             }
         }
     }

@@ -1,9 +1,10 @@
 ﻿using System;
+using WClipboard.App.SettingsWindow;
 using WClipboard.Core.DI;
 using WClipboard.Core.WPF.Models;
 using WClipboard.Core.WPF.ViewModels;
 
-namespace WClipboard.App.ViewModels.Interactables
+namespace WClipboard.App.OverviewWindow.Interactables
 {
     public class OpenSettingsInteractable : Interactable<IMainWindowViewModel>
     {

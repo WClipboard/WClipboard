@@ -30,7 +30,6 @@
     <None Remove="Resources\WClipboard.ico" />
     <None Remove="Themes\Light.xaml" />
     <None Remove="Themes\Dark.xaml" />
-    <None Remove="Windows\OverviewWindow.xaml" />
     <None Include="..\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -55,7 +54,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Update="Windows\OverviewWindow.xaml.cs" />
   </ItemGroup>
 
   <ItemGroup>

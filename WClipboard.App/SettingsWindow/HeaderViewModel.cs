@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Windows;
 
-namespace WClipboard.App.ViewModels
+namespace WClipboard.App.SettingsWindow
 {
     public class HeaderViewModel
     {

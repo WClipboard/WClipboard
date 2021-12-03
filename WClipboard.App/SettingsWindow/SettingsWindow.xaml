@@ -1,4 +1,4 @@
-﻿<cc:CustomWindow x:Class="WClipboard.App.Windows.SettingsWindow"
+﻿<cc:CustomWindow x:Class="WClipboard.App.SettingsWindow.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,7 +6,7 @@
         xmlns:cc="clr-namespace:WClipboard.Core.WPF.CustomControls;assembly=WClipboard.Core.WPF"
         xmlns:c="clr-namespace:WClipboard.Core.WPF.Converters;assembly=WClipboard.Core.WPF"
         xmlns:t="clr-namespace:WClipboard.Core.WPF.Themes;assembly=WClipboard.Core.WPF"
-        xmlns:avm="clr-namespace:WClipboard.App.ViewModels"
+        xmlns:local="clr-namespace:WClipboard.App.SettingsWindow"
         xmlns:s="clr-namespace:WClipboard.Core.WPF.Settings;assembly=WClipboard.Core.WPF"
         mc:Ignorable="d"
         d:DesignHeight="450" d:DesignWidth="800"
@@ -43,7 +43,7 @@
                                 <ContentControl ContentTemplateSelector="{StaticResource TypeTemplateSelector}" Content="{Binding MessageBar}"/>
                             </StackPanel>
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type avm:HeaderViewModel}">
+                        <DataTemplate DataType="{x:Type local:HeaderViewModel}">
                             <TextBlock Text="{Binding Key, Converter={StaticResource KeyConverter}}" FontSize="{Binding FontSize}" Margin="{Binding Margin}" FontWeight="{Binding FontWeight}" />
                         </DataTemplate>
                     </ItemsControl.Resources>

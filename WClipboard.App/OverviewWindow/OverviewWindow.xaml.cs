@@ -1,6 +1,6 @@
 ﻿using WClipboard.Core.WPF.CustomControls;
 
-namespace WClipboard.App.Windows
+namespace WClipboard.App.OverviewWindow
 {
     /// <summary>
     /// Interaction logic for OverviewWindow.xaml

@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Data;
 using WClipboard.Core.WPF.Clipboard.ViewModel;
 
-namespace WClipboard.App.ViewModels
+namespace WClipboard.App.OverviewWindow
 {
     public class FilterHelper : BindableBase
     {

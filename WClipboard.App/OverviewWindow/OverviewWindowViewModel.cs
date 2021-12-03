@@ -5,9 +5,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using WClipboard.App.OverviewWindow.Interactables;
 using WClipboard.App.Settings;
-using WClipboard.App.ViewModels.Interactables;
-using WClipboard.App.Windows;
 using WClipboard.Core;
 using WClipboard.Core.Clipboard.Format;
 using WClipboard.Core.Clipboard.Trigger;
@@ -24,7 +23,7 @@ using WClipboard.Core.WPF.ViewModels;
 using WClipboard.Windows;
 using WClipboard.Windows.Helpers;
 
-namespace WClipboard.App.ViewModels
+namespace WClipboard.App.OverviewWindow
 {
     public class OverviewWindowViewModel : BindableBase, IClipboardObjectsListener, IMainWindowViewModel
     {
