@@ -43,15 +43,5 @@ namespace WClipboard.Core.Extensions
                 }
             }
         }
-
-        public static T MaxBy<T, R>(this IEnumerable<T> collection, Func<T, R> evaluate) where R : IComparable<R>
-        {
-            return collection.Aggregate((max, next) => evaluate(next).CompareTo(evaluate(max)) > 0 ? next : max);
-        }
-
-        public static T MinBy<T, R>(this IEnumerable<T> collection, Func<T, R> evaluate) where R : IComparable<R>
-        {
-            return collection.Aggregate((min, next) => evaluate(next).CompareTo(evaluate(min)) < 0 ? next : min);
-        }
     }
 }

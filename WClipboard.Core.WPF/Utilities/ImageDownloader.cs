@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.IO;
-using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using WClipboard.Core.Utilities.Collections;
@@ -16,6 +16,7 @@ namespace WClipboard.Core.WPF.Utilities
     internal class ImageDownloader : IImageDownloader
     {
         private readonly WeakValueDictionary<string, BitmapSource> cache;
+        private readonly Lazy<HttpClient> httpClient = new Lazy<HttpClient>(() => new HttpClient());
 
         public ImageDownloader()
         {
@@ -29,16 +30,13 @@ namespace WClipboard.Core.WPF.Utilities
                 return bitmapSource;
             }
 
-            using (var webClient = new WebClient())
+            using (var stream = await httpClient.Value.GetStreamAsync(url, new CancellationTokenSource(TimeSpan.FromSeconds(10)).Token))
             {
-                using (var ms = new MemoryStream(await webClient.DownloadDataTaskAsync(url).ConfigureAwait(false)))
-                {
-                    var decoder = BitmapDecoder.Create(ms, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
-                    bitmapSource = decoder.Frames[0];
-                    bitmapSource.Freeze();
-                    cache[url] = bitmapSource;
-                    return bitmapSource;
-                }
+                var decoder = BitmapDecoder.Create(stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+                bitmapSource = decoder.Frames[0];
+                bitmapSource.Freeze();
+                cache[url] = bitmapSource;
+                return bitmapSource;
             }
         }
     }

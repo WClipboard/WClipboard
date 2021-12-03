@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28606.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WClipboard.App", "WClipboard.App\WClipboard.App.csproj", "{3AF08A5C-A183-4C03-A84C-CFBE3E55113C}"
 EndProject
@@ -22,6 +22,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WClipboard.Windows", "WClipboard.Windows\WClipboard.Windows.csproj", "{37D7853B-D7ED-4DCC-A5F3-D9FDB276C03C}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "WClipboard.Setup", "WClipboard.Setup\WClipboard.Setup.vdproj", "{E3E8BBC8-22A5-454F-8FDA-94FA3F1F4093}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AD6475A1-AFE7-4160-9D6A-9301C794DA1F}"
+	ProjectSection(SolutionItems) = preProject
+		config.json = config.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

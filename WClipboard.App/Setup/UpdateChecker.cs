@@ -1,13 +1,14 @@
-﻿using Microsoft.Toolkit.Uwp.Notifications;
+﻿using Microsoft.Net.Http.Headers;
+using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using WClipboard.App.Settings;
 using WClipboard.Core;
-using WClipboard.Core.Extensions;
 using WClipboard.Core.Settings;
 using WClipboard.Core.Utilities;
 using WClipboard.Core.Utilities.Json;
@@ -62,13 +63,20 @@ namespace WClipboard.App.Setup
         {
             try
             {
-                using (var webclient = new WebClient())
+                using (var httpClient = new HttpClient())
                 {
-                    webclient.Headers.Add(HttpRequestHeader.UserAgent, appInfo.Name);
-                    var releases = await JsonSerializer.DeserializeAsync<List<Release>>(await webclient.OpenReadTaskAsync($"https://api.github.com/repos/WClipboard/{appInfo.Name}/releases"), new JsonSerializerOptions(JsonSerializerDefaults.Web) { PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy() });
+                    var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.github.com/repos/WClipboard/{appInfo.Name}/releases");
+                    request.Headers.Add(HeaderNames.UserAgent, appInfo.Name);
+                    var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token);
+                    response.EnsureSuccessStatusCode();
+
+                    var content = await response.Content.ReadAsStreamAsync();
+
+                    var releases = await JsonSerializer.DeserializeAsync<List<Release>>(content, new JsonSerializerOptions(JsonSerializerDefaults.Web) { PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy() });
 
                     var checkForPrereleases = checkPrereleasesSetting.GetValue<bool>();
-                    newestRelease = releases?.Where(r => !r.Draft && (!r.Prerelease || checkForPrereleases)).MaxBy(r => r.GetVersion());
+                    newestRelease = releases?.Where(r => !r.Draft && (!r.Prerelease || checkForPrereleases))
+                                             .MaxBy(r => r.GetVersion());
 
                     if (newestRelease != null && newestRelease.GetVersion() > appInfo.Version)
                     {
@@ -93,7 +101,7 @@ namespace WClipboard.App.Setup
             {
                 logger.Log(LogLevel.Warning, "Could not parse github api response to Json", ex);
             }
-            catch (WebException ex)
+            catch (HttpRequestException ex)
             {
                 logger.Log(LogLevel.Info, "Something went wrong when checking for updates", ex);
             }
