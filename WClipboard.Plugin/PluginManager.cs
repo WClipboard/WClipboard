@@ -29,30 +29,39 @@ namespace WClipboard.Plugin
 
             var appDirectory = Path.GetDirectoryName(context.AppInfo.Path);
             _pluginDirectory = Path.Combine(appDirectory, "Plugins");
-            if (!Directory.Exists(_pluginDirectory))
-                return;
-
-            foreach (var pluginLocation in Directory.EnumerateFiles(_pluginDirectory, "*.dll", SearchOption.AllDirectories))
+            if (Directory.Exists(_pluginDirectory))
             {
-                TryLoadPlugin(pluginLocation);
-            }
-
-#if DEBUG
-            var debugFileName = Path.Combine(_pluginDirectory, "debug.txt");
-            if (File.Exists(debugFileName))
-            {
-                using(StreamReader sr = new StreamReader(debugFileName))
+                foreach (var pluginLocation in Directory.EnumerateFiles(_pluginDirectory, "*.dll", SearchOption.AllDirectories))
                 {
-                    string pluginLocation = null;
-                    while (!sr.EndOfStream)
+                    TryLoadPlugin(pluginLocation);
+                }
+            }
+#if DEBUG
+            if (Directory.Exists(_pluginDirectory))
+            {
+                var debugFileName = Path.Combine(_pluginDirectory, "debug.txt");
+                if (File.Exists(debugFileName))
+                {
+                    using (StreamReader sr = new StreamReader(debugFileName))
                     {
-                        pluginLocation = sr.ReadLine();
-                        if (!string.IsNullOrWhiteSpace(pluginLocation))
+                        string pluginLocation = null;
+                        while (!sr.EndOfStream)
                         {
-                            TryLoadPlugin(Path.Combine(appDirectory, pluginLocation));
+                            pluginLocation = sr.ReadLine();
+                            if (!string.IsNullOrWhiteSpace(pluginLocation))
+                            {
+                                TryLoadPlugin(Path.Combine(appDirectory, pluginLocation));
+                            }
                         }
                     }
                 }
+            }
+
+            var pluginDev = context.AppInfo.Args.SkipWhile(arg => arg != "/pluginDev").Skip(1).FirstOrDefault();
+            if (pluginDev != null)
+            {
+                Debug.WriteLine($"Try adding {pluginDev}");
+                TryLoadPlugin(pluginDev);
             }
 #endif
         }

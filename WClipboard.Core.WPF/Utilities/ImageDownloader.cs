@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,12 +33,19 @@ namespace WClipboard.Core.WPF.Utilities
 
             using (var stream = await httpClient.Value.GetStreamAsync(url, new CancellationTokenSource(TimeSpan.FromSeconds(10)).Token))
             {
-                var decoder = BitmapDecoder.Create(stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
-                bitmapSource = decoder.Frames[0];
-                bitmapSource.Freeze();
-                cache[url] = bitmapSource;
-                return bitmapSource;
+                using (var ms = new MemoryStream())
+                {
+                    await stream.CopyToAsync(ms);
+                    ms.Seek(0, SeekOrigin.Begin);
+
+                    var decoder = BitmapDecoder.Create(ms, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+                    bitmapSource = decoder.Frames[0];
+                }
             }
+
+            bitmapSource.Freeze();
+            cache[url] = bitmapSource;
+            return bitmapSource;
         }
     }
 }

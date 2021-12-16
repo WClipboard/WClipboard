@@ -5,7 +5,6 @@
     <TargetFramework>net6.0-windows10.0.18362.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>WClipboard.App.Program</StartupObject>
-    <LangVersion>8.0</LangVersion>
     <Company>WClipboard</Company>
     <Product>WClipboard</Product>
     <Authors>Wibren Wiersma</Authors>
